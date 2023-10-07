@@ -30,3 +30,21 @@
 *.exe
 *.out
 *.app
+
+# Project
+.vs/
+Debug/
+x64/
+_deps/
+2DProject.*
+
+#CMake Projects
+ALL_BUILD.*
+INSTALL.*
+PACKAGE.*
+ZERO_CHECK.*
+CMakeCache.txt
+CMakeFiles
+CPackConfig.cmake
+CPackSourceConfig.cmake
+cmake_install.cmake
