@@ -15,6 +15,7 @@ public:
 	static const MyVector2& LeftVector;
 
 	MyVector2(float X = 0.0f, float Y = 0.0f);
+	MyVector2(const Vector2& Vector);
 	MyVector2(const MyVector2& Vector);
 	MyVector2(MyVector2&& Vector) noexcept;
 
@@ -27,7 +28,7 @@ public:
 	MyVector2 operator*(const int& Other) const;
 
 	float GetMagnitude() const;
-	void Normalize();
+	MyVector2 Normalize();
 
 	std::string ToString() const;
 };

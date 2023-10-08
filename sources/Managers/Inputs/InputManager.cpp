@@ -126,5 +126,5 @@ void InputManager::GetAxisValue(std::string EventName, MyVector2& Direction) con
         }
     }
 
-    Direction.Normalize();
+    Direction = Direction.Normalize();
 }

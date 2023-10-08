@@ -11,6 +11,7 @@
 
 Player::Player()
 {
+	SetActorLocation({((float)GetScreenWidth() / 2), ((float)GetScreenHeight() / 2)});
 	InputComp = std::make_shared<InputComponent>(std::make_shared<Player>(*this));
 	AddComponent(InputComp);
 	InputComp->BindInput<Player, &Player::Jump>("Jump", PRESSED, this);
@@ -23,7 +24,8 @@ Player::~Player()
 
 void Player::Draw()
 {
-	DrawRectangleGradientEx({ ((float)GetScreenWidth() / 2) - 25, ((float)GetScreenHeight() / 2) - 25, 50.0f, 50.0f }, RED, BLUE, WHITE, GREEN);
+	MyVector2 DrawLocation = GetActorTransform()->GetDrawLocation();
+	DrawRectangleGradientEx({ DrawLocation.x, DrawLocation.y, 50.0f, 50.0f }, RED, BLUE, WHITE, GREEN);
 }
 
 void Player::Move(const MyVector2& Scale)
