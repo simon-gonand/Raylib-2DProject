@@ -42,20 +42,25 @@ private:
 	InputType Type;
 	int Value;
 	bool IsAxis;
-	MyVector2 Scale;
+	Vector2 Scale;
 
 public:
-	InputAxis(const InputType& InType, const int& InValue, const bool& InIsAxis, const MyVector2& InScale = { 0.0f, 0.0f })
+	InputAxis(const InputType& InType, const int& InValue, const bool& InIsAxis, const Vector2& InScale = { 0.0f, 0.0f })
 		: Type{ InType }, Value{ InValue }, IsAxis{ InIsAxis }, Scale { InScale } {}
 
 	const InputType& GetType() const { return Type; }
 	const int& GetValue() const { return Value; }
 	const bool& GetIsAxis() const { return IsAxis; }
-	const MyVector2& GetScale() const { return Scale; }
+	const Vector2& GetScale() const { return Scale; }
 };
 
 class InputManager
 {
+private:
+	static std::shared_ptr<InputManager> Instance;
+	InputManager(InputManager& InInputManager) = delete;
+	void operator=(const InputManager& InInputManager) = delete;
+
 protected:
 	std::unordered_map<std::string, std::vector<std::shared_ptr<InputKey>>> EventsBindedInputs;
 	std::unordered_map<std::string, std::vector<std::shared_ptr<InputAxis>>> AxisBindedInputs;
@@ -63,18 +68,14 @@ protected:
 
 	bool IsBindKeyboardInputTriggered(int Input, InputTrigger Trigger) const;
 	bool IsBindGamepadInputTriggered(int Input, InputTrigger Trigger) const;
-
-	InputManager();
-
 public:
-	InputManager(InputManager& InInputManager) = delete;
-	void operator=(const InputManager& InInputManager) = delete;
-
+	InputManager();
+	
 	static std::shared_ptr<InputManager> Get();
 
 	bool IsEventTriggered(std::string EventName, InputTrigger Trigger, int& PressedInput, float& ScaleInput) const;
 	bool IsEventExists(std::string EventName) const;
 
 	bool IsAxisExists(std::string AxisName) const;
-	void GetAxisValue(std::string EventName, MyVector2& Direction) const;
+	void GetAxisValue(std::string EventName, Vector2& Direction) const;
 };

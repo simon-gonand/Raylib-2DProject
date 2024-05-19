@@ -32,17 +32,17 @@ struct AxisBinding
 {
 private:
 	const std::string AxisName;
-	DelegateBase<void, const MyVector2&>* Callback;
+	DelegateBase<void, const Vector2&>* Callback;
 	
 public:
-	AxisBinding(const std::string& InAxisName, DelegateBase<void, const MyVector2&>* InCallback) : AxisName { InAxisName }, Callback { InCallback } {}
+	AxisBinding(const std::string& InAxisName, DelegateBase<void, const Vector2&>* InCallback) : AxisName { InAxisName }, Callback { InCallback } {}
 
 	AxisBinding(AxisBinding& CopyRef) = delete;
 	AxisBinding(AxisBinding&& MoveRef) = delete;
 	int operator =(AxisBinding& AssignmentRef) = delete;
 
 	const std::string& GetAxisName() const { return AxisName; }
-	DelegateBase<void, const MyVector2&>* GetCallback() const { return Callback; }
+	DelegateBase<void, const Vector2&>* GetCallback() const { return Callback; }
 };
 
 class InputComponent: public ComponentBase
@@ -65,10 +65,10 @@ public:
 		}
 	}
 
-	template<class C, void (C::* Function)(const MyVector2&)>
+	template<class C, void (C::* Function)(const Vector2&)>
 	void BindAxis(const std::string& AxisName, C* Instance) 
 	{
-		DelegateBase<void, const MyVector2&>* AxisDelegate = new DelegateBase<void, const MyVector2&>();
+		DelegateBase<void, const Vector2&>* AxisDelegate = new DelegateBase<void, const Vector2&>();
 		AxisDelegate->Bind<C, Function>(Instance);
 		if (InputManager::Get()->IsAxisExists(AxisName)) 
 		{

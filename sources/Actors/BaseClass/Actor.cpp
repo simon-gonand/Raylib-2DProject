@@ -1,10 +1,11 @@
 #include "Actor.h"
 
+#include <raymath.h>
+
 #include "../../Components/BaseClass/ComponentBase.h"
 
 Actor::Actor()
 {
-	Transform = new Transform2D();
 }
 
 void Actor::AddComponent(std::shared_ptr<ComponentBase> Component)
@@ -22,44 +23,44 @@ const std::list<std::shared_ptr<ComponentBase>>& Actor::GetAllComponents() const
 	return Components;
 }
 
-Transform2D* Actor::GetActorTransform() const
+const Transform& Actor::GetActorTransform() const
 {
-	return Transform;
+	return ActorTransform;
 }
 
-const MyVector2& Actor::GetActorLocation() const
+const Vector3& Actor::GetActorLocation() const
 {
-	return Transform->GetLocation();
+	return ActorTransform.translation;
 }
 
-const float& Actor::GetActorRotation() const
+const Quaternion& Actor::GetActorRotation() const
 {
-	return Transform->GetRotation();
+	return ActorTransform.rotation;
 }
 
-const MyVector2& Actor::GetActorScale() const
+const Vector3& Actor::GetActorScale() const
 {
-	return Transform->GetScale();
+	return ActorTransform.scale;
 }
 
-void Actor::SetActorLocation(const MyVector2& NewLocation)
+void Actor::SetActorLocation(const Vector3& NewLocation)
 {
-	Transform->SetLocation(NewLocation);
+	ActorTransform.translation = NewLocation;
 }
 
-void Actor::AddActorLocation(const MyVector2& AddedLocation)
+void Actor::AddActorLocation(const Vector3& AddedLocation)
 {
-	Transform->AddLocation(AddedLocation);
+	ActorTransform.translation = Vector3Add(ActorTransform.translation, AddedLocation);
 }
 
-void Actor::SetActorRotation(const float& NewRotation)
+void Actor::SetActorRotation(const Quaternion& NewRotation)
 {
-	Transform->SetRotation(NewRotation);
+	ActorTransform.rotation = NewRotation;
 }
 
-void Actor::SetActorScale(const MyVector2& NewScale)
+void Actor::SetActorScale(const Vector3& NewScale)
 {
-	Transform->SetScale(NewScale);
+	ActorTransform.scale = NewScale;
 }
 
 void Actor::Update(float Tick)

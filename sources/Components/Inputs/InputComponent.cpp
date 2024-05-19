@@ -1,6 +1,7 @@
 #include "InputComponent.h"
 #include <functional>
 #include <iostream>
+#include <raymath.h>
 
 InputComponent::InputComponent(std::shared_ptr<Actor> InOwner)
 	:ComponentBase(InOwner)
@@ -24,7 +25,7 @@ void InputComponent::Update(float Tick)
 	{
 		if (InputManager::Get()->IsAxisExists(BindedAxis->GetAxisName()))
 		{
-			MyVector2 Direction = MyVector2::ZeroVector;
+			Vector2 Direction = Vector2Zero();
 			InputManager::Get()->GetAxisValue(BindedAxis->GetAxisName(), Direction);
 			BindedAxis->GetCallback()->Invoke(Direction);
 		}
