@@ -3,9 +3,13 @@
 #include <memory>
 #include <vector>
 
+#include <box2d/box2d.h>
+
 #include "Actors/BaseClass/Actor.h"
 #include "Actors/Player/Player.h"
 #include "Components/Inputs/InputComponent.h"
+#include "Physics/PhysicsWorldManager.h"
+
 
 int main(void) 
 {
@@ -18,6 +22,12 @@ int main(void)
 
 	std::shared_ptr<Player> P = std::make_shared<Player>();
 	Actors.push_back(P);
+
+	if (std::shared_ptr<PhysicsWorldManager> WorldManager = std::shared_ptr<PhysicsWorldManager>(PhysicsWorldManager::Get(BOX2D)))
+	{
+		WorldManager->Initialize({ 0.0f, -10.0f, 0.0f });
+	}
+
 
 	// Target FPS
 	SetTargetFPS(60);
