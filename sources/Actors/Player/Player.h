@@ -14,5 +14,6 @@ public:
 	void Jump(const float& Scale);
 
 	std::shared_ptr<class InputComponent> InputComp;
+	std::shared_ptr<class PhysicsComponent> PhysicsComp;
 };
 

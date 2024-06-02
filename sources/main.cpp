@@ -16,18 +16,18 @@ int main(void)
 	const int ScreenWidth = 800;
 	const int ScreenHeight = 450;
 
-	InitWindow(ScreenWidth, ScreenHeight, "My First Screen");
+	InitWindow(ScreenWidth, ScreenHeight, "2D Project");
 
 	std::vector<std::shared_ptr<Actor>> Actors; // Will be managed by a Level class
 
-	std::shared_ptr<Player> P = std::make_shared<Player>();
-	Actors.push_back(P);
-
-	if (std::shared_ptr<PhysicsWorldManager> WorldManager = std::shared_ptr<PhysicsWorldManager>(PhysicsWorldManager::Get(BOX2D)))
+	std::shared_ptr<PhysicsWorldManager> WorldManager = std::shared_ptr<PhysicsWorldManager>(PhysicsWorldManager::Get(BOX2D));
+	if(WorldManager)
 	{
 		WorldManager->Initialize({ 0.0f, -10.0f, 0.0f });
 	}
 
+	std::shared_ptr<Player> P = std::make_shared<Player>();
+	Actors.push_back(P);
 
 	// Target FPS
 	SetTargetFPS(60);
@@ -37,6 +37,9 @@ int main(void)
 	{
 		float DeltaTime = GetFrameTime();
 		
+		// Physics Update
+		WorldManager->Update(DeltaTime);
+
 		BeginDrawing();
 			ClearBackground(BLACK);
 			for (std::shared_ptr<Actor> CurrentActor : Actors)

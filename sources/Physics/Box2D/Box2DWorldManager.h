@@ -13,5 +13,8 @@ public:
 	Box2DWorldManager();
 
 	virtual void Initialize(Vector3 InGravity) override;
+	virtual void Update(float DeltaTime) override;
+
+	b2Body* CreateBody(const b2BodyDef* BodyDef);
 };
 
