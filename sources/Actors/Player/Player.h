@@ -8,7 +8,9 @@ public:
 	Player();
 	virtual ~Player();
 
-	virtual void Draw() override;
+	virtual void Initialize() override;
+
+	virtual void Draw(const Vector2& ScreenSize) override;
 
 	void Move(const Vector2& Scale);
 	void Jump(const float& Scale);

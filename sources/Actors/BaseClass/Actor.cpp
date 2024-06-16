@@ -8,6 +8,10 @@ Actor::Actor()
 {
 }
 
+void Actor::Initialize()
+{
+}
+
 void Actor::AddComponent(std::shared_ptr<ComponentBase> Component)
 {
 	Components.push_back(Component);
@@ -46,11 +50,19 @@ const Vector3& Actor::GetActorScale() const
 void Actor::SetActorLocation(const Vector3& NewLocation)
 {
 	ActorTransform.translation = NewLocation;
+	for (DelegateBase<void, const Vector3&>* Delegate : OnLocationSet)
+	{
+		Delegate->Invoke(NewLocation);
+	}
 }
 
 void Actor::AddActorLocation(const Vector3& AddedLocation)
 {
 	ActorTransform.translation = Vector3Add(ActorTransform.translation, AddedLocation);
+	for (DelegateBase<void, const Vector3&>* Delegate : OnLocationSet)
+	{
+		Delegate->Invoke(ActorTransform.translation);
+	}
 }
 
 void Actor::SetActorRotation(const Quaternion& NewRotation)
@@ -70,4 +82,16 @@ void Actor::Update(float Tick)
 		if (Component)
 			Component->Update(Tick);
 	}
+}
+
+void Actor::Draw(const Vector2& ScreenSize)
+{
+}
+
+// Convertion calculation get from github of box2d on how to link box2d and raylib together
+// https://github.com/erincatto/box2d-raylib/blob/main/main.c
+Vector2 Actor::ConvertWorldToScreen(const Vector2& WorldCoordinates, const Vector2& ScreenSize)
+{
+	Vector2 result = { WorldCoordinates.x + 0.5f * ScreenSize.x, 0.5f * ScreenSize.y * WorldCoordinates.y };
+	return result;
 }

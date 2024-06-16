@@ -19,5 +19,9 @@ private:
 	b2Shape* BodyShape;
 	b2FixtureDef* FixtureDef;
 	b2Fixture* Fixture;
+
+	void BindEvents(std::shared_ptr<Actor> InOwner);
+
+	void OnOwnerLocationSet(const Vector3& NewLocation);
 };
 

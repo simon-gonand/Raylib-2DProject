@@ -1,6 +1,7 @@
 #include "Box2DPhysicsComponent.h"
 
 #include "../../../Physics/Box2D/Box2DWorldManager.h"
+#include <iostream>
 
 Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Shape* Shape, b2Vec2 Position, float Density, float Friction)
 	: PhysicsComponent(InOwner)
@@ -15,6 +16,8 @@ Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2B
 	FixtureDef->density = Density;
 	FixtureDef->friction = Friction;
 	Fixture = Body->CreateFixture(FixtureDef);
+
+	BindEvents(InOwner);
 }
 
 Vector2 Box2DPhysicsComponent::GetWorldLocation() const
@@ -25,4 +28,19 @@ Vector2 Box2DPhysicsComponent::GetWorldLocation() const
 
 void Box2DPhysicsComponent::Update(float Tick)
 {
+	if (GetOwner()) 
+	{
+		b2Vec2 Position = Body->GetPosition();
+		GetOwner()->SetActorLocation({ Position.x, Position.y, 0.0f });
+	}
+}
+
+void Box2DPhysicsComponent::BindEvents(std::shared_ptr<Actor> InOwner)
+{
+	InOwner->BindOnLocationSet<Box2DPhysicsComponent, &Box2DPhysicsComponent::OnOwnerLocationSet>(this);
+}
+
+void Box2DPhysicsComponent::OnOwnerLocationSet(const Vector3& NewLocation)
+{
+	Body->SetTransform({ NewLocation.x, NewLocation.y }, Body->GetAngle());
 }

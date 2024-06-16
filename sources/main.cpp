@@ -23,11 +23,14 @@ int main(void)
 	std::shared_ptr<PhysicsWorldManager> WorldManager = std::shared_ptr<PhysicsWorldManager>(PhysicsWorldManager::Get(BOX2D));
 	if(WorldManager)
 	{
-		WorldManager->Initialize({ 0.0f, -10.0f, 0.0f });
+		WorldManager->Initialize({ 0.0f, 10.0f, 0.0f });
 	}
 
 	std::shared_ptr<Player> P = std::make_shared<Player>();
+	P->Initialize();
 	Actors.push_back(P);
+
+
 
 	// Target FPS
 	SetTargetFPS(60);
@@ -45,7 +48,7 @@ int main(void)
 			for (std::shared_ptr<Actor> CurrentActor : Actors)
 			{
 				CurrentActor->Update(DeltaTime);
-				CurrentActor->Draw(); // Might be manage by a renderer component ?
+				CurrentActor->Draw({ (float)GetScreenWidth(), (float)GetScreenHeight() }); // Might be manage by a renderer component ?
 			}
 		EndDrawing();
 	}

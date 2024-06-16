@@ -13,11 +13,15 @@
 
 Player::Player()
 {
-	SetActorLocation({((float)GetScreenWidth() / 2), ((float)GetScreenHeight() / 2)});
-	SetActorRotation({ 0.0f, 0.0f, 0.0f, 1.0f });
-	SetActorScale({ 1.0f, 1.0f });
+}
 
-	std::shared_ptr PlayerSPtr = std::make_shared<Player>(*this);
+Player::~Player() 
+{
+}
+
+void Player::Initialize()
+{
+	std::shared_ptr PlayerSPtr = shared_from_this();
 
 	InputComp = std::make_shared<InputComponent>(PlayerSPtr);
 	AddComponent(InputComp);
@@ -29,17 +33,17 @@ Player::Player()
 
 	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, &PhysicsShape);
 	AddComponent(PhysicsComp);
+
+	SetActorLocation({ 0.0f, 0.0f });
+	SetActorRotation({ 0.0f, 0.0f, 0.0f, 1.0f });
+	SetActorScale({ 1.0f, 1.0f });
 }
 
-Player::~Player() 
-{
-}
-
-void Player::Draw()
+void Player::Draw(const Vector2& ScreenSize)
 {
 	Vector3 ScaledLocation = Vector3Multiply(GetActorLocation(), GetActorScale());
-	Vector3 DrawLocation = Vector3RotateByQuaternion(ScaledLocation, GetActorRotation()); // weird though
-	std::cout << PhysicsComp->GetWorldLocation().x << "; " << PhysicsComp->GetWorldLocation().y << std::endl;
+	Vector3 DrawWorldLocation = Vector3RotateByQuaternion(ScaledLocation, GetActorRotation()); // weird though
+	Vector2 DrawLocation = ConvertWorldToScreen({ DrawWorldLocation.x, DrawWorldLocation.y }, ScreenSize);
 	DrawRectangleGradientEx({ DrawLocation.x, DrawLocation.y, 50.0f, 50.0f }, RED, BLUE, WHITE, GREEN);
 }
 
