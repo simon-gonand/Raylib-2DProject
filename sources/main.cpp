@@ -9,6 +9,7 @@
 #include "Actors/Player/Player.h"
 #include "Components/Inputs/InputComponent.h"
 #include "Physics/PhysicsWorldManager.h"
+#include "Actors/Statics/Ground.h"
 
 
 int main(void) 
@@ -23,14 +24,18 @@ int main(void)
 	std::shared_ptr<PhysicsWorldManager> WorldManager = std::shared_ptr<PhysicsWorldManager>(PhysicsWorldManager::Get(BOX2D));
 	if(WorldManager)
 	{
-		WorldManager->Initialize({ 0.0f, 10.0f, 0.0f });
+		WorldManager->Initialize({ 0.0f, /*0.0f*/ -9.81f, 0.0f});
 	}
+
+	// TODO Player and Ground don't want to collide well, try to find why Player is going so far. Maybe be rendering the debug of the b2Shape
+
+	std::shared_ptr<Ground> G = std::make_shared<Ground>();
+	G->Initialize();
+	Actors.push_back(G);
 
 	std::shared_ptr<Player> P = std::make_shared<Player>();
 	P->Initialize();
 	Actors.push_back(P);
-
-
 
 	// Target FPS
 	SetTargetFPS(60);

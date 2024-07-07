@@ -29,22 +29,21 @@ void Player::Initialize()
 	InputComp->BindAxis<Player, &Player::Move>("Move", this);
 
 	b2PolygonShape PhysicsShape;
-	PhysicsShape.SetAsBox(50.0f, 50.0f);
+	PhysicsShape.SetAsBox(25.0f, 25.0f);
 
 	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, &PhysicsShape);
 	AddComponent(PhysicsComp);
 
-	SetActorLocation({ 0.0f, 0.0f });
+	SetActorLocation({ 0.0f, 200.0f });
 	SetActorRotation({ 0.0f, 0.0f, 0.0f, 1.0f });
-	SetActorScale({ 1.0f, 1.0f });
+	SetActorScale({ 50.0f, 50.0f });
 }
 
 void Player::Draw(const Vector2& ScreenSize)
 {
-	Vector3 ScaledLocation = Vector3Multiply(GetActorLocation(), GetActorScale());
-	Vector3 DrawWorldLocation = Vector3RotateByQuaternion(ScaledLocation, GetActorRotation()); // weird though
-	Vector2 DrawLocation = ConvertWorldToScreen({ DrawWorldLocation.x, DrawWorldLocation.y }, ScreenSize);
-	DrawRectangleGradientEx({ DrawLocation.x, DrawLocation.y, 50.0f, 50.0f }, RED, BLUE, WHITE, GREEN);
+	Vector3 Scale = GetActorScale();
+	Vector2 DrawLocation = GetLocationToDraw(ScreenSize);
+	DrawRectangleGradientEx({ DrawLocation.x, DrawLocation.y, Scale.x, Scale.y}, RED, BLUE, WHITE, GREEN);
 }
 
 void Player::Move(const Vector2& Scale)

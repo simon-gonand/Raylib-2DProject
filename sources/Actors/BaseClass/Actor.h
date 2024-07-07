@@ -35,6 +35,7 @@ public:
 	void SetActorScale(const Vector3& NewScale);
 
 	virtual void Update(float Tick);
+	virtual Vector2 GetLocationToDraw(const Vector2& ScreenSize);
 	virtual void Draw(const Vector2& ScreenSize);
 
 	// Event Bindings
@@ -46,11 +47,20 @@ public:
 		OnLocationSet.push_back(OnLocationSetDelegate);
 	}
 
+	template<class C, void (C::* Function)(const Quaternion&)>
+	void BindOnRotationSet(C* Instance)
+	{
+		DelegateBase<void, const Quaternion&>* OnLocationSetDelegate = new DelegateBase<void, const Quaternion&>();
+		OnLocationSetDelegate->Bind<C, Function>(Instance);
+		OnRotationSet.push_back(OnLocationSetDelegate);
+	}
+
 protected:
 	Vector2 ConvertWorldToScreen(const Vector2& WorldCoordinates, const Vector2& ScreenSize);
 
 private:
 	// Events
 	std::vector<DelegateBase<void, const Vector3&>*> OnLocationSet;
+	std::vector<DelegateBase<void, const Quaternion&>*> OnRotationSet;
 };
 

@@ -38,9 +38,16 @@ void Box2DPhysicsComponent::Update(float Tick)
 void Box2DPhysicsComponent::BindEvents(std::shared_ptr<Actor> InOwner)
 {
 	InOwner->BindOnLocationSet<Box2DPhysicsComponent, &Box2DPhysicsComponent::OnOwnerLocationSet>(this);
+	InOwner->BindOnRotationSet<Box2DPhysicsComponent, &Box2DPhysicsComponent::OnOwnerRotationSet>(this);
 }
 
 void Box2DPhysicsComponent::OnOwnerLocationSet(const Vector3& NewLocation)
 {
 	Body->SetTransform({ NewLocation.x, NewLocation.y }, Body->GetAngle());
+}
+
+void Box2DPhysicsComponent::OnOwnerRotationSet(const Quaternion& NewRotation)
+{
+	float Angle = std::acos(NewRotation.w) * 2;
+	Body->SetTransform(Body->GetPosition(), Angle);
 }

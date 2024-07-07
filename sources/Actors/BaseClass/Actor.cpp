@@ -3,6 +3,7 @@
 #include <raymath.h>
 
 #include "../../Components/BaseClass/ComponentBase.h"
+#include <iostream>
 
 Actor::Actor()
 {
@@ -68,6 +69,10 @@ void Actor::AddActorLocation(const Vector3& AddedLocation)
 void Actor::SetActorRotation(const Quaternion& NewRotation)
 {
 	ActorTransform.rotation = NewRotation;
+	for (DelegateBase<void, const Quaternion&>* Delegate : OnRotationSet)
+	{
+		Delegate->Invoke(NewRotation);
+	}
 }
 
 void Actor::SetActorScale(const Vector3& NewScale)
@@ -84,6 +89,16 @@ void Actor::Update(float Tick)
 	}
 }
 
+Vector2 Actor::GetLocationToDraw(const Vector2& ScreenSize)
+{
+	Vector3 DrawWorldLocation = Vector3RotateByQuaternion(GetActorLocation(), GetActorRotation());
+	//std::cout << "Location: " << DrawWorldLocation.x << "; " << DrawWorldLocation.y << "; " << DrawWorldLocation.z << std::endl;
+	Vector2 DrawLocation = ConvertWorldToScreen({ DrawWorldLocation.x, DrawWorldLocation.y }, ScreenSize);
+	DrawLocation.x -= ActorTransform.scale.x / 2;
+	DrawLocation.y -= ActorTransform.scale.y / 2;
+	return DrawLocation;
+}
+
 void Actor::Draw(const Vector2& ScreenSize)
 {
 }
@@ -92,6 +107,6 @@ void Actor::Draw(const Vector2& ScreenSize)
 // https://github.com/erincatto/box2d-raylib/blob/main/main.c
 Vector2 Actor::ConvertWorldToScreen(const Vector2& WorldCoordinates, const Vector2& ScreenSize)
 {
-	Vector2 result = { WorldCoordinates.x + 0.5f * ScreenSize.x, 0.5f * ScreenSize.y * WorldCoordinates.y };
+	Vector2 result = { WorldCoordinates.x + 0.5f * ScreenSize.x, 0.5f * ScreenSize.y - WorldCoordinates.y };
 	return result;
 }

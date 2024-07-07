@@ -23,5 +23,6 @@ private:
 	void BindEvents(std::shared_ptr<Actor> InOwner);
 
 	void OnOwnerLocationSet(const Vector3& NewLocation);
+	void OnOwnerRotationSet(const Quaternion& NewRotation);
 };
 
