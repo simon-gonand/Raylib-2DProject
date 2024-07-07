@@ -26,6 +26,23 @@ Vector2 Box2DPhysicsComponent::GetWorldLocation() const
 	return { Position.x, Position.y};
 }
 
+Vector2 Box2DPhysicsComponent::GetLinearVelocity() const
+{
+	b2Vec2 Velocity = Body->GetLinearVelocity();
+	return {Velocity.x, Velocity.y };
+}
+
+void Box2DPhysicsComponent::SetLinearVelocity(const Vector2& NewVelocity)
+{
+	Body->SetLinearVelocity({ NewVelocity.x, NewVelocity.y });
+}
+
+void Box2DPhysicsComponent::AddLinearVelocity(const Vector2& VelocityToAdd)
+{
+	b2Vec2 CurrentVelocity = Body->GetLinearVelocity();
+	Body->SetLinearVelocity({ CurrentVelocity.x + VelocityToAdd.x, CurrentVelocity.y + VelocityToAdd.y });
+}
+
 void Box2DPhysicsComponent::Update(float Tick)
 {
 	if (GetOwner()) 

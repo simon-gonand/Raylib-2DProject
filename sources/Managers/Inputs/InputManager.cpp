@@ -16,11 +16,6 @@ InputManager::InputManager()
 
     std::string AxisName = "Move";
     std::vector<std::shared_ptr<InputAxis>> AxisInputs;
-    AxisInputs.push_back(std::make_shared<InputAxis>(KEYBOARD, KEY_W, false, Vector::UpVector2));
-    AxisInputs.push_back(std::make_shared<InputAxis>(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_UP, false, Vector::UpVector2));
-
-    AxisInputs.push_back(std::make_shared<InputAxis>(KEYBOARD, KEY_S, false, Vector::DownVector2));
-    AxisInputs.push_back(std::make_shared<InputAxis>(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_DOWN, false, Vector::DownVector2));
 
     AxisInputs.push_back(std::make_shared<InputAxis>(KEYBOARD, KEY_D, false, Vector::RightVector2));
     AxisInputs.push_back(std::make_shared<InputAxis>(GAMEPAD, GAMEPAD_BUTTON_LEFT_FACE_RIGHT, false, Vector::RightVector2));

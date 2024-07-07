@@ -23,6 +23,9 @@ void Player::Initialize()
 {
 	std::shared_ptr PlayerSPtr = shared_from_this();
 
+	PreviousMovingVelocity = Vector2Zero();
+	CurrentMovingVelocity = Vector2Zero();
+
 	InputComp = std::make_shared<InputComponent>(PlayerSPtr);
 	AddComponent(InputComp);
 	InputComp->BindInput<Player, &Player::Jump>("Jump", PRESSED, this);
@@ -49,14 +52,36 @@ void Player::Draw(const Vector2& ScreenSize)
 void Player::Move(const Vector2& Scale)
 {
 	float Magnitude = Vector2Length(Scale);
+	PreviousMovingVelocity = CurrentMovingVelocity;
 	if (Magnitude > 0.0f) 
 	{
-		AddActorLocation({Scale.x, Scale.y});
+		CurrentMovingVelocity = Vector2Add(CurrentMovingVelocity, Scale);
 		std::cout << "Move: [" << Scale.x << ", " << Scale.y << "]" << std::endl;
+	}
+	else if(CurrentMovingVelocity.x != 0.0f || CurrentMovingVelocity.y != 0.0f)
+	{
+		float XValueToSubstract = 0.0f;
+		float YValueToSubstract = 0.0f;
+		if (CurrentMovingVelocity.x != 0.0f)
+		{
+			XValueToSubstract = CurrentMovingVelocity.x > 0.0f ? 1.0f : -1.0f;
+		}
+		if (CurrentMovingVelocity.y != 0.0f)
+		{
+			YValueToSubstract = CurrentMovingVelocity.y > 0.0f ? 1.0f : -1.0f;
+		}
+		CurrentMovingVelocity = Vector2Subtract(CurrentMovingVelocity, { XValueToSubstract, YValueToSubstract });
 	}
 }
 
 void Player::Jump(const float& Scale)
 {
 	std::cout << "Jump: " << Scale << std::endl;
+}
+
+void Player::Update(float DeltaTime)
+{
+	Actor::Update(DeltaTime);
+	Vector2 VelocityWithoutInput = Vector2Subtract(PhysicsComp->GetLinearVelocity(), PreviousMovingVelocity);
+	PhysicsComp->SetLinearVelocity(Vector2Add(VelocityWithoutInput, CurrentMovingVelocity));
 }
