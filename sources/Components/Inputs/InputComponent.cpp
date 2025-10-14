@@ -17,7 +17,7 @@ void InputComponent::Update(float Tick)
 		float Scale;
 		if (InputManager::Get()->IsEventTriggered(BindedInput->GetEventName(), BindedInput->GetTrigger(), PressedInput, Scale)) 
 		{
-			BindedInput->GetCallback()->Invoke(Scale);
+			BindedInput->GetCallback()->Invoke(Scale, BindedInput->GetTrigger());
 		}
 	}
 

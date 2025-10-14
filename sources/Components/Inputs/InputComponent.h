@@ -12,11 +12,11 @@ struct InputBinding
 {
 private:
 	const std::string EventName;
-	DelegateBase<void, const float&>* Callback;
+	DelegateBase<void, const float&, const InputTrigger&>* Callback;
 	const InputTrigger Trigger;
 
 public:
-	InputBinding(const std::string& InEventName, DelegateBase<void, const float&>* InCallback, const InputTrigger& InTrigger)
+	InputBinding(const std::string& InEventName, DelegateBase<void, const float&, const InputTrigger&>* InCallback, const InputTrigger& InTrigger)
 		: EventName{ InEventName }, Callback{ InCallback }, Trigger{ InTrigger } {}
 
 	InputBinding(InputBinding& CopyRef) = delete;
@@ -25,7 +25,7 @@ public:
 
 	const std::string& GetEventName() const { return EventName; }
 	const InputTrigger& GetTrigger() const { return Trigger; }
-	DelegateBase<void, const float&>* GetCallback() const { return Callback; }
+	DelegateBase<void, const float&, const InputTrigger&>* GetCallback() const { return Callback; }
 };
 
 struct AxisBinding
@@ -54,10 +54,10 @@ private:
 public:
 	InputComponent(std::shared_ptr<Actor> InOwner);
 
-	template<class C, void (C::* Function)(const float&)>
+	template<class C, void (C::* Function)(const float&, const InputTrigger&)>
 	void BindInput(const std::string& EventName, const InputTrigger& Trigger, C* Instance)
 	{
-		DelegateBase<void, const float&>* InputDelegate = new DelegateBase<void, const float&>();
+		DelegateBase<void, const float&, const InputTrigger&>* InputDelegate = new DelegateBase<void, const float&, const InputTrigger&>();
 		InputDelegate->Bind<C, Function>(Instance);
 		if (InputManager::Get()->IsEventExists(EventName))
 		{

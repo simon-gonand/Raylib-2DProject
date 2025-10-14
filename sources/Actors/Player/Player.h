@@ -13,7 +13,7 @@ public:
 	virtual void Draw(const Vector2& ScreenSize) override;
 
 	void Move(const Vector2& Scale);
-	void Jump(const float& Scale);
+	void Jump(const float& Scale, const enum InputTrigger& Trigger);
 
 	virtual void Update(float DeltaTime) override;
 
@@ -23,5 +23,7 @@ public:
 private:
 	Vector2 PreviousMovingVelocity;
 	Vector2 CurrentMovingVelocity;
+
+	bool bIsJumping = false;
 };
 

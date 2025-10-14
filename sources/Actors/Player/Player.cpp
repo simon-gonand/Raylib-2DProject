@@ -29,6 +29,7 @@ void Player::Initialize()
 	InputComp = std::make_shared<InputComponent>(PlayerSPtr);
 	AddComponent(InputComp);
 	InputComp->BindInput<Player, &Player::Jump>("Jump", PRESSED, this);
+	InputComp->BindInput<Player, &Player::Jump>("Jump", RELEASED, this);
 	InputComp->BindAxis<Player, &Player::Move>("Move", this);
 
 	b2PolygonShape PhysicsShape;
@@ -40,6 +41,8 @@ void Player::Initialize()
 	SetActorLocation({ 0.0f, 200.0f });
 	SetActorRotation({ 0.0f, 0.0f, 0.0f, 1.0f });
 	SetActorScale({ 50.0f, 50.0f });
+
+	bIsJumping = false;
 }
 
 void Player::Draw(const Vector2& ScreenSize)
@@ -74,14 +77,21 @@ void Player::Move(const Vector2& Scale)
 	}
 }
 
-void Player::Jump(const float& Scale)
+void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 {
-	std::cout << "Jump: " << Scale << std::endl;
+  	std::cout << "Jump: " << Scale << std::endl;
+	bIsJumping = Trigger == PRESSED;
 }
 
 void Player::Update(float DeltaTime)
 {
 	Actor::Update(DeltaTime);
 	Vector2 VelocityWithoutInput = Vector2Subtract(PhysicsComp->GetLinearVelocity(), PreviousMovingVelocity);
-	PhysicsComp->SetLinearVelocity(Vector2Add(VelocityWithoutInput, CurrentMovingVelocity));
+	Vector2 NewVelocity = Vector2Add(VelocityWithoutInput, CurrentMovingVelocity);
+	if (bIsJumping) 
+	{
+		NewVelocity = Vector2Add(NewVelocity, { 0.0f, 1.0f });
+	}
+	PhysicsComp->SetLinearVelocity(NewVelocity);
+
 }
