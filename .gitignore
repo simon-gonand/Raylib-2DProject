@@ -38,6 +38,9 @@ x64/
 _deps/
 2DProject.*
 
+#Built files
+out/
+
 #CMake Projects
 ALL_BUILD.*
 INSTALL.*
