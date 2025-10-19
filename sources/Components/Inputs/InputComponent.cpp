@@ -6,7 +6,6 @@
 InputComponent::InputComponent(std::shared_ptr<Actor> InOwner)
 	:ComponentBase(InOwner)
 {
-	// Register in Manager ?
 }
 
 void InputComponent::Update(float Tick)

@@ -60,6 +60,7 @@ private:
 	static std::shared_ptr<InputManager> Instance;
 	InputManager(InputManager& InInputManager) = delete;
 	void operator=(const InputManager& InInputManager) = delete;
+	InputManager();
 
 protected:
 	std::unordered_map<std::string, std::vector<std::shared_ptr<InputKey>>> EventsBindedInputs;
@@ -69,8 +70,6 @@ protected:
 	bool IsBindKeyboardInputTriggered(int Input, InputTrigger Trigger) const;
 	bool IsBindGamepadInputTriggered(int Input, InputTrigger Trigger) const;
 public:
-	InputManager();
-	
 	static std::shared_ptr<InputManager> Get();
 
 	bool IsEventTriggered(std::string EventName, InputTrigger Trigger, int& PressedInput, float& ScaleInput) const;
