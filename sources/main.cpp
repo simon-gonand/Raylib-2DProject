@@ -14,8 +14,8 @@
 
 int main(void) 
 {
-	const int ScreenWidth = 800;
-	const int ScreenHeight = 450;
+	const int ScreenWidth = 1280;
+	const int ScreenHeight = 720;
 
 	InitWindow(ScreenWidth, ScreenHeight, "2D Project");
 
@@ -24,7 +24,7 @@ int main(void)
 	std::shared_ptr<PhysicsWorldManager> WorldManager = std::shared_ptr<PhysicsWorldManager>(PhysicsWorldManager::Get(BOX2D));
 	if(WorldManager)
 	{
-		WorldManager->Initialize({ 0.0f, /*0.0f*/ -9.81f, 0.0f});
+		WorldManager->Initialize({ 0.0f, -9.81f, 0.0f});
 	}
 
 	// TODO Player and Ground don't want to collide well, try to find why Player is going so far. Maybe be rendering the debug of the b2Shape
