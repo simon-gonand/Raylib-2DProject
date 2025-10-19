@@ -10,6 +10,8 @@
 #include "../BaseClass/Actor.h"
 #include "../../Managers/Inputs/InputManager.h"
 #include "../../Components/Physics/Box2D/Box2DPhysicsComponent.h"
+#include "../../Components/Camera/PlayerCameraComponent.h"
+#include "../../Helpers/Math/Vectors/Vectors.h"
 
 Player::Player()
 {
@@ -21,7 +23,7 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	std::shared_ptr PlayerSPtr = shared_from_this();
+	std::shared_ptr<Actor> PlayerSPtr = shared_from_this();
 
 	PreviousMovingVelocity = Vector2Zero();
 	CurrentMovingVelocity = Vector2Zero();
@@ -38,7 +40,12 @@ void Player::Initialize()
 	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, &PhysicsShape);
 	AddComponent(PhysicsComp);
 
-	SetActorLocation({ 0.0f, 200.0f });
+	Vector3 ActorInitialPostion = { 0.0f, 200.0f, 0.0f};
+
+	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, Vector2({ ActorInitialPostion.x, -ActorInitialPostion.y }));
+	AddComponent(CameraComp);
+
+	SetActorLocation(ActorInitialPostion);
 	SetActorRotation({ 0.0f, 0.0f, 0.0f, 1.0f });
 	SetActorScale({ 50.0f, 50.0f });
 

@@ -32,7 +32,7 @@ InputManager::InputManager()
 std::shared_ptr<InputManager> InputManager::Get()
 {
     if(!Instance)
-        Instance = std::make_shared<InputManager>();
+        Instance.reset(new InputManager());
 
     return Instance;
 }

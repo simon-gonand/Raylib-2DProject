@@ -19,6 +19,7 @@ public:
 
 	std::shared_ptr<class InputComponent> InputComp;
 	std::shared_ptr<class PhysicsComponent> PhysicsComp;
+	std::shared_ptr<class PlayerCameraComponent> CameraComp;
 
 private:
 	Vector2 PreviousMovingVelocity;

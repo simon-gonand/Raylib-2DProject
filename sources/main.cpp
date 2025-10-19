@@ -10,6 +10,7 @@
 #include "Components/Inputs/InputComponent.h"
 #include "Physics/PhysicsWorldManager.h"
 #include "Actors/Statics/Ground.h"
+#include "Managers/Camera/CameraManager.h"
 
 
 int main(void) 
@@ -50,11 +51,14 @@ int main(void)
 
 		BeginDrawing();
 			ClearBackground(BLACK);
-			for (std::shared_ptr<Actor> CurrentActor : Actors)
-			{
-				CurrentActor->Update(DeltaTime);
-				CurrentActor->Draw({ (float)GetScreenWidth(), (float)GetScreenHeight() }); // Might be manage by a renderer component ?
-			}
+			Camera2D Camera = CameraManager::Get()->GetCameraToUse();
+			BeginMode2D(Camera);
+				for (std::shared_ptr<Actor> CurrentActor : Actors)
+				{
+					CurrentActor->Update(DeltaTime);
+					CurrentActor->Draw({ (float)GetScreenWidth(), (float)GetScreenHeight() }); // Might be manage by a renderer component ?
+				}
+			EndMode2D();
 		EndDrawing();
 	}
 

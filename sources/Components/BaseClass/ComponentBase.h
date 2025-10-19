@@ -16,6 +16,7 @@ public:
 	std::shared_ptr<Actor> GetOwner() const;
 	void SetOwner(std::shared_ptr<Actor> NewOwner);
 
+	virtual void Initialize() {};
 	virtual void Update(float Tick) = 0;
 };
 

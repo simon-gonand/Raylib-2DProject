@@ -16,6 +16,7 @@ void Actor::Initialize()
 void Actor::AddComponent(std::shared_ptr<ComponentBase> Component)
 {
 	Components.push_back(Component);
+	Component->Initialize();
 }
 
 void Actor::RemoveComponent(std::shared_ptr<ComponentBase> Component)

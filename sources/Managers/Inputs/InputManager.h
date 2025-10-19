@@ -58,8 +58,10 @@ class InputManager
 {
 private:
 	static std::shared_ptr<InputManager> Instance;
+
 	InputManager(InputManager& InInputManager) = delete;
 	void operator=(const InputManager& InInputManager) = delete;
+
 	InputManager();
 
 protected:
