@@ -23,7 +23,7 @@ protected:
 public:
 	static std::shared_ptr<PhysicsWorldManager> Get(PhysicsEngineType InPhysicsEngineType);
 
-	virtual void Initialize(Vector3 InGravity) = 0;
+	virtual void Initialize(const Vector3& InGravity) = 0;
 	virtual void Update(float DeltaTime) = 0;
 };
 

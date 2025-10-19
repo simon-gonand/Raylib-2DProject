@@ -3,7 +3,8 @@
 #include "../../../Physics/Box2D/Box2DWorldManager.h"
 #include <iostream>
 
-Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Shape* Shape, b2Vec2 Position, float Density, float Friction)
+Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Shape* Shape, 
+	const b2Vec2& Position, const float& Density, const float& Friction)
 	: PhysicsComponent(InOwner)
 {
 	BodyDef = new b2BodyDef();
