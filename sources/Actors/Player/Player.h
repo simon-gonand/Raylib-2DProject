@@ -22,9 +22,18 @@ public:
 	std::shared_ptr<class PlayerCameraComponent> CameraComp;
 
 private:
-	Vector2 PreviousMovingVelocity;
-	Vector2 CurrentMovingVelocity;
+	float TopSpeed = 10.0f;
+	float Acceleration = 1.0f;
+	float DecelerationScale = 3.0f;
+	float JumpSpeed = -10.0f;
+
+	Vector2 VelocityToAdd;
+	Vector2 LastVelocityIncrease;
 
 	bool bIsJumping = false;
+	bool bDecreaseVelocity = false;
+	float DeaccelerateAlpha = 0.0f;
+
+	void ClampVelocity(Vector2& NewVelocity);
 };
 

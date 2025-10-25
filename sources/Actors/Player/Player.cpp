@@ -26,8 +26,8 @@ void Player::Initialize()
 {
 	std::shared_ptr<Actor> PlayerSPtr = shared_from_this();
 
-	PreviousMovingVelocity = Vector2Zero();
-	CurrentMovingVelocity = Vector2Zero();
+	VelocityToAdd = Vector2Zero();
+	LastVelocityIncrease = Vector2Zero();
 
 	InputComp = std::make_shared<InputComponent>(PlayerSPtr);
 	AddComponent(InputComp);
@@ -38,11 +38,11 @@ void Player::Initialize()
 	Vector2 ScaleSizeMeter({ 0.5f, 0.5f });
 	b2PolygonShape PhysicsShape;
 	PhysicsShape.SetAsBox(ScaleSizeMeter.x, ScaleSizeMeter.y);
+	Vector3 ActorInitialPostion = { 0.0f, -100.0f, 0.0f};
 
-	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, &PhysicsShape);
+	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, &PhysicsShape, b2Vec2(ActorInitialPostion.x, ActorInitialPostion.y), 1.0f, 0.3f);
 	AddComponent(PhysicsComp);
 
-	Vector3 ActorInitialPostion = { 0.0f, -100.0f, 0.0f};
 
 	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, Vector2({ ActorInitialPostion.x, ActorInitialPostion.y }), Vector2({ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }), 0.0f, 2.5f);
 	AddComponent(CameraComp);
@@ -74,25 +74,18 @@ void Player::Draw(const Vector2& ScreenSize)
 void Player::Move(const Vector2& Scale)
 {
 	float Magnitude = Vector2Length(Scale);
-	PreviousMovingVelocity = CurrentMovingVelocity;
-	if (Magnitude > 0.0f) 
+	if (Magnitude > 0.0f)
 	{
-		CurrentMovingVelocity = Vector2Add(CurrentMovingVelocity, Scale);
-		std::cout << "Move: [" << Scale.x << ", " << Scale.y << "]" << std::endl;
+		DeaccelerateAlpha = 0.0f;
+		
+		VelocityToAdd.x = Scale.x > 0.0f ? Acceleration : -Acceleration;
+		LastVelocityIncrease = PhysicsComp->GetLinearVelocity();
+		bDecreaseVelocity = false;
 	}
-	else if(CurrentMovingVelocity.x != 0.0f || CurrentMovingVelocity.y != 0.0f)
+	else 
 	{
-		float XValueToSubstract = 0.0f;
-		float YValueToSubstract = 0.0f;
-		if (CurrentMovingVelocity.x != 0.0f)
-		{
-			XValueToSubstract = CurrentMovingVelocity.x > 0.0f ? 1.0f : -1.0f;
-		}
-		if (CurrentMovingVelocity.y != 0.0f)
-		{
-			YValueToSubstract = CurrentMovingVelocity.y > 0.0f ? 1.0f : -1.0f;
-		}
-		CurrentMovingVelocity = Vector2Subtract(CurrentMovingVelocity, { XValueToSubstract, YValueToSubstract });
+		bDecreaseVelocity = true;
+		VelocityToAdd = Vector2Zero();
 	}
 }
 
@@ -105,11 +98,29 @@ void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 void Player::Update(float DeltaTime)
 {
 	Actor::Update(DeltaTime);
-	Vector2 VelocityWithoutInput = Vector2Subtract(PhysicsComp->GetLinearVelocity(), PreviousMovingVelocity);
-	Vector2 NewVelocity = Vector2Add(VelocityWithoutInput, CurrentMovingVelocity);
-	if (bIsJumping) 
+	Vector2 NewVelocity = Vector2Add(PhysicsComp->GetLinearVelocity(), VelocityToAdd);
+	if (bIsJumping && FloatEquals(NewVelocity.y, 0.0f)) 
 	{
-		NewVelocity = Vector2Add(NewVelocity, { 0.0f, 1.0f });
+		NewVelocity = Vector2Add(NewVelocity, { 0.0f, JumpSpeed });
 	}
+	if (bDecreaseVelocity) 
+	{
+		DeaccelerateAlpha += DeltaTime * DecelerationScale;
+		DeaccelerateAlpha = Clamp(DeaccelerateAlpha, 0.0f, 1.0f);
+		NewVelocity.x = Lerp(LastVelocityIncrease.x, 0.0f, DeaccelerateAlpha);
+	}
+	ClampVelocity(NewVelocity);
 	PhysicsComp->SetLinearVelocity(NewVelocity);
+}
+
+void Player::ClampVelocity(Vector2& NewVelocity)
+{
+	if (NewVelocity.x > 0.0f) 
+	{
+		NewVelocity.x = Clamp(NewVelocity.x, 0.0f, TopSpeed);
+	}
+	else 
+	{
+		NewVelocity.x = Clamp(NewVelocity.x, -TopSpeed, 0.0f);
+	}
 }

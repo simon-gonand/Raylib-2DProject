@@ -4,7 +4,7 @@
 
 void Ground::Initialize()
 {
-	Vector2 ScaleSizeMeter({ 10.0f, 1.0f });
+	Vector2 ScaleSizeMeter({ 20.0f, 1.0f });
 	b2PolygonShape PhysicsShape;
 	PhysicsShape.SetAsBox(ScaleSizeMeter.x, ScaleSizeMeter.y);
 
