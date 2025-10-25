@@ -35,7 +35,7 @@ public:
 	void SetActorScale(const Vector3& NewScale);
 
 	virtual void Update(float Tick);
-	virtual Vector2 GetLocationToDraw(const Vector2& ScreenSize);
+	//virtual Vector2 GetLocationToDraw(const Vector2& ScreenSize);
 	virtual void Draw(const Vector2& ScreenSize);
 
 	// Event Bindings
@@ -56,7 +56,7 @@ public:
 	}
 
 protected:
-	Vector2 ConvertWorldToScreen(const Vector2& WorldCoordinates, const Vector2& ScreenSize);
+	//Vector2 ConvertWorldToScreen(const Vector2& WorldCoordinates, const Vector2& ScreenSize);
 
 private:
 	// Events

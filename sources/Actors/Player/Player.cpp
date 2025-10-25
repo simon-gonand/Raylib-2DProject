@@ -12,6 +12,7 @@
 #include "../../Components/Physics/Box2D/Box2DPhysicsComponent.h"
 #include "../../Components/Camera/PlayerCameraComponent.h"
 #include "../../Helpers/Math/Vectors/Vectors.h"
+#include "../../Helpers/Globals/Globals.h"
 
 Player::Player()
 {
@@ -34,29 +35,40 @@ void Player::Initialize()
 	InputComp->BindInput<Player, &Player::Jump>("Jump", RELEASED, this);
 	InputComp->BindAxis<Player, &Player::Move>("Move", this);
 
+	Vector2 ScaleSizeMeter({ 0.5f, 0.5f });
 	b2PolygonShape PhysicsShape;
-	PhysicsShape.SetAsBox(25.0f, 25.0f);
+	PhysicsShape.SetAsBox(ScaleSizeMeter.x, ScaleSizeMeter.y);
 
 	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, &PhysicsShape);
 	AddComponent(PhysicsComp);
 
-	Vector3 ActorInitialPostion = { 0.0f, 200.0f, 0.0f};
+	Vector3 ActorInitialPostion = { 0.0f, -100.0f, 0.0f};
 
-	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, Vector2({ ActorInitialPostion.x, -ActorInitialPostion.y }));
+	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, Vector2({ ActorInitialPostion.x, ActorInitialPostion.y }), Vector2({ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }), 0.0f, 2.5f);
 	AddComponent(CameraComp);
 
 	SetActorLocation(ActorInitialPostion);
 	SetActorRotation({ 0.0f, 0.0f, 0.0f, 1.0f });
-	SetActorScale({ 50.0f, 50.0f });
+	SetActorScale({ ScaleSizeMeter.x * 2 * PTM_RATIO, ScaleSizeMeter.y * 2 * PTM_RATIO });
 
 	bIsJumping = false;
 }
 
 void Player::Draw(const Vector2& ScreenSize)
 {
+
 	Vector3 Scale = GetActorScale();
-	Vector2 DrawLocation = GetLocationToDraw(ScreenSize);
-	DrawRectangleGradientEx({ DrawLocation.x, DrawLocation.y, Scale.x, Scale.y}, RED, BLUE, WHITE, GREEN);
+	Vector3 DrawLocation = GetActorLocation();
+
+	// Draw centered to correspond to physics
+	DrawRectangleGradientEx(
+		{ DrawLocation.x - Scale.x / 2,
+		DrawLocation.y - Scale.y / 2,
+		Scale.x,
+		Scale.y},
+		RED, BLUE, WHITE, GREEN
+	);
+
 }
 
 void Player::Move(const Vector2& Scale)
@@ -100,5 +112,4 @@ void Player::Update(float DeltaTime)
 		NewVelocity = Vector2Add(NewVelocity, { 0.0f, 1.0f });
 	}
 	PhysicsComp->SetLinearVelocity(NewVelocity);
-
 }

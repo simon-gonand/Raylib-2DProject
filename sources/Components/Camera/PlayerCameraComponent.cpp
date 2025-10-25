@@ -12,6 +12,6 @@ void PlayerCameraComponent::Update(float Tick)
 	if (std::shared_ptr<Actor> CurrentOwner = GetOwner()) 
 	{
 		Vector3 ActorLocation = CurrentOwner->GetActorLocation();
-		Camera.target = Vector2({ ActorLocation.x, -ActorLocation.y });
+		Camera.target = Vector2({ ActorLocation.x, ActorLocation.y });
 	}
 }

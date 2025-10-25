@@ -12,7 +12,6 @@
 #include "Actors/Statics/Ground.h"
 #include "Managers/Camera/CameraManager.h"
 
-
 int main(void) 
 {
 	const int ScreenWidth = 1280;
@@ -25,10 +24,8 @@ int main(void)
 	std::shared_ptr<PhysicsWorldManager> WorldManager = std::shared_ptr<PhysicsWorldManager>(PhysicsWorldManager::Get(BOX2D));
 	if(WorldManager)
 	{
-		WorldManager->Initialize({ 0.0f, -9.81f, 0.0f});
+		WorldManager->Initialize({ 0.0f, 9.81f, 0.0f});
 	}
-
-	// TODO Player and Ground don't want to collide well, try to find why Player is going so far. Maybe be rendering the debug of the b2Shape
 
 	std::shared_ptr<Ground> G = std::make_shared<Ground>();
 	G->Initialize();

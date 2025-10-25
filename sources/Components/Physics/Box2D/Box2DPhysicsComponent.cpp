@@ -2,6 +2,7 @@
 
 #include "../../../Physics/Box2D/Box2DWorldManager.h"
 #include <iostream>
+#include "../../../Helpers/Globals/Globals.h"
 
 Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Shape* Shape, 
 	const b2Vec2& Position, const float& Density, const float& Friction)
@@ -49,7 +50,7 @@ void Box2DPhysicsComponent::Update(float Tick)
 	if (GetOwner()) 
 	{
 		b2Vec2 Position = Body->GetPosition();
-		GetOwner()->SetActorLocation({ Position.x, Position.y, 0.0f });
+		GetOwner()->SetActorLocation({ Position.x * PTM_RATIO, Position.y * PTM_RATIO, 0.0f });
 	}
 }
 
@@ -61,7 +62,7 @@ void Box2DPhysicsComponent::BindEvents(std::shared_ptr<Actor> InOwner)
 
 void Box2DPhysicsComponent::OnOwnerLocationSet(const Vector3& NewLocation)
 {
-	Body->SetTransform({ NewLocation.x, NewLocation.y }, Body->GetAngle());
+	Body->SetTransform({ NewLocation.x / PTM_RATIO, NewLocation.y / PTM_RATIO }, Body->GetAngle());
 }
 
 void Box2DPhysicsComponent::OnOwnerRotationSet(const Quaternion& NewRotation)
