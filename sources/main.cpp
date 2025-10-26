@@ -25,7 +25,7 @@ int main(void)
 	std::shared_ptr<PhysicsWorldManager> WorldManager = std::shared_ptr<PhysicsWorldManager>(PhysicsWorldManager::Get(BOX2D));
 	if(WorldManager)
 	{
-		WorldManager->Initialize({ 0.0f, 10.0f, 0.0f});
+		WorldManager->Initialize({ 0.0f, 9.81f, 0.0f});
 	}
 
 	std::shared_ptr<Ground> G = std::make_shared<Ground>();

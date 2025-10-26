@@ -25,7 +25,7 @@ private:
 	float TopSpeed = 10.0f;
 	float Acceleration = 1.0f;
 	float DecelerationScale = 3.0f;
-	float JumpSpeed = -10.0f;
+	float JumpSpeed = -20.0f;
 
 	Vector2 VelocityToAdd;
 	Vector2 LastVelocityIncrease;

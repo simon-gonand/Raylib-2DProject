@@ -40,7 +40,7 @@ void Player::Initialize()
 	PhysicsShape.SetAsBox(ScaleSizeMeter.x, ScaleSizeMeter.y);
 	Vector3 ActorInitialPostion = { 0.0f, -100.0f, 0.0f};
 
-	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, &PhysicsShape, b2Vec2(ActorInitialPostion.x, ActorInitialPostion.y), 1.0f, 0.3f);
+	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, &PhysicsShape, b2Vec2(ActorInitialPostion.x, ActorInitialPostion.y), 1.0f, 0.3f, 3.0f);
 	AddComponent(PhysicsComp);
 
 
