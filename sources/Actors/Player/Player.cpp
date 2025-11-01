@@ -116,7 +116,7 @@ void Player::UpdateJumpVelocity(Vector2& NewVelocity)
 	{
 		NewVelocity = Vector2Add(NewVelocity, { 0.0f, JumpSpeed });
 	}
-	else if(bWasJumpingLastFrame && !bIsJumping)
+	else if (bWasJumpingLastFrame && !bIsJumping && NewVelocity.y < 0.0f)
 	{
 		NewVelocity.y = NewVelocity.y / 1.5f;
 		bWasJumpingLastFrame = false;
