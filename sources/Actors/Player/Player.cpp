@@ -31,7 +31,7 @@ void Player::Initialize()
 
 	InputComp = std::make_shared<InputComponent>(PlayerSPtr);
 	AddComponent(InputComp);
-	InputComp->BindInput<Player, &Player::Jump>("Jump", PRESSED, this);
+	InputComp->BindInput<Player, &Player::Jump>("Jump", DOWN, this);
 	InputComp->BindInput<Player, &Player::Jump>("Jump", RELEASED, this);
 	InputComp->BindAxis<Player, &Player::Move>("Move", this);
 
@@ -91,18 +91,15 @@ void Player::Move(const Vector2& Scale)
 
 void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 {
-  	std::cout << "Jump: " << Scale << std::endl;
-	bIsJumping = Trigger == PRESSED;
+	bWasJumpingLastFrame = bIsJumping;
+	bIsJumping = Trigger == DOWN;
 }
 
 void Player::Update(float DeltaTime)
 {
 	Actor::Update(DeltaTime);
 	Vector2 NewVelocity = Vector2Add(PhysicsComp->GetLinearVelocity(), VelocityToAdd);
-	if (bIsJumping && FloatEquals(NewVelocity.y, 0.0f)) 
-	{
-		NewVelocity = Vector2Add(NewVelocity, { 0.0f, JumpSpeed });
-	}
+	UpdateJumpVelocity(NewVelocity);
 	if (bDecreaseVelocity) 
 	{
 		DeaccelerateAlpha += DeltaTime * DecelerationScale;
@@ -111,6 +108,19 @@ void Player::Update(float DeltaTime)
 	}
 	ClampVelocity(NewVelocity);
 	PhysicsComp->SetLinearVelocity(NewVelocity);
+}
+
+void Player::UpdateJumpVelocity(Vector2& NewVelocity)
+{
+	if (bIsJumping && FloatEquals(NewVelocity.y, 0.0f))
+	{
+		NewVelocity = Vector2Add(NewVelocity, { 0.0f, JumpSpeed });
+	}
+	else if(bWasJumpingLastFrame && !bIsJumping)
+	{
+		NewVelocity.y = NewVelocity.y / 1.5f;
+		bWasJumpingLastFrame = false;
+	}
 }
 
 void Player::ClampVelocity(Vector2& NewVelocity)

@@ -30,10 +30,12 @@ private:
 	Vector2 VelocityToAdd;
 	Vector2 LastVelocityIncrease;
 
+	bool bWasJumpingLastFrame = false;
 	bool bIsJumping = false;
 	bool bDecreaseVelocity = false;
 	float DeaccelerateAlpha = 0.0f;
 
+	void UpdateJumpVelocity(Vector2& NewVelocity);
 	void ClampVelocity(Vector2& NewVelocity);
 };
 
