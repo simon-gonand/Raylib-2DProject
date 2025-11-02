@@ -10,8 +10,6 @@ public:
 
 	virtual void Initialize() override;
 
-	virtual void Draw(const Vector2& ScreenSize) override;
-
 	void Move(const Vector2& Scale);
 	void Jump(const float& Scale, const enum InputTrigger& Trigger);
 
@@ -20,6 +18,7 @@ public:
 	std::shared_ptr<class InputComponent> InputComp;
 	std::shared_ptr<class PhysicsComponent> PhysicsComp;
 	std::shared_ptr<class PlayerCameraComponent> CameraComp;
+	std::shared_ptr<class RendererComponent> RendererComp;
 
 private:
 	float TopSpeed = 10.0f;

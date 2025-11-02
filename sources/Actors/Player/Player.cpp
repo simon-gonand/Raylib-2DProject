@@ -13,6 +13,7 @@
 #include "../../Components/Camera/PlayerCameraComponent.h"
 #include "../../Helpers/Math/Vectors/Vectors.h"
 #include "../../Helpers/Globals/Globals.h"
+#include "../../Components/Renderer/2DRenderer/SpriteSheet2DRenderer/SpriteSheet2DRendererComponent.h"
 
 Player::Player()
 {
@@ -43,32 +44,17 @@ void Player::Initialize()
 	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, &PhysicsShape, b2Vec2(ActorInitialPostion.x, ActorInitialPostion.y), 1.0f, 0.3f, 3.0f);
 	AddComponent(PhysicsComp);
 
-
 	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, Vector2({ ActorInitialPostion.x, ActorInitialPostion.y }), Vector2({ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }), 0.0f, 2.5f);
 	AddComponent(CameraComp);
+
+	RendererComp = std::make_shared<SpriteSheet2DRendererComponent>(PlayerSPtr, "");
+	AddComponent(RendererComp);
 
 	SetActorLocation(ActorInitialPostion);
 	SetActorRotation({ 0.0f, 0.0f, 0.0f, 1.0f });
 	SetActorScale({ ScaleSizeMeter.x * 2 * PTM_RATIO, ScaleSizeMeter.y * 2 * PTM_RATIO });
 
 	bIsJumping = false;
-}
-
-void Player::Draw(const Vector2& ScreenSize)
-{
-
-	Vector3 Scale = GetActorScale();
-	Vector3 DrawLocation = GetActorLocation();
-
-	// Draw centered to correspond to physics
-	DrawRectangleGradientEx(
-		{ DrawLocation.x - Scale.x / 2,
-		DrawLocation.y - Scale.y / 2,
-		Scale.x,
-		Scale.y},
-		RED, BLUE, WHITE, GREEN
-	);
-
 }
 
 void Player::Move(const Vector2& Scale)
