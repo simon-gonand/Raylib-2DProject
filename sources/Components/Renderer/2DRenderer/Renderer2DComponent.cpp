@@ -9,16 +9,16 @@ Renderer2DComponent::Renderer2DComponent(std::shared_ptr<Actor> Owner, const cha
 void Renderer2DComponent::Initialize()
 {
 	if (DefaultTexturePath && DefaultTexturePath[0])
-		DefaultTexture2D = &LoadTexture(DefaultTexturePath);
+		DefaultTexture2D = LoadTexture(DefaultTexturePath);
 }
 
 void Renderer2DComponent::Update(float DeltaTime)
 {
 	Vector3 DrawLocation = GetOwnerLocation();
 	Vector3 Scale = GetOwnerScale();
-	if (DefaultTexture2D && (DefaultTexture2D->width != 0.0f && DefaultTexture2D->height != 0.0f)) 
+	if (DefaultTexture2D.width > 0.0f && DefaultTexture2D.height > 0.0f)
 	{
-		DrawTexture(*DefaultTexture2D, DrawLocation.x, DrawLocation.y, Color({ 0 }));
+		DrawTexture(DefaultTexture2D, DrawLocation.x, DrawLocation.y, Color({ 0 }));
 	}
 	else 
 	{

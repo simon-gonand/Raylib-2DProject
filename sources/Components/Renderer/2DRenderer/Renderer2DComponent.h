@@ -8,7 +8,7 @@ public:
 	Renderer2DComponent(std::shared_ptr<Actor> Owner, const char* TexturePath);
 
 protected:
-	Texture2D* DefaultTexture2D = nullptr;
+	Texture2D DefaultTexture2D;
 
 	virtual void Initialize() override;
 	virtual void Update(float DeltaTime) override;

@@ -12,5 +12,5 @@ protected:
 	virtual void Update(float DeltaTime) override;
 
 private:
-	Texture2D* IdleAnimation;
+	Texture2D IdleAnimation;
 };
