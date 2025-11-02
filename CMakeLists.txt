@@ -58,6 +58,17 @@ target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 target_link_libraries(${PROJECT_NAME} PRIVATE box2d)
 
 ##########################################################################################
+# Copy assets to build directory
+##########################################################################################
+# Copy the assets folder in the out directory after each build
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/assets
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/assets
+    COMMENT "Copying assets to build directory..."
+)
+
+##########################################################################################
 # Project build settings
 ##########################################################################################
 
