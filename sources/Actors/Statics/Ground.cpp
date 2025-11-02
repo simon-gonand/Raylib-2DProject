@@ -20,18 +20,3 @@ void Ground::Initialize()
 	SetActorRotation({ 0.0f, 0.0f, 0.0f, 1.0f });
 	SetActorScale({ ScaleSizeMeter.x * 2 * PTM_RATIO, ScaleSizeMeter.y * 2 * PTM_RATIO });
 }
-
-void Ground::Draw(const Vector2& ScreenSize)
-{
-    Vector3 Scale = GetActorScale();
-    Vector3 DrawLocation = GetActorLocation();
-
-    Rectangle rect = {
-        DrawLocation.x,
-        DrawLocation.y,
-        Scale.x,
-        Scale.y
-    };
-
-    DrawRectanglePro(rect, { Scale.x / 2, Scale.y / 2 }, 0.0f, WHITE);
-}

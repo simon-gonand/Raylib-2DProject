@@ -35,8 +35,6 @@ public:
 	void SetActorScale(const Vector3& NewScale);
 
 	virtual void Update(float Tick);
-	//virtual Vector2 GetLocationToDraw(const Vector2& ScreenSize);
-	virtual void Draw(const Vector2& ScreenSize);
 
 	// Event Bindings
 	template<class C, void (C::* Function)(const Vector3&)>

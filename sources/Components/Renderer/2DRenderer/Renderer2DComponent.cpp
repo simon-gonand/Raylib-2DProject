@@ -8,7 +8,8 @@ Renderer2DComponent::Renderer2DComponent(std::shared_ptr<Actor> Owner, const cha
 
 void Renderer2DComponent::Initialize()
 {
-	DefaultTexture2D = &LoadTexture(DefaultTexturePath);
+	if (DefaultTexturePath && DefaultTexturePath[0])
+		DefaultTexture2D = &LoadTexture(DefaultTexturePath);
 }
 
 void Renderer2DComponent::Update(float DeltaTime)

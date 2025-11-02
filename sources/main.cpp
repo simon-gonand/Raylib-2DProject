@@ -54,7 +54,6 @@ int main(void)
 				for (std::shared_ptr<Actor> CurrentActor : Actors)
 				{
 					CurrentActor->Update(DeltaTime);
-					CurrentActor->Draw({ (float)GetScreenWidth(), (float)GetScreenHeight() }); // Might be manage by a renderer component ?
 				}
 			EndMode2D();
 		EndDrawing();
