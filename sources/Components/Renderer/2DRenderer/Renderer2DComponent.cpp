@@ -18,7 +18,7 @@ void Renderer2DComponent::Update(float DeltaTime)
 	Vector3 Scale = GetOwnerScale();
 	if (DefaultTexture2D.width > 0.0f && DefaultTexture2D.height > 0.0f)
 	{
-		DrawTexture(DefaultTexture2D, DrawLocation.x, DrawLocation.y, Color({ 0 }));
+		DrawTexture(DefaultTexture2D, DrawLocation.x, DrawLocation.y, WHITE);
 	}
 	else 
 	{

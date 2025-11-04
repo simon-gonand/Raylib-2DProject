@@ -29,7 +29,7 @@ public:
 	{
 	}
 
-	RetType Invoke(Args&... Arg) const
+	RetType Invoke(Args... Arg) const
 	{
 		if (Callback.second) {
 			return Callback.second(Callback.first, Arg...);

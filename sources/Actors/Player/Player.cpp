@@ -36,7 +36,7 @@ void Player::Initialize()
 	InputComp->BindInput<Player, &Player::Jump>("Jump", RELEASED, this);
 	InputComp->BindAxis<Player, &Player::Move>("Move", this);
 
-	Vector2 ScaleSizeMeter({ 2.5f, 2.5f });
+	Vector2 ScaleSizeMeter({ 3.0f, 3.0f });
 	b2PolygonShape PhysicsShape;
 	PhysicsShape.SetAsBox(ScaleSizeMeter.x, ScaleSizeMeter.y);
 	Vector3 ActorInitialPostion = { 0.0f, -100.0f, 0.0f};
