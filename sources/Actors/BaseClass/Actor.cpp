@@ -49,30 +49,39 @@ const Vector3& Actor::GetActorScale() const
 	return ActorTransform.scale;
 }
 
-void Actor::SetActorLocation(const Vector3& NewLocation)
+void Actor::SetActorLocation(const Vector3& NewLocation, bool bTriggerEvent)
 {
 	ActorTransform.translation = NewLocation;
-	for (DelegateBase<void, const Vector3&>* Delegate : OnLocationSet)
+	if (bTriggerEvent)
 	{
-		Delegate->Invoke(NewLocation);
+		for (DelegateBase<void, const Vector3&>* Delegate : OnLocationSet)
+		{
+			Delegate->Invoke(NewLocation);
+		}
 	}
 }
 
-void Actor::AddActorLocation(const Vector3& AddedLocation)
+void Actor::AddActorLocation(const Vector3& AddedLocation, bool bTriggerEvent)
 {
 	ActorTransform.translation = Vector3Add(ActorTransform.translation, AddedLocation);
-	for (DelegateBase<void, const Vector3&>* Delegate : OnLocationSet)
+	if (bTriggerEvent)
 	{
-		Delegate->Invoke(ActorTransform.translation);
+		for (DelegateBase<void, const Vector3&>* Delegate : OnLocationSet)
+		{
+			Delegate->Invoke(ActorTransform.translation);
+		}
 	}
 }
 
-void Actor::SetActorRotation(const Quaternion& NewRotation)
+void Actor::SetActorRotation(const Quaternion& NewRotation, bool bTriggerEvent)
 {
 	ActorTransform.rotation = NewRotation;
-	for (DelegateBase<void, const Quaternion&>* Delegate : OnRotationSet)
+	if (bTriggerEvent)
 	{
-		Delegate->Invoke(NewRotation);
+		for (DelegateBase<void, const Quaternion&>* Delegate : OnRotationSet)
+		{
+			Delegate->Invoke(NewRotation);
+		}
 	}
 }
 

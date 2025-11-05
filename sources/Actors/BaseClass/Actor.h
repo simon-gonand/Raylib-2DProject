@@ -29,9 +29,9 @@ public:
 	const Quaternion& GetActorRotation() const;
 	const Vector3& GetActorScale() const;
 
-	void SetActorLocation(const Vector3& NewLocation);
-	void AddActorLocation(const Vector3& AddedLocation);
-	void SetActorRotation(const Quaternion& NewRotation);
+	void SetActorLocation(const Vector3& NewLocation, bool bTriggerEvent = true);
+	void AddActorLocation(const Vector3& AddedLocation, bool bTriggerEvent = true);
+	void SetActorRotation(const Quaternion& NewRotation, bool bTriggerEvent = true);
 	void SetActorScale(const Vector3& NewScale);
 
 	virtual void Update(float Tick);

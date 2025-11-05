@@ -18,5 +18,9 @@ public:
 
 	virtual void Initialize() {};
 	virtual void Update(float Tick) = 0;
+
+	Vector3 GetOwnerLocation() const;
+	Quaternion GetOwnerRotation() const;
+	Vector3 GetOwnerScale() const;
 };
 

@@ -8,9 +8,10 @@ class Box2DPhysicsComponent : public PhysicsComponent
 {
 public:
 	Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Shape* Shape, 
-		const b2Vec2& Position = b2Vec2_zero, const float& Density = 1.0f, const float& Friction = 0.3f, const float& GravityScale = 1.0f);
+		const float& Density = 1.0f, const float& Friction = 0.3f, const float& GravityScale = 1.0f, 
+		const Vector3& InLocation = { 0.0f }, const Quaternion& InRotation = { 0.0f }, const Vector3& InScale = { 1.0f, 1.0f, 1.0f });
 	
-	virtual Vector2 GetWorldLocation() const override;
+	virtual Vector2 GetWorldPhysicsLocation() const override;
 	virtual Vector2 GetLinearVelocity() const override;
 
 	virtual void SetLinearVelocity(const Vector2& NewVelocity) override;

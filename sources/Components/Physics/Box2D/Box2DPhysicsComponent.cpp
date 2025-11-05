@@ -5,12 +5,14 @@
 #include "../../../Helpers/Globals/Globals.h"
 
 Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Shape* Shape, 
-	const b2Vec2& Position, const float& Density, const float& Friction, const float& GravityScale)
-	: PhysicsComponent(InOwner)
+	const float& Density, const float& Friction, const float& GravityScale, 
+	const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale)
+	: PhysicsComponent(InOwner, InLocation, InRotation, InScale)
 {
+	Vector3 WorldLocation = GetWorldLocation();
 	BodyDef = new b2BodyDef();
 	BodyDef->type = Type;
-	BodyDef->position = Position;
+	BodyDef->position = b2Vec2(WorldLocation.x, WorldLocation.y);
 	BodyDef->gravityScale = GravityScale;
 	Body = ((Box2DWorldManager*)Box2DWorldManager::Get(BOX2D).get())->CreateBody(BodyDef);
 	BodyShape = Shape;
@@ -23,7 +25,7 @@ Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2B
 	BindEvents(InOwner);
 }
 
-Vector2 Box2DPhysicsComponent::GetWorldLocation() const
+Vector2 Box2DPhysicsComponent::GetWorldPhysicsLocation() const
 {
 	b2Vec2 Position = Body->GetPosition();
 	return { Position.x, Position.y};
@@ -51,7 +53,9 @@ void Box2DPhysicsComponent::Update(float Tick)
 	if (GetOwner()) 
 	{
 		b2Vec2 Position = Body->GetPosition();
-		GetOwner()->SetActorLocation({ Position.x * PTM_RATIO, Position.y * PTM_RATIO, 0.0f });
+		Vector3 VPosition({ Position.x * PTM_RATIO, Position.y * PTM_RATIO });
+		Vector3 WorldPosition = Vector3Add(VPosition, GetComponentLocation());
+		GetOwner()->SetActorLocation(WorldPosition, false);
 	}
 }
 
@@ -63,11 +67,12 @@ void Box2DPhysicsComponent::BindEvents(std::shared_ptr<Actor> InOwner)
 
 void Box2DPhysicsComponent::OnOwnerLocationSet(const Vector3& NewLocation)
 {
-	Body->SetTransform({ NewLocation.x / PTM_RATIO, NewLocation.y / PTM_RATIO }, Body->GetAngle());
+	Vector3 RelativeLocation = GetComponentLocation();
+	Body->SetTransform({ (NewLocation.x + RelativeLocation.x) / PTM_RATIO, (NewLocation.y + RelativeLocation.y) / PTM_RATIO }, Body->GetAngle());
 }
 
 void Box2DPhysicsComponent::OnOwnerRotationSet(const Quaternion& NewRotation)
 {
-	float Angle = std::acos(NewRotation.w) * 2;
+	float Angle = (NewRotation.y + GetComponentRotation().y) * 3.14 / 180;
 	Body->SetTransform(Body->GetPosition(), Angle);
 }
