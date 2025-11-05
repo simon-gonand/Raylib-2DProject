@@ -26,6 +26,7 @@ int main(void)
 	if(WorldManager)
 	{
 		WorldManager->Initialize({ 0.0f, 9.81f, 0.0f});
+		WorldManager->SetDebugMode(true);
 	}
 
 	std::shared_ptr<Ground> G = std::make_shared<Ground>();
@@ -55,6 +56,7 @@ int main(void)
 				{
 					CurrentActor->Update(DeltaTime);
 				}
+				WorldManager->DrawDebug();
 			EndMode2D();
 		EndDrawing();
 	}

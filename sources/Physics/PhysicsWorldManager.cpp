@@ -22,3 +22,8 @@ std::shared_ptr<PhysicsWorldManager> PhysicsWorldManager::Get(PhysicsEngineType 
 
     return Instance;
 }
+
+void PhysicsWorldManager::SetDebugMode(bool bInDebug)
+{
+    bDebugMode = bInDebug;
+}
