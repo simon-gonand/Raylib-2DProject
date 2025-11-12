@@ -98,3 +98,7 @@ void Actor::Update(float Tick)
 			Component->Update(Tick);
 	}
 }
+
+void Actor::PostUpdate()
+{
+}

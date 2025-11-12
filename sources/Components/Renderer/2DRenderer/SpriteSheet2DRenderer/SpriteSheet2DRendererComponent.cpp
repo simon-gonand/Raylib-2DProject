@@ -28,6 +28,20 @@ void SpriteSheet2DRendererComponent::Update(float DeltaTime)
 		{
 			Rectangle Source = CurrentAnimation->GetAnimationSourceRect();
 
+			if (bInvertXDraw != bIsDrawnInverted) 
+			{
+				Vector3 ActualLocation = GetComponentLocation();
+				ActualLocation.x = -ActualLocation.x;
+				SetComponentLocation(ActualLocation);
+			}
+
+			bIsDrawnInverted = bInvertXDraw;
+			if (bInvertXDraw) 
+			{
+				Source.width = -Source.width;
+			}
+			
+
 			Rectangle Destination = {
 				DrawLocation.x,
 				DrawLocation.y,

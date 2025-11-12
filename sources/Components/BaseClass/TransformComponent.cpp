@@ -8,6 +8,21 @@ TransformComponent::TransformComponent(std::shared_ptr<Actor> InOwner, const Vec
 	RelativeTransform.scale = InScale;
 }
 
+void TransformComponent::SetComponentLocation(const Vector3& NewLocation)
+{
+	RelativeTransform.translation = NewLocation;
+}
+
+void TransformComponent::SetComponentRotation(const Quaternion& NewRotation)
+{
+	RelativeTransform.rotation = NewRotation;
+}
+
+void TransformComponent::SetComponentScale(const Vector3& NewScale)
+{
+	RelativeTransform.scale = NewScale;
+}
+
 const Vector3& TransformComponent::GetComponentLocation() const
 {
 	return RelativeTransform.translation;

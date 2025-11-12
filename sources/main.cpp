@@ -55,6 +55,7 @@ int main(void)
 				for (std::shared_ptr<Actor> CurrentActor : Actors)
 				{
 					CurrentActor->Update(DeltaTime);
+					CurrentActor->PostUpdate();
 				}
 				WorldManager->DrawDebug();
 			EndMode2D();

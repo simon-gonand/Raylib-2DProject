@@ -100,12 +100,20 @@ void Player::Update(float DeltaTime)
 	}
 	ClampVelocity(NewVelocity);
 	PhysicsComp->SetLinearVelocity(NewVelocity);
-	if (FloatEquals(NewVelocity.y, 0.0f)) {
+}
+
+void Player::PostUpdate()
+{
+	Vector2 CurrentVelocity = PhysicsComp->GetLinearVelocity();
+	if (FloatEquals(CurrentVelocity.y, 0.0f)) {
 		CurrentMovementMode = EMovementMode::GROUND;
 	}
 	else {
 		CurrentMovementMode = EMovementMode::FALLING;
 	}
+
+	Vector2 NormalizedVelocity = Vector2Normalize(CurrentVelocity);
+	RendererComp->ApplyDirectionToRender({ NormalizedVelocity.x, NormalizedVelocity.y});
 }
 
 EMovementMode Player::GetCurrentMovementMode() const

@@ -20,6 +20,7 @@ public:
 	void Jump(const float& Scale, const enum InputTrigger& Trigger);
 
 	virtual void Update(float DeltaTime) override;
+	virtual void PostUpdate() override;
 
 	EMovementMode GetCurrentMovementMode() const;
 	

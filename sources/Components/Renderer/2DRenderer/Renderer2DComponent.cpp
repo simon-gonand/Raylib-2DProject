@@ -8,6 +8,11 @@ Renderer2DComponent::Renderer2DComponent(std::shared_ptr<Actor> Owner, const cha
 	Size = InSize;
 }
 
+void Renderer2DComponent::SetInvertedDraw(bool bInvert)
+{
+	bInvertXDraw = bInvert;
+}
+
 void Renderer2DComponent::Initialize()
 {
 	if (DefaultTexturePath && DefaultTexturePath[0])
@@ -21,7 +26,21 @@ void Renderer2DComponent::Update(float DeltaTime)
 	Vector2 ScaleSize = GetSizeScaledWithRatio();
 	if (DefaultTexture2D.width > 0.0f && DefaultTexture2D.height > 0.0f)
 	{
-		DrawTextureEx(DefaultTexture2D, { DrawLocation.x, DrawLocation.y }, DrawRotation.x, 1.0f, WHITE);
+		Rectangle source = {
+			0,
+			0,
+			bInvertXDraw ? -DefaultTexture2D.width : DefaultTexture2D.width,
+			DefaultTexture2D.height
+		};
+
+		Rectangle destination = {
+			DrawLocation.x,
+			DrawLocation.y,
+			ScaleSize.x,
+			ScaleSize.y
+		};
+
+		DrawTexturePro(DefaultTexture2D, source, destination, { ScaleSize.x / 2, ScaleSize.y / 2 }, DrawRotation.x, WHITE);
 	}
 	else 
 	{
@@ -30,12 +49,22 @@ void Renderer2DComponent::Update(float DeltaTime)
 		Rectangle rect = {
 			DrawLocation.x,
 			DrawLocation.y,
-			ScaleSize.x,
+			bInvertXDraw ? -ScaleSize.x : ScaleSize.x,
 			ScaleSize.y
 		};
 
 		DrawRectanglePro(rect, { ScaleSize.x / 2, ScaleSize.y / 2 }, DrawRotation.x, WHITE);
 	}
+	
+	bIsDrawnInverted = bInvertXDraw;
+}
+
+void Renderer2DComponent::ApplyDirectionToRender(const Vector3& Dir)
+{
+	if (Dir.x < 0.0f)
+		bInvertXDraw = true;
+	else if (Dir.x > 0.0f)
+		bInvertXDraw = false;
 }
 
 Vector2 Renderer2DComponent::GetSizeScaledWithRatio() const

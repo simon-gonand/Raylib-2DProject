@@ -35,6 +35,7 @@ public:
 	void SetActorScale(const Vector3& NewScale);
 
 	virtual void Update(float Tick);
+	virtual void PostUpdate();
 
 	// Event Bindings
 	template<class C, void (C::* Function)(const Vector3&)>
