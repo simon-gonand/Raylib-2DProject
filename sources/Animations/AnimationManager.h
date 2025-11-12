@@ -14,13 +14,15 @@ public:
 	std::shared_ptr<Animation> GetCurrentAnimation() const;
 	void ResetAnimationState();
 
-	void Update(const float& DeltaTime);
+	virtual void Update(const float& DeltaTime);
+
+protected:
+	const char* CurrentAnimationState = nullptr;
 
 private:
 	std::unordered_map<const char*, std::shared_ptr<Animation>> AnimationBank;
 
 	std::shared_ptr<Animation> CurrentPlayedAnimation = nullptr;
 
-	const char* CurrentAnimationState = nullptr;
 	const char* InitialAnimationState = nullptr;
 };

@@ -14,7 +14,7 @@
 #include "../../Helpers/Math/Vectors/Vectors.h"
 #include "../../Helpers/Globals/Globals.h"
 #include "../../Components/Renderer/2DRenderer/SpriteSheet2DRenderer/SpriteSheet2DRendererComponent.h"
-#include "../../Animations/2D/SpriteSheet2DAnimationManager.h"
+#include "Animation/PlayerAnimationManager.h"
 
 Player::Player()
 {
@@ -57,6 +57,7 @@ void Player::Initialize()
 	SetActorScale({1.0f, 1.0f});
 
 	bIsJumping = false;
+	CurrentMovementMode = EMovementMode::FALLING;
 }
 
 void Player::Move(const Vector2& Scale)
@@ -83,6 +84,7 @@ void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 {
 	bWasJumpingLastFrame = bIsJumping;
 	bIsJumping = Trigger == DOWN;
+	//CurrentMovementMode = EMovementMode::FALLING;
 }
 
 void Player::Update(float DeltaTime)
@@ -98,6 +100,17 @@ void Player::Update(float DeltaTime)
 	}
 	ClampVelocity(NewVelocity);
 	PhysicsComp->SetLinearVelocity(NewVelocity);
+	if (FloatEquals(NewVelocity.y, 0.0f)) {
+		CurrentMovementMode = EMovementMode::GROUND;
+	}
+	else {
+		CurrentMovementMode = EMovementMode::FALLING;
+	}
+}
+
+EMovementMode Player::GetCurrentMovementMode() const
+{
+	return CurrentMovementMode;
 }
 
 void Player::UpdateJumpVelocity(Vector2& NewVelocity)
@@ -129,8 +142,9 @@ void Player::ClampVelocity(Vector2& NewVelocity)
 
 std::shared_ptr<AnimationManager> Player::CreatePlayerAnimationManager()
 {
-	std::shared_ptr<SpriteSheet2DAnimationManager> Result = std::make_shared<SpriteSheet2DAnimationManager>();
+	std::shared_ptr<PlayerAnimationManager> Result = std::make_shared<PlayerAnimationManager>();
+	Result->Initialize(std::static_pointer_cast<Player>(shared_from_this()));
 	Result->AddAnimationFromTexture("Idle", "assets/Characters/Player/SpriteSheets/_Idle.png", 10, 1, 0.15f, true, 0, 9);
-
+	Result->AddAnimationFromTexture("Jump", "assets/Characters/Player/SpriteSheets/_Jump.png", 3, 1, 0.05f, true, 0, 2);
 	return Result;
 }

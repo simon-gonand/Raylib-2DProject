@@ -2,6 +2,12 @@
 
 #include "../BaseClass/Actor.h"
 
+enum class EMovementMode : int
+{
+	GROUND,
+	FALLING
+};
+
 class Player: public Actor
 {
 public:
@@ -15,12 +21,14 @@ public:
 
 	virtual void Update(float DeltaTime) override;
 
+	EMovementMode GetCurrentMovementMode() const;
+
+private:
 	std::shared_ptr<class InputComponent> InputComp;
 	std::shared_ptr<class PhysicsComponent> PhysicsComp;
 	std::shared_ptr<class PlayerCameraComponent> CameraComp;
 	std::shared_ptr<class RendererComponent> RendererComp;
 
-private:
 	float TopSpeed = 10.0f;
 	float Acceleration = 1.0f;
 	float DecelerationScale = 3.0f;
@@ -36,6 +44,8 @@ private:
 
 	void UpdateJumpVelocity(Vector2& NewVelocity);
 	void ClampVelocity(Vector2& NewVelocity);
+
+	EMovementMode CurrentMovementMode;
 
 	std::shared_ptr<class AnimationManager> CreatePlayerAnimationManager();
 };
