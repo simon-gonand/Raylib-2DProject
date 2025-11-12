@@ -113,6 +113,11 @@ EMovementMode Player::GetCurrentMovementMode() const
 	return CurrentMovementMode;
 }
 
+std::shared_ptr<class PhysicsComponent> Player::GetPhysicsComponent()
+{
+	return PhysicsComp;
+}
+
 void Player::UpdateJumpVelocity(Vector2& NewVelocity)
 {
 	if (bIsJumping && FloatEquals(NewVelocity.y, 0.0f))
@@ -146,5 +151,6 @@ std::shared_ptr<AnimationManager> Player::CreatePlayerAnimationManager()
 	Result->Initialize(std::static_pointer_cast<Player>(shared_from_this()));
 	Result->AddAnimationFromTexture("Idle", "assets/Characters/Player/SpriteSheets/_Idle.png", 10, 1, 0.15f, true, 0, 9);
 	Result->AddAnimationFromTexture("Jump", "assets/Characters/Player/SpriteSheets/_Jump.png", 3, 1, 0.05f, true, 0, 2);
+	Result->AddAnimationFromTexture("Movement", "assets/Characters/Player/SpriteSheets/_Run.png", 10, 1, 0.05f, true, 0, 9);
 	return Result;
 }

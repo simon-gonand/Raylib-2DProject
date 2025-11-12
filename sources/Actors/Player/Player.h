@@ -22,10 +22,12 @@ public:
 	virtual void Update(float DeltaTime) override;
 
 	EMovementMode GetCurrentMovementMode() const;
+	
+	std::shared_ptr<class PhysicsComponent> GetPhysicsComponent();
 
 private:
 	std::shared_ptr<class InputComponent> InputComp;
-	std::shared_ptr<class PhysicsComponent> PhysicsComp;
+	std::shared_ptr<PhysicsComponent> PhysicsComp;
 	std::shared_ptr<class PlayerCameraComponent> CameraComp;
 	std::shared_ptr<class RendererComponent> RendererComp;
 
