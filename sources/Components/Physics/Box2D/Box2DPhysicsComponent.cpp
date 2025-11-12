@@ -5,7 +5,7 @@
 #include "../../../Helpers/Globals/Globals.h"
 
 Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Shape* Shape, 
-	const float& Density, const float& Friction, const float& GravityScale, 
+	const float& Density, const float& Friction, const float& GravityScale, bool bFixedRotation,
 	const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale)
 	: PhysicsComponent(InOwner, InLocation, InRotation, InScale)
 {
@@ -14,6 +14,7 @@ Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2B
 	BodyDef->type = Type;
 	BodyDef->position = b2Vec2(WorldLocation.x, WorldLocation.y);
 	BodyDef->gravityScale = GravityScale;
+	BodyDef->fixedRotation = bFixedRotation;
 	Body = ((Box2DWorldManager*)Box2DWorldManager::Get(BOX2D).get())->CreateBody(BodyDef);
 	BodyShape = Shape;
 	FixtureDef = new b2FixtureDef();

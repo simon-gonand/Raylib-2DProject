@@ -8,7 +8,7 @@ class Box2DPhysicsComponent : public PhysicsComponent
 {
 public:
 	Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Shape* Shape, 
-		const float& Density = 1.0f, const float& Friction = 0.3f, const float& GravityScale = 1.0f, 
+		const float& Density = 1.0f, const float& Friction = 0.3f, const float& GravityScale = 1.0f, bool bFixedRotation = false,
 		const Vector3& InLocation = { 0.0f }, const Quaternion& InRotation = { 0.0f }, const Vector3& InScale = { 1.0f, 1.0f, 1.0f });
 	
 	virtual Vector2 GetWorldPhysicsLocation() const override;
