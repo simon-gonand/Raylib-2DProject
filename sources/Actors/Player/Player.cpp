@@ -14,6 +14,7 @@
 #include "../../Helpers/Math/Vectors/Vectors.h"
 #include "../../Helpers/Globals/Globals.h"
 #include "../../Components/Renderer/2DRenderer/SpriteSheet2DRenderer/SpriteSheet2DRendererComponent.h"
+#include "../../Animations/2D/SpriteSheet2DAnimationManager.h"
 
 Player::Player()
 {
@@ -46,7 +47,9 @@ void Player::Initialize()
 	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, Vector2({ ActorInitialPostion.x, ActorInitialPostion.y }), Vector2({ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }), 0.0f, 2.5f);
 	AddComponent(CameraComp);
 
-	RendererComp = std::make_shared<SpriteSheet2DRendererComponent>(PlayerSPtr, "", Vector3({ 2.5f, -15.0f }), QuaternionIdentity(), Vector3({1.0f, 1.0f}), Vector2({3.0f, 3.0f}));
+	// Create Animation Manager + add Idle animation
+	std::shared_ptr<AnimationManager> AnimManager = CreatePlayerAnimationManager();
+	RendererComp = std::make_shared<SpriteSheet2DRendererComponent>(PlayerSPtr, "", Vector3({ 2.5f, -15.0f }), QuaternionIdentity(), Vector3({1.0f, 1.0f}), Vector2({3.0f, 3.0f}), AnimManager);
 	AddComponent(RendererComp);
 
 	SetActorLocation(ActorInitialPostion);
@@ -66,6 +69,8 @@ void Player::Move(const Vector2& Scale)
 		VelocityToAdd.x = Scale.x > 0.0f ? Acceleration : -Acceleration;
 		LastVelocityIncrease = PhysicsComp->GetLinearVelocity();
 		bDecreaseVelocity = false;
+
+		// Animation
 	}
 	else 
 	{
@@ -120,4 +125,12 @@ void Player::ClampVelocity(Vector2& NewVelocity)
 	{
 		NewVelocity.x = Clamp(NewVelocity.x, -TopSpeed, 0.0f);
 	}
+}
+
+std::shared_ptr<AnimationManager> Player::CreatePlayerAnimationManager()
+{
+	std::shared_ptr<SpriteSheet2DAnimationManager> Result = std::make_shared<SpriteSheet2DAnimationManager>();
+	Result->AddAnimationFromTexture("Idle", "assets/Characters/Player/SpriteSheets/_Idle.png", 10, 1, 0.15f, true, 0, 9);
+
+	return Result;
 }

@@ -1,18 +1,15 @@
 #include "SpriteSheet2DRendererComponent.h"
 #include <raymath.h>
 
-SpriteSheet2DRendererComponent::SpriteSheet2DRendererComponent(std::shared_ptr<Actor> Owner, const char* DefaultTexturePath, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale, const Vector2& InSize) :
-	Renderer2DComponent(Owner, DefaultTexturePath, InLocation, InRotation, InScale, InSize)
+SpriteSheet2DRendererComponent::SpriteSheet2DRendererComponent(std::shared_ptr<Actor> Owner, const char* DefaultTexturePath, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale, const Vector2& InSize, std::shared_ptr<AnimationManager> InAnimManager) :
+	Renderer2DComponent(Owner, DefaultTexturePath, InLocation, InRotation, InScale, InSize, InAnimManager)
 {
 }
 
 void SpriteSheet2DRendererComponent::Initialize()
 {
-	Texture2D IdleAnimationTexture = LoadTexture("assets/Characters/Player/SpriteSheets/_Idle.png");
-	if (IdleAnimationTexture.width > 0.0f && IdleAnimationTexture.height > 0.0f) 
-	{
-		IdleAnimation = new SpriteSheet2DAnimation(IdleAnimationTexture, 10, 1, 0.15f, true, 0, 9);
-		IdleAnimation->StartAnimation();
+	if (AnimManager) {
+		AnimManager->ResetAnimationState();
 	}
 }
 
@@ -23,20 +20,27 @@ void SpriteSheet2DRendererComponent::Update(float DeltaTime)
 	Quaternion DrawRotation = GetWorldRotation();
 	Vector2 SizeScaled = GetSizeScaledWithRatio();
 
-
-	if (IdleAnimation)
+	// No Idle Animation no more use Animation Manager
+	if (AnimManager)
 	{
-		IdleAnimation->Update(DeltaTime);
-		Rectangle Source = IdleAnimation->GetAnimationSourceRect();
+		AnimManager->Update(DeltaTime);
+		if (std::shared_ptr<SpriteSheet2DAnimation> CurrentAnimation = std::static_pointer_cast<SpriteSheet2DAnimation>(AnimManager->GetCurrentAnimation())) 
+		{
+			Rectangle Source = CurrentAnimation->GetAnimationSourceRect();
 
-		Rectangle Destination = {
-			DrawLocation.x,
-			DrawLocation.y,
-			SizeScaled.x,
-			SizeScaled.y
-		};
+			Rectangle Destination = {
+				DrawLocation.x,
+				DrawLocation.y,
+				SizeScaled.x,
+				SizeScaled.y
+			};
 
-		DrawTexturePro(IdleAnimation->GetAnimationTexture(), Source, Destination, { SizeScaled.x / 2, SizeScaled.y / 2 }, DrawRotation.y, WHITE);
+			DrawTexturePro(CurrentAnimation->GetAnimationTexture(), Source, Destination, { SizeScaled.x / 2, SizeScaled.y / 2 }, DrawRotation.y, WHITE);
+		}
+		else
+		{
+			Renderer2DComponent::Update(DeltaTime);
+		}
 	}
 	else 
 	{

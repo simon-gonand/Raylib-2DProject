@@ -1,8 +1,8 @@
 #include "Renderer2DComponent.h"
 #include "../../../Helpers/Globals/Globals.h"
 
-Renderer2DComponent::Renderer2DComponent(std::shared_ptr<Actor> Owner, const char* TexturePath, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale, const Vector2& InSize)
-	:RendererComponent(Owner, InLocation, InRotation, InScale)
+Renderer2DComponent::Renderer2DComponent(std::shared_ptr<Actor> Owner, const char* TexturePath, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale, const Vector2& InSize, std::shared_ptr<AnimationManager> InAnimManager)
+	:RendererComponent(Owner, InLocation, InRotation, InScale, InAnimManager)
 {
 	DefaultTexturePath = TexturePath;
 	Size = InSize;

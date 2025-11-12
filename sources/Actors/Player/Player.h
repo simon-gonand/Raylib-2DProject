@@ -36,5 +36,7 @@ private:
 
 	void UpdateJumpVelocity(Vector2& NewVelocity);
 	void ClampVelocity(Vector2& NewVelocity);
+
+	std::shared_ptr<class AnimationManager> CreatePlayerAnimationManager();
 };
 

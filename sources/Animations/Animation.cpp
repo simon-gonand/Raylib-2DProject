@@ -1,9 +1,4 @@
 #include "Animation.h"
-#include "Animation.h"
-#include "Animation.h"
-#include "Animation.h"
-#include "Animation.h"
-#include "Animation.h"
 
 Animation::Animation(float InDuration, bool bInIsLooping) 
 {
