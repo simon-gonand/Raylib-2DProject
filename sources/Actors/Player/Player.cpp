@@ -113,7 +113,14 @@ void Player::PostUpdate()
 	}
 
 	Vector2 NormalizedVelocity = Vector2Normalize(CurrentVelocity);
-	RendererComp->ApplyDirectionToRender({ NormalizedVelocity.x, NormalizedVelocity.y});
+	Quaternion RendererComponentRotation = RendererComp->GetComponentRotation();
+	if (NormalizedVelocity.x < 0.0f) {
+		RendererComponentRotation.y = -180.0f;
+	}
+	else if (NormalizedVelocity.x > 0.0f) {
+		RendererComponentRotation.y = 0.0f;
+	}
+	RendererComp->SetComponentRotation(RendererComponentRotation);
 }
 
 EMovementMode Player::GetCurrentMovementMode() const

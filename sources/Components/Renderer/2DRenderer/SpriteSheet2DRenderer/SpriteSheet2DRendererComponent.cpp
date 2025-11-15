@@ -28,15 +28,15 @@ void SpriteSheet2DRendererComponent::Update(float DeltaTime)
 		{
 			Rectangle Source = CurrentAnimation->GetAnimationSourceRect();
 
-			if (bInvertXDraw != bIsDrawnInverted) 
+			if (DrawRotation.y < 0.0f != bIsDrawnInverted) 
 			{
 				Vector3 ActualLocation = GetComponentLocation();
 				ActualLocation.x = -ActualLocation.x;
 				SetComponentLocation(ActualLocation);
 			}
 
-			bIsDrawnInverted = bInvertXDraw;
-			if (bInvertXDraw) 
+			bIsDrawnInverted = DrawRotation.y < 0.0f;
+			if (DrawRotation.y < 0.0f)
 			{
 				Source.width = -Source.width;
 			}
@@ -49,7 +49,7 @@ void SpriteSheet2DRendererComponent::Update(float DeltaTime)
 				SizeScaled.y
 			};
 
-			DrawTexturePro(CurrentAnimation->GetAnimationTexture(), Source, Destination, { SizeScaled.x / 2, SizeScaled.y / 2 }, DrawRotation.y, WHITE);
+			DrawTexturePro(CurrentAnimation->GetAnimationTexture(), Source, Destination, { SizeScaled.x / 2, SizeScaled.y / 2 }, DrawRotation.x, WHITE);
 		}
 		else
 		{
