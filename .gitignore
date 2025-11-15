@@ -41,6 +41,9 @@ _deps/
 #Built files
 out/
 
+#Specific Personal files
+Features.txt
+
 #CMake Projects
 ALL_BUILD.*
 INSTALL.*
