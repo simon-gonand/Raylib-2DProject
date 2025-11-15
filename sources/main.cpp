@@ -12,6 +12,7 @@
 #include "Actors/Statics/Ground.h"
 #include "Managers/Camera/CameraManager.h"
 #include "Helpers/Globals/Globals.h"
+#include "Actors/TileMap/TileMap.h"
 
 int main(void) 
 {
@@ -26,7 +27,7 @@ int main(void)
 	if(WorldManager)
 	{
 		WorldManager->Initialize({ 0.0f, 9.81f, 0.0f});
-		WorldManager->SetDebugMode(true);
+		WorldManager->SetDebugMode(false);
 	}
 
 	std::shared_ptr<Ground> G = std::make_shared<Ground>();
@@ -36,6 +37,12 @@ int main(void)
 	std::shared_ptr<Player> P = std::make_shared<Player>();
 	P->Initialize();
 	Actors.push_back(P);
+
+	Vector2 TileSize = { 16.0f, 16.0f };
+	std::shared_ptr<TileMap> TM = std::make_shared<TileMap>(TileSize);
+	TM->Initialize();
+	TM->SetActorScale({ 0.05f, 0.05f });
+	Actors.push_back(TM);
 
 	// Target FPS
 	SetTargetFPS(60);

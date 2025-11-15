@@ -26,6 +26,8 @@ Player::~Player()
 
 void Player::Initialize()
 {
+	Actor::Initialize();
+
 	std::shared_ptr<Actor> PlayerSPtr = shared_from_this();
 
 	VelocityToAdd = Vector2Zero();

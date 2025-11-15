@@ -14,7 +14,7 @@ void Ground::Initialize()
 	AddComponent(PhysicsComp);
 
 	RendererComp = std::make_shared<Renderer2DComponent>(shared_from_this(), "", Vector3Zero(), QuaternionIdentity(), Vector3({ 1.0f, 1.0f}), Vector2({20.0f, 1.0f}));
-    AddComponent(RendererComp);
+    //AddComponent(RendererComp);
 
 	SetActorLocation({ 0.0f, 0.0f, 0.0f });
 	SetActorRotation({ 0.0f, 0.0f, 0.0f, 1.0f });
