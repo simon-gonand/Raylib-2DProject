@@ -26,14 +26,6 @@ void TileMapRendererComponent::Update(float DeltaTime)
 			TileSheetTileInfo SheetTileInfo = TileMapOwner->GetTileSheetInfoForTile(Tile);
 			Vector2 TileDrawLocation = Vector2Add(DrawLocation, Tile.Location);
 
-			Rectangle SourceTest
-			{
-				16.0f,
-				16.0f,
-				16.0f,
-				16.0f
-			};
-
 			Rectangle DrawTileDestination
 			{
 				TileDrawLocation.x,
