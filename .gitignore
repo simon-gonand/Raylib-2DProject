@@ -44,6 +44,9 @@ out/
 #Specific Personal files
 Features.txt
 
+#Tiled Project
+TileMapProject/
+
 #CMake Projects
 ALL_BUILD.*
 INSTALL.*
