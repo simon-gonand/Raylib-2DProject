@@ -40,8 +40,6 @@ void TileMap::Initialize()
 	SetActorLocation({0.0f});
 	SetActorRotation(QuaternionIdentity());
 	SetActorScale({ 1.0f, 1.0f });
-
-	//FillTest();
 }
 
 const Vector2& TileMap::GetTileSize() const
@@ -77,32 +75,6 @@ TileSheetTileInfo TileMap::GetTileSheetInfoForTile(const TileInfo& InTile)
 void TileMap::Update(float DeltaTime)
 {
 	Actor::Update(DeltaTime);
-}
-
-void TileMap::FillTest()
-{
-	Texture2D SheetTexture = LoadTexture("assets/TileMap/_Brown_Tile_Terrain.png");
-	std::vector<Rectangle> SheetTileRectangles;
-	SheetTileRectangles.push_back({
-			16.0f,
-			16.0f,
-			TileSize.x,
-			TileSize.y
-		});
-	Sheets.push_back({
-			SheetTexture,
-			0,
-			SheetTileRectangles
-		});
-
-	std::vector<TileInfo> TileInfo;
-	TileInfo.push_back({
-			{0.0f},
-			0
-		});
-	Layers.push_back({
-			TileInfo
-		});
 }
 
 void TileMap::FillTileSheets(rapidxml::xml_node<>* InMapNode)

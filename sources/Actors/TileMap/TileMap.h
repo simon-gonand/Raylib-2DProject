@@ -61,8 +61,6 @@ private:
 
 	TileSheet* LastUsedTileSheet = nullptr;
 
-	void FillTest();
-
 	void FillTileSheets(rapidxml::xml_node<>* InMapNode);
 	Texture2D GetTileSheetTexture(rapidxml::xml_node<>* InTileSetNode) const;
 	void GetTileSheetRectangles(rapidxml::xml_node<>* InTileSetNode, std::vector<Rectangle>& OutRectangles) const;
