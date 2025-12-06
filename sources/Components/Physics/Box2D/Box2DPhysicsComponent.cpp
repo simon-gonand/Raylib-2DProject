@@ -51,11 +51,12 @@ void Box2DPhysicsComponent::AddLinearVelocity(const Vector2& VelocityToAdd)
 
 void Box2DPhysicsComponent::Update(float Tick)
 {
-	if (GetOwner()) 
+	if (GetOwner() && BodyDef->type != b2_staticBody) 
 	{
 		b2Vec2 Position = Body->GetPosition();
 		Vector3 VPosition({ Position.x * PTM_RATIO, Position.y * PTM_RATIO });
-		Vector3 WorldPosition = Vector3Add(VPosition, GetComponentLocation());
+		Vector3 ComponentLocation = GetComponentLocation();
+		Vector3 WorldPosition = Vector3Add(VPosition, { -ComponentLocation.x, -ComponentLocation.y });
 		GetOwner()->SetActorLocation(WorldPosition, false);
 	}
 }

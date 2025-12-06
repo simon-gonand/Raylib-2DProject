@@ -9,7 +9,6 @@
 #include "Actors/Player/Player.h"
 #include "Components/Inputs/InputComponent.h"
 #include "Physics/PhysicsWorldManager.h"
-#include "Actors/Statics/Ground.h"
 #include "Managers/Camera/CameraManager.h"
 #include "Helpers/Globals/Globals.h"
 #include "Actors/TileMap/TileMap.h"
@@ -27,12 +26,8 @@ int main(void)
 	if(WorldManager)
 	{
 		WorldManager->Initialize({ 0.0f, 9.81f, 0.0f});
-		WorldManager->SetDebugMode(false);
+		WorldManager->SetDebugMode(true);
 	}
-
-	std::shared_ptr<Ground> G = std::make_shared<Ground>();
-	G->Initialize();
-	Actors.push_back(G);
 
 	std::shared_ptr<Player> P = std::make_shared<Player>();
 	P->Initialize();

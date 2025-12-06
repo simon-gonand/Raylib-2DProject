@@ -130,6 +130,8 @@ private:
 
 	std::shared_ptr<class TileMapRendererComponent> RendererComp;
 
+	std::vector<std::shared_ptr<class PhysicsComponent>> PhysicsComps;
+
 	TileSheet* LastUsedTileSheet = nullptr;
 
 	void FillTileSheets(rapidxml::xml_node<>* InMapNode);
@@ -140,6 +142,8 @@ private:
 
 	void FillObjects(rapidxml::xml_node<>* InMapNode);
 	ObjectInfo* GetObjectInfoType(rapidxml::xml_node<>* InObjectNode);
+
+	void InitializeColliders();
 
 	char* TestDecode(const char* source, unsigned int* rlength);
 	char b64_value(char c);
