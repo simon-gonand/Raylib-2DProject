@@ -36,4 +36,37 @@ void TileMapRendererComponent::Update(float DeltaTime)
 			DrawTexturePro(*SheetTileInfo.Texture, SheetTileInfo.Source, DrawTileDestination, { TileSize.x / 2, TileSize.y / 2 }, DrawRotation.x, WHITE);
 		}
 	}
+
+	ObjectGroupInfo Collisions = TileMapOwner->GetObjectGroup("Collisions");
+	for (ObjectInfo* Object : Collisions.Objects)
+	{
+		Vector2 ObjectDrawLocation = Vector2Add(DrawLocation, Object->Location);
+		if (EllipseObjectInfo* EllipseObject = dynamic_cast<EllipseObjectInfo*>(Object))
+		{
+			ObjectDrawLocation.x = ObjectDrawLocation.x + EllipseObject->Size.x / 2;
+			ObjectDrawLocation.y = ObjectDrawLocation.y + EllipseObject->Size.y / 2;
+			DrawEllipse(ObjectDrawLocation.x, ObjectDrawLocation.y, EllipseObject->Size.x / 2, EllipseObject->Size.y / 2, RED);
+		}
+		else if (RectangleObjectInfo* RectangleObject = dynamic_cast<RectangleObjectInfo*>(Object))
+		{
+			Rectangle ObjectDrawRectangle
+			{
+				ObjectDrawLocation.x,
+				ObjectDrawLocation.y,
+				RectangleObject->Size.x,
+				RectangleObject->Size.y
+			};
+
+			DrawRectanglePro(ObjectDrawRectangle, { TileSize.x / 2, -TileSize.y / 2 }, 0.0f, BLUE);
+		}
+		else if (PolygoneObjectInfo* PolygonObject = dynamic_cast<PolygoneObjectInfo*>(Object))
+		{
+			for (int index = 0; index < PolygonObject->Points.size(); ++index)
+			{
+				Vector2 StartPoint = Vector2Add(ObjectDrawLocation, PolygonObject->Points[index]);
+				Vector2 EndPoint = Vector2Add(ObjectDrawLocation, index == PolygonObject->Points.size() - 1 ? PolygonObject->Points[0] : PolygonObject->Points[index + 1]);
+				DrawLine(StartPoint.x, StartPoint.y, EndPoint.x, EndPoint.y, YELLOW);
+			}
+		}
+	}
 }

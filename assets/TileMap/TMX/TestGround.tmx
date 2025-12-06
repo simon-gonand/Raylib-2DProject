@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="4">
  <tileset firstgid="1" source="assets/TileMap/TMX/_Brown_Tile_Terrain.tsx"/>
- <layer id="1" name="Calque de Tuiles 1" width="30" height="20">
+ <layer id="1" name="Environment" width="30" height="20">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -25,4 +25,16 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="4" name="Collisions">
+  <object id="3" name="Block" x="160.043" y="144.654" width="161.069" height="15.3887"/>
+  <object id="4" x="172.354" y="26.6738" width="102.079" height="63.6067">
+   <ellipse/>
+  </object>
+  <object id="5" x="195.95" y="-7.18141">
+   <ellipse/>
+  </object>
+  <object id="6" x="339.578" y="36.9329">
+   <polygon points="0,0 -1.53887,70.7881 75.4048,19.4924 28.2127,-15.9017"/>
+  </object>
+ </objectgroup>
 </map>

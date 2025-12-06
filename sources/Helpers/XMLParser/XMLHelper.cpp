@@ -23,4 +23,14 @@ namespace XMLHelper {
 
 		return atoi(Attribute->value());
 	}
+	const char* GetStringAttribute(rapidxml::xml_node<>* Node, const char* AttributeName)
+	{
+		if (!Node)
+			return "";
+		rapidxml::xml_attribute<>* Attribute = Node->first_attribute(AttributeName);
+		if (!Attribute)
+			return "";
+
+		return Attribute->value();
+	}
 }

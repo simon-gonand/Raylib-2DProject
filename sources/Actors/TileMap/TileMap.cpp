@@ -28,6 +28,9 @@ TileMap::TileMap(const char* InTSXFilePath)
 	
 	//Layers
 	FillLayers(MapNode);
+
+	//Objects
+	FillObjects(MapNode);
 }
 
 void TileMap::Initialize()
@@ -50,6 +53,17 @@ const Vector2& TileMap::GetTileSize() const
 const std::vector<LayerInfo>& TileMap::GetLayers() const
 {
 	return Layers;
+}
+
+const ObjectGroupInfo& TileMap::GetObjectGroup(const char* InObjectGroupName) const
+{
+	for (const ObjectGroupInfo& ObjectGroup : ObjectGroups)
+	{
+		if (std::strcmp(ObjectGroup.Name, InObjectGroupName) == 0)
+			return ObjectGroup;
+	}
+
+	return ObjectGroupInfo();
 }
 
 TileSheetTileInfo TileMap::GetTileSheetInfoForTile(const TileInfo& InTile)
@@ -200,6 +214,39 @@ void TileMap::FillLayers(rapidxml::xml_node<>* InMapNode)
 		
 		Layers.push_back(NewLayer);
 	}
+}
+
+void TileMap::FillObjects(rapidxml::xml_node<>* InMapNode)
+{
+	for (rapidxml::xml_node<>* ObjectGroup = InMapNode->first_node("objectgroup"); ObjectGroup; ObjectGroup = ObjectGroup->next_sibling("objectgroup"))
+	{
+		ObjectGroupInfo NewObjectGroupInfo;
+		const char* ObjectGroupName = XMLHelper::GetStringAttribute(ObjectGroup, "name");
+		NewObjectGroupInfo.Name = (char*)malloc(sizeof(ObjectGroupName));
+		strcpy(NewObjectGroupInfo.Name, ObjectGroupName);
+		for (rapidxml::xml_node<>* Object = ObjectGroup->first_node("object"); Object; Object = Object->next_sibling("object"))
+		{
+			ObjectInfo* NewObject = GetObjectInfoType(Object);
+			NewObject->FillInformation(Object);
+			NewObjectGroupInfo.Objects.push_back(NewObject);
+		}
+
+		ObjectGroups.push_back(NewObjectGroupInfo);
+	}
+}
+
+ObjectInfo* TileMap::GetObjectInfoType(rapidxml::xml_node<>* InObjectNode)
+{
+	if (rapidxml::xml_node<>* EllipseNode = InObjectNode->first_node("ellipse")) 
+	{
+		return new EllipseObjectInfo();
+	}
+	else if (rapidxml::xml_node<>* EllipseNode = InObjectNode->first_node("polygon"))
+	{
+		return new PolygoneObjectInfo();
+	}
+
+	return new RectangleObjectInfo();
 }
 
 char* TileMap::TestDecode(const char* source, unsigned int* rlength)

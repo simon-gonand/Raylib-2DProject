@@ -5,4 +5,7 @@
 namespace XMLHelper {
 	float GetFloatAttribute(rapidxml::xml_node<>* Node, const char* AttributeName);
 	int GetIntAttribute(rapidxml::xml_node<>* Node, const char* AttributeName);
+	const char* GetStringAttribute(rapidxml::xml_node<>* Node, const char* AttributeName);
+
+
 }
