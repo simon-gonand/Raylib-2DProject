@@ -14,6 +14,9 @@ TileMap::TileMap(const Vector2& InTileSize): TileSize{InTileSize}
 
 TileMap::TileMap(const char* InTSXFilePath)
 {
+	TSXDirectoryPath = InTSXFilePath;
+	size_t LastSlashIndex = TSXDirectoryPath.find_last_of('/');
+	TSXDirectoryPath = TSXDirectoryPath.substr(0, LastSlashIndex + 1);
 	rapidxml::file<> TileMapFile(InTSXFilePath);
 	rapidxml::xml_document<> TileMapDocument;
 	TileMapDocument.parse<0>(TileMapFile.data());
@@ -100,10 +103,14 @@ void TileMap::FillTileSheets(rapidxml::xml_node<>* InMapNode)
 	{
 		int FirstId = XMLHelper::GetIntAttribute(TileSet, "firstgid") - 1;
 		rapidxml::xml_attribute<>* TileSetFileName = TileSet->first_attribute("source");
+		
+
 		if (!TileSetFileName)
 			continue;
 
-		rapidxml::file<> TileSetFile(TileSetFileName->value());
+		std::string TileSetFullPath = TSXDirectoryPath;
+		TileSetFullPath.append(TileSetFileName->value());;
+		rapidxml::file<> TileSetFile(TileSetFullPath.c_str());
 		rapidxml::xml_document<> TileSetDocument;
 		TileSetDocument.parse<0>(TileSetFile.data());
 		rapidxml::xml_node<>* TileSetNode = TileSetDocument.first_node("tileset");
@@ -131,7 +138,9 @@ Texture2D TileMap::GetTileSheetTexture(rapidxml::xml_node<>* InTileSetNode) cons
 	if (!TexturePath)
 		return Texture2D();
 
-	return LoadTexture(TexturePath->value());
+	std::string TextureFullPath = TSXDirectoryPath;
+	TextureFullPath.append(TexturePath->value());
+	return LoadTexture(TextureFullPath.c_str());
 }
 
 void TileMap::GetTileSheetRectangles(rapidxml::xml_node<>* InTileSetNode, std::vector<Rectangle>& OutRectangles) const

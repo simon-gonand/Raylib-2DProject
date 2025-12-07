@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <memory>
+#include <string>
 
 #include "../../Helpers/XMLParser/XMLHelper.h"
 #include "../../Helpers/Globals/Globals.h"
@@ -123,6 +124,8 @@ protected:
 	virtual void Update(float DeltaTime) override;
 
 private:
+	std::string TSXDirectoryPath;
+
 	Vector2 TileSize;
 	std::vector<TileSheet> Sheets;
 	std::vector<LayerInfo> Layers;
