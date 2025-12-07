@@ -1,6 +1,7 @@
 #include "TileMapRendererComponent.h"
 
 #include "../../../../Helpers/Math/Vectors/Vectors.h"
+#include "../../../../Managers/Camera/CameraManager.h"
 
 TileMapRendererComponent::TileMapRendererComponent(std::shared_ptr<Actor> Owner, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale, const Vector2& InSize):
 	Renderer2DComponent(Owner, "", InLocation, InRotation, InScale, InSize)
@@ -9,6 +10,12 @@ TileMapRendererComponent::TileMapRendererComponent(std::shared_ptr<Actor> Owner,
 		TileMapOwner = std::static_pointer_cast<TileMap>(Owner);
 		Size = TileMapOwner->GetTileSize();
 	}
+}
+
+void TileMapRendererComponent::Initialize()
+{
+	const Camera2D& UsedCamera = CameraManager::Get()->GetCameraToUse();
+	InitialCameraLocation = UsedCamera.target;
 }
 
 void TileMapRendererComponent::Update(float DeltaTime)
@@ -26,9 +33,12 @@ void TileMapRendererComponent::Update(float DeltaTime)
 
 void TileMapRendererComponent::DrawBackground(const Vector2& DrawLocation, const Quaternion& DrawRotation, const Vector2& DrawScale)
 {
+	const Camera2D& UsedCamera = CameraManager::Get()->GetCameraToUse();
 	const Vector2 TileMapPxlSize = TileMapOwner->GetPxlTileMapSize();
 	for (const BackgroundImageInfo& Image : TileMapOwner->GetBackgroundImages())
 	{
+		Vector2	CameraOffset = Vector2Subtract(InitialCameraLocation, UsedCamera.target);
+		CameraOffset = Vector2Multiply(CameraOffset, Vector2Subtract(Vector2One(), Image.ParallaxScrollingFactor));
 		int ImageXIndex = Image.RepeatX ? -2 : -1;
 		int ImageYIndex = Image.RepeatY ? -2 : -1;
 		do
@@ -47,8 +57,8 @@ void TileMapRendererComponent::DrawBackground(const Vector2& DrawLocation, const
 
 				Rectangle Destination
 				{
-					DrawLocation.x + Image.Texture.width * ImageXIndex,
-					DrawLocation.y + Image.Texture.height * ImageYIndex,
+					(DrawLocation.x + Image.Texture.width * ImageXIndex) - CameraOffset.x,
+					(DrawLocation.y + Image.Texture.height * ImageYIndex) - CameraOffset.y,
 					Image.Texture.width,
 					Image.Texture.height
 				};

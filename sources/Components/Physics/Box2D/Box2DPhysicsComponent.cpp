@@ -56,7 +56,7 @@ void Box2DPhysicsComponent::Update(float Tick)
 		b2Vec2 Position = Body->GetPosition();
 		Vector3 VPosition({ Position.x * PTM_RATIO, Position.y * PTM_RATIO });
 		Vector3 ComponentLocation = GetComponentLocation();
-		Vector3 WorldPosition = Vector3Add(VPosition, { -ComponentLocation.x, -ComponentLocation.y });
+		Vector3 WorldPosition = Vector3Subtract(VPosition, ComponentLocation);
 		GetOwner()->SetActorLocation(WorldPosition, false);
 	}
 }
