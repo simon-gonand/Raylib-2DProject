@@ -29,8 +29,8 @@ void TileMapRendererComponent::DrawBackground(const Vector2& DrawLocation, const
 	const Vector2 TileMapPxlSize = TileMapOwner->GetPxlTileMapSize();
 	for (const BackgroundImageInfo& Image : TileMapOwner->GetBackgroundImages())
 	{
-		int ImageXIndex = -1;
-		int ImageYIndex = -1;
+		int ImageXIndex = Image.RepeatX ? -2 : -1;
+		int ImageYIndex = Image.RepeatY ? -2 : -1;
 		do
 		{
 			++ImageYIndex;

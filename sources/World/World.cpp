@@ -1,0 +1,40 @@
+#include "World.h"
+
+World::World()
+{
+	PhysicsManager = std::shared_ptr<PhysicsWorldManager>(PhysicsWorldManager::Get(BOX2D));
+	if (PhysicsManager)
+	{
+		PhysicsManager->Initialize({ 0.0f, 9.81f, 0.0f });
+		PhysicsManager->SetDebugMode(false);
+	}
+}
+
+void World::AddActor(std::shared_ptr<Actor> InActor)
+{
+	Actors.push_back(InActor);
+}
+
+void World::RemoveActor(std::shared_ptr<Actor> InActor)
+{
+	std::vector<std::shared_ptr<Actor>>::iterator ActorToRemove = std::find(Actors.begin(), Actors.end(), InActor);
+	if (ActorToRemove == Actors.end())
+		return;
+
+	Actors.erase(ActorToRemove);
+}
+
+void World::Update(float DeltaTime)
+{
+	if(PhysicsManager)
+		PhysicsManager->Update(DeltaTime);
+
+	for (std::shared_ptr<Actor> CurrentActor : Actors)
+	{
+		CurrentActor->Update(DeltaTime);
+		CurrentActor->PostUpdate();
+	}
+
+	if (PhysicsManager)
+		PhysicsManager->DrawDebug();
+}
