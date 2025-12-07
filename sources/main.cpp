@@ -29,16 +29,16 @@ int main(void)
 		WorldManager->SetDebugMode(true);
 	}
 
-	std::shared_ptr<Player> P = std::make_shared<Player>();
-	P->Initialize();
-	Actors.push_back(P);
-
 	Vector2 TileSize = { 16.0f, 16.0f };
 	std::shared_ptr<TileMap> TM2 = std::make_shared<TileMap>("assets/TileMap/TMX/TestGround.tmx");
 	TM2->Initialize();
 	TM2->SetActorScale({ 0.05f, 0.05f });
 	TM2->SetActorLocation({ -30 * 16.0f / 2, -20 * 16.0f / 2, 2.0f });
 	Actors.push_back(TM2);
+
+	std::shared_ptr<Player> P = std::make_shared<Player>();
+	P->Initialize();
+	Actors.push_back(P);
 
 	// Target FPS
 	SetTargetFPS(60);

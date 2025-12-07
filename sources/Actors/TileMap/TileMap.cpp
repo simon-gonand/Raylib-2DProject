@@ -24,6 +24,8 @@ TileMap::TileMap(const char* InTSXFilePath)
 	if (!MapNode)
 		return;
 		
+	//Tile Map Size
+	TileMapSize = { XMLHelper::GetFloatAttribute(MapNode, "width"), XMLHelper::GetFloatAttribute(MapNode, "height")};
 	//Tile Size
 	TileSize = { XMLHelper::GetFloatAttribute(MapNode, "tilewidth"), XMLHelper::GetFloatAttribute(MapNode, "tileheight") };
 	
@@ -35,6 +37,9 @@ TileMap::TileMap(const char* InTSXFilePath)
 
 	//Objects
 	FillObjects(MapNode);
+
+	//Background Images
+	FillBackground(MapNode);
 }
 
 void TileMap::Initialize()
@@ -51,9 +56,19 @@ void TileMap::Initialize()
 	SetActorScale({ 1.0f, 1.0f });
 }
 
+const Vector2& TileMap::GetTileMapSize() const
+{
+	return TileMapSize;
+}
+
 const Vector2& TileMap::GetTileSize() const
 {
 	return TileSize;
+}
+
+const Vector2& TileMap::GetPxlTileMapSize() const
+{
+	return Vector2Multiply(TileSize, TileMapSize);
 }
 
 const std::vector<LayerInfo>& TileMap::GetLayers() const
@@ -70,6 +85,11 @@ const ObjectGroupInfo& TileMap::GetObjectGroup(const char* InObjectGroupName) co
 	}
 
 	return ObjectGroupInfo();
+}
+
+const std::vector<BackgroundImageInfo> TileMap::GetBackgroundImages() const
+{
+	return BackgroundImages;
 }
 
 TileSheetTileInfo TileMap::GetTileSheetInfoForTile(const TileInfo& InTile)
@@ -259,6 +279,40 @@ ObjectInfo* TileMap::GetObjectInfoType(rapidxml::xml_node<>* InObjectNode)
 	}
 
 	return new RectangleObjectInfo();
+}
+
+void TileMap::FillBackground(rapidxml::xml_node<>* InMapNode)
+{
+	for (rapidxml::xml_node<>* ImageLayer = InMapNode->first_node("imagelayer"); ImageLayer; ImageLayer = ImageLayer->next_sibling("imagelayer"))
+	{
+		if (!strcmp(XMLHelper::GetStringAttribute(ImageLayer, "class"), "backgound"))
+			continue;
+
+		BackgroundImageInfo ImageInfo;
+		if (rapidxml::xml_node<>* ImageNode = ImageLayer->first_node("image"))
+		{
+			const char* ImagePath = XMLHelper::GetStringAttribute(ImageNode, "source");
+			std::string ImageFullPath = TSXDirectoryPath;
+			ImageFullPath.append(ImagePath);
+			ImageInfo.Texture = LoadTexture(ImageFullPath.c_str());
+		}
+		else
+			continue;
+
+		const char* RepeatX = XMLHelper::GetStringAttribute(ImageLayer, "repeatx");
+		const char* RepeatY = XMLHelper::GetStringAttribute(ImageLayer, "repeaty");
+		ImageInfo.RepeatX = RepeatX == "" ? false : RepeatX;
+		ImageInfo.RepeatY = RepeatY ? false : RepeatY;
+
+		float ParallaxX = XMLHelper::GetFloatAttribute(ImageLayer, "parallaxx");
+		float ParallaxY = XMLHelper::GetFloatAttribute(ImageLayer, "parallaxy");
+		ImageInfo.ParallaxScrollingFactor =
+		{
+			ParallaxX == 0.0f ? 1.0f : ParallaxX,
+			ParallaxY == 0.0f ? 1.0f : ParallaxY
+		};
+		BackgroundImages.push_back(ImageInfo);
+	}
 }
 
 void TileMap::InitializeColliders()

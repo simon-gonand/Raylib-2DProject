@@ -87,6 +87,13 @@ struct ObjectGroupInfo
 	std::vector<ObjectInfo*> Objects;
 };
 
+struct BackgroundImageInfo
+{
+	Texture2D Texture;
+	Vector2 ParallaxScrollingFactor;
+	bool RepeatX;
+	bool RepeatY = false;
+};
 
 struct TileSheetTileInfo
 {
@@ -113,10 +120,13 @@ public:
 
 	virtual void Initialize() override;
 
+	const Vector2& GetTileMapSize() const;
 	const Vector2& GetTileSize() const;
+	const Vector2& GetPxlTileMapSize() const;
 
 	const std::vector<LayerInfo>& GetLayers() const;
 	const ObjectGroupInfo& GetObjectGroup(const char* InObjectGroupName) const;
+	const std::vector<BackgroundImageInfo> GetBackgroundImages() const;
 
 	TileSheetTileInfo GetTileSheetInfoForTile(const TileInfo& InTile);
 
@@ -126,10 +136,12 @@ protected:
 private:
 	std::string TSXDirectoryPath;
 
+	Vector2 TileMapSize;
 	Vector2 TileSize;
 	std::vector<TileSheet> Sheets;
 	std::vector<LayerInfo> Layers;
 	std::vector<ObjectGroupInfo> ObjectGroups;
+	std::vector<BackgroundImageInfo> BackgroundImages;
 
 	std::shared_ptr<class TileMapRendererComponent> RendererComp;
 
@@ -145,6 +157,8 @@ private:
 
 	void FillObjects(rapidxml::xml_node<>* InMapNode);
 	ObjectInfo* GetObjectInfoType(rapidxml::xml_node<>* InObjectNode);
+
+	void FillBackground(rapidxml::xml_node<>* InMapNode);
 
 	void InitializeColliders();
 

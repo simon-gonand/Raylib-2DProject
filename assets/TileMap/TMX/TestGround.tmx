@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="75" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="7">
  <tileset firstgid="1" source="_Brown_Tile_Terrain.tsx"/>
- <imagelayer id="5" name="BackgroundPlan4" parallaxx="1.25" repeatx="1">
+ <imagelayer id="5" name="BackgroundPlan4" class="Background" parallaxx="1.25" repeatx="1">
   <image source="../Textures/Background/Plan_4.png" width="284" height="160"/>
  </imagelayer>
- <imagelayer id="6" name="BackgroundPlan3" repeatx="1">
+ <imagelayer id="6" name="BackgroundPlan3" class="Background" repeatx="1">
   <image source="../Textures/Background/Plan_3.png" width="284" height="160"/>
  </imagelayer>
- <imagelayer id="7" name="BackgroundPlan2" parallaxx="0.5" repeatx="1">
+ <imagelayer id="7" name="BackgroundPlan2" class="Background" parallaxx="0.5" repeatx="1">
   <image source="../Textures/Background/Plan_2.png" width="284" height="160"/>
  </imagelayer>
  <layer id="1" name="Environment" width="75" height="10">

@@ -13,4 +13,7 @@ protected:
 
 private:
 	std::shared_ptr<TileMap> TileMapOwner;
+
+	void DrawBackground(const Vector2& DrawLocation, const Quaternion& DrawRotation, const Vector2& DrawScale);
+	void DrawTiles(const Vector2& DrawLocation, const Quaternion& DrawRotation, const Vector2& DrawScale);
 };
