@@ -9,16 +9,16 @@ class DelegateBase
 {
 	
 	typedef void* InstancePtr;
-	typedef RetType (*InternalFunction)(InstancePtr, Args&...);
+	typedef RetType (*InternalFunction)(InstancePtr, Args...);
 
-	template<RetType(*Function)(Args&...)>
-	static inline RetType FunctionToInternal(InstancePtr, Args&... InArg)
+	template<RetType(*Function)(Args...)>
+	static inline RetType FunctionToInternal(InstancePtr, Args... InArg)
 	{
 		return (Function)(InArg);
 	}
 
-	template<class C, RetType(C::*Function)(Args&...)>
-	static inline RetType ClassFunctionToInternal(InstancePtr Instance, Args&... Arg)
+	template<class C, RetType(C::*Function)(Args...)>
+	static inline RetType ClassFunctionToInternal(InstancePtr Instance, Args... Arg)
 	{
 		return (static_cast<C*>(Instance)->*Function)(Arg...);
 	}
@@ -36,14 +36,14 @@ public:
 		}
 	}
 
-	template<RetType(*Function)(Args&...)>
+	template<RetType(*Function)(Args...)>
 	void Bind(void)
 	{
 		Callback.first = nullptr;
 		Callback.second = &FunctionToInternal<Function>;
 	}
 
-	template<class C, RetType(C::* Function)(Args&...)>
+	template<class C, RetType(C::* Function)(Args...)>
 	void Bind(C* Instance)
 	{
 		Callback.first = Instance;

@@ -37,6 +37,8 @@ void Player::Initialize()
 	AddComponent(InputComp);
 	InputComp->BindInput<Player, &Player::Jump>("Jump", DOWN, this);
 	InputComp->BindInput<Player, &Player::Jump>("Jump", RELEASED, this);
+	InputComp->BindInput<Player, &Player::Slide>("Slide", DOWN, this);
+	InputComp->BindInput<Player, &Player::Slide>("Slide", RELEASED, this);
 	InputComp->BindAxis<Player, &Player::Move>("Move", this);
 
 	b2PolygonShape PhysicsShape;
@@ -59,7 +61,7 @@ void Player::Initialize()
 	SetActorScale({1.0f, 1.0f});
 
 	bIsJumping = false;
-	CurrentMovementMode = EMovementMode::FALLING;
+	SetCurrentMovementMode(EMovementMode::FALLING);
 }
 
 void Player::Move(const Vector2& Scale)
@@ -82,11 +84,19 @@ void Player::Move(const Vector2& Scale)
 	}
 }
 
+void Player::Slide(const float& Scale, const InputTrigger& Trigger)
+{
+	if (CurrentMovementMode == EMovementMode::FALLING)
+		return;
+
+	std::cout << (Trigger == RELEASED ? "Stop Slide" : "Slide") << std::endl;
+	SetCurrentMovementMode(Trigger == DOWN ? EMovementMode::SLIDING : EMovementMode::GROUND);
+}
+
 void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 {
 	bWasJumpingLastFrame = bIsJumping;
 	bIsJumping = Trigger == DOWN;
-	//CurrentMovementMode = EMovementMode::FALLING;
 }
 
 void Player::Update(float DeltaTime)
@@ -108,10 +118,11 @@ void Player::PostUpdate()
 {
 	Vector2 CurrentVelocity = PhysicsComp->GetLinearVelocity();
 	if (FloatEquals(CurrentVelocity.y, 0.0f)) {
-		CurrentMovementMode = EMovementMode::GROUND;
+		if(CurrentMovementMode != EMovementMode::SLIDING)
+			SetCurrentMovementMode(EMovementMode::GROUND);
 	}
 	else {
-		CurrentMovementMode = EMovementMode::FALLING;
+		SetCurrentMovementMode(EMovementMode::FALLING);
 	}
 
 	Vector2 NormalizedVelocity = Vector2Normalize(CurrentVelocity);
@@ -123,11 +134,26 @@ void Player::PostUpdate()
 		RendererComponentRotation.y = 0.0f;
 	}
 	RendererComp->SetComponentRotation(RendererComponentRotation);
+	PreviousMovementMode = CurrentMovementMode;
+}
+
+void Player::SetCurrentMovementMode(EMovementMode NewMovementMode)
+{
+	if (CurrentMovementMode == NewMovementMode)
+		return;
+
+	PreviousMovementMode = CurrentMovementMode;
+	CurrentMovementMode = NewMovementMode;
 }
 
 EMovementMode Player::GetCurrentMovementMode() const
 {
 	return CurrentMovementMode;
+}
+
+EMovementMode Player::GetPreviousMovementMode() const
+{
+	return PreviousMovementMode;
 }
 
 std::shared_ptr<class PhysicsComponent> Player::GetPhysicsComponent()
@@ -166,8 +192,5 @@ std::shared_ptr<AnimationManager> Player::CreatePlayerAnimationManager()
 {
 	std::shared_ptr<PlayerAnimationManager> Result = std::make_shared<PlayerAnimationManager>();
 	Result->Initialize(std::static_pointer_cast<Player>(shared_from_this()));
-	Result->AddAnimationFromTexture("Idle", "assets/Characters/Player/SpriteSheets/_Idle.png", 10, 1, 0.15f, true, 0, 9);
-	Result->AddAnimationFromTexture("Jump", "assets/Characters/Player/SpriteSheets/_Jump.png", 3, 1, 0.05f, true, 0, 2);
-	Result->AddAnimationFromTexture("Movement", "assets/Characters/Player/SpriteSheets/_Run.png", 10, 1, 0.05f, true, 0, 9);
 	return Result;
 }

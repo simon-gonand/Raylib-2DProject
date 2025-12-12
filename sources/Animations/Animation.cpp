@@ -35,17 +35,17 @@ void Animation::Update(const float& DeltaTime)
 
 void Animation::AnimationDurationFinished()
 {
-	for (DelegateBase<void, Animation*>* Delegate : OnAnimationDurationFinished)
+	for (DelegateBase<void, const std::shared_ptr<Animation>>* Delegate : OnAnimationDurationFinished)
 	{
-		Delegate->Invoke(this);
+		Delegate->Invoke(shared_from_this());
 	}
 }
 
 void Animation::AnimationFinished()
 {
-	for (DelegateBase<void, Animation*>* Delegate : OnAnimationFinished)
+	for (DelegateBase<void, const std::shared_ptr<Animation>>* Delegate : OnAnimationFinished)
 	{
-		Delegate->Invoke(this);
+		Delegate->Invoke(shared_from_this());
 	}
 }
 

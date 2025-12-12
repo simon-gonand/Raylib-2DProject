@@ -5,7 +5,8 @@
 enum class EMovementMode : int
 {
 	GROUND,
-	FALLING
+	FALLING,
+	SLIDING
 };
 
 class Player: public Actor
@@ -18,11 +19,14 @@ public:
 
 	void Move(const Vector2& Scale);
 	void Jump(const float& Scale, const enum InputTrigger& Trigger);
+	void Slide(const float& Scale, const enum InputTrigger& Trigger);
 
 	virtual void Update(float DeltaTime) override;
 	virtual void PostUpdate() override;
 
+	void SetCurrentMovementMode(EMovementMode NewMovementMode);
 	EMovementMode GetCurrentMovementMode() const;
+	EMovementMode GetPreviousMovementMode() const;
 	
 	std::shared_ptr<class PhysicsComponent> GetPhysicsComponent();
 
@@ -49,6 +53,7 @@ private:
 	void ClampVelocity(Vector2& NewVelocity);
 
 	EMovementMode CurrentMovementMode;
+	EMovementMode PreviousMovementMode;
 
 	std::shared_ptr<class AnimationManager> CreatePlayerAnimationManager();
 };

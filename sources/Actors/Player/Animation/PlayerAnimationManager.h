@@ -12,4 +12,8 @@ protected:
 
 private:
 	std::shared_ptr<Player> Player;
+
+	void ComputeDefaultAnimation();
+
+	void OnEndSlideEnded(const std::shared_ptr<Animation> EndSlideAnimation);
 };

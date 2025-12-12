@@ -8,11 +8,17 @@ std::shared_ptr<InputManager> InputManager::Instance;
 InputManager::InputManager()
 {
     //TODO Create function to help add and remove inputs / events
-    std::string EventName = "Jump";
-    std::vector<std::shared_ptr<InputKey>> EventInputs;
-    EventInputs.push_back(std::make_shared<InputKey>(KEYBOARD, KEY_SPACE, 1.0f));
-    EventInputs.push_back(std::make_shared<InputKey>(GAMEPAD, GAMEPAD_BUTTON_RIGHT_FACE_DOWN, 1.0f));
-    EventsBindedInputs.insert(std::make_pair(EventName, EventInputs));
+    std::string JumpEventName = "Jump";
+    std::vector<std::shared_ptr<InputKey>> JumpEventInputs;
+    JumpEventInputs.push_back(std::make_shared<InputKey>(KEYBOARD, KEY_SPACE, 1.0f));
+    JumpEventInputs.push_back(std::make_shared<InputKey>(GAMEPAD, GAMEPAD_BUTTON_RIGHT_FACE_DOWN, 1.0f));
+    EventsBindedInputs.insert(std::make_pair(JumpEventName, JumpEventInputs));
+
+    std::string SlideEventName = "Slide";
+    std::vector<std::shared_ptr<InputKey>> SlideEventInputs;
+    SlideEventInputs.push_back(std::make_shared<InputKey>(KEYBOARD, KEY_LEFT_SHIFT, 1.0f));
+    SlideEventInputs.push_back(std::make_shared<InputKey>(GAMEPAD, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT, 1.0f));
+    EventsBindedInputs.insert(std::make_pair(SlideEventName, SlideEventInputs));
 
     std::string AxisName = "Move";
     std::vector<std::shared_ptr<InputAxis>> AxisInputs;

@@ -24,6 +24,11 @@ void AnimationManager::SetCurrentAnimationState(const char* AnimationState)
 	}
 }
 
+const char* AnimationManager::GetCurrentAnimationState() const
+{
+	return CurrentAnimationState;
+}
+
 std::shared_ptr<Animation> AnimationManager::GetCurrentAnimation() const
 {
 	return CurrentPlayedAnimation;

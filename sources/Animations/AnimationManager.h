@@ -11,6 +11,7 @@ public:
 	void AddAnimation(const char* AnimationName, std::shared_ptr<Animation> AnimationToAdd);
 
 	void SetCurrentAnimationState(const char* AnimationState);
+	const char* GetCurrentAnimationState() const;
 	std::shared_ptr<Animation> GetCurrentAnimation() const;
 	void ResetAnimationState();
 
