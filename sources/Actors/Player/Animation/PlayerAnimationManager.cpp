@@ -27,7 +27,7 @@ void PlayerAnimationManager::Update(const float& DeltaTime)
 		if(Player->GetPreviousMovementMode() != EMovementMode::SLIDING && CurrentAnimationState != "Slide")
 			SetCurrentAnimationState("StartSlide");
 	}
-	else if (Player->GetPreviousMovementMode() == EMovementMode::SLIDING)
+	else if (Player->GetPreviousMovementMode() == EMovementMode::SLIDING && CurrentAnimationState == "Slide")
 	{
 		SetCurrentAnimationState("EndSlide");
 	}

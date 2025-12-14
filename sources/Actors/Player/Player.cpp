@@ -16,9 +16,9 @@
 #include "../../Components/Renderer/2DRenderer/SpriteSheet2DRenderer/SpriteSheet2DRendererComponent.h"
 #include "Animation/PlayerAnimationManager.h"
 #include "../../Components/Movements/MovementComponent.h"
-#include "../../MovementModes/GroudMovementMode/GroundMovementMode.h"
 #include "../../MovementModes/JumpingMovementMode/JumpingMovementMode.h"
 #include "../../MovementModes/FallingMovementMode/FallingMovementMode.h"
+#include "../../MovementModes/SlidingMovementMode/SlidingMovementMode.h"
 
 Player::Player()
 {
@@ -58,9 +58,10 @@ void Player::Initialize()
 	AddComponent(RendererComp);
 
 	MovementComp = std::make_shared<MovementComponent>(PlayerSPtr, PhysicsComp);
-	MovementComp->AddNewMovementMode(EMovementMode::GROUND, std::make_shared<GroundMovementMode>(1.0f, 3.0f, 10.0f));
+	MovementComp->AddNewMovementMode(EMovementMode::GROUND, std::make_shared<MovementModeBase>(1.0f, 3.0f, 10.0f));
 	MovementComp->AddNewMovementMode(EMovementMode::JUMPING, std::make_shared<JumpingMovementMode>(1.0f, 3.0f, 10.0f, -20.0f, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::FALLING, std::make_shared<FallingMovementMode>(1.0f, 3.0f, 10.0f, 30.0f, 1.5f));
+	MovementComp->AddNewMovementMode(EMovementMode::SLIDING, std::make_shared<SlidingMovementMode>(1.0f, 0.75f, 10.0f, MovementComp));
 	AddComponent(MovementComp);
 
 	SetActorLocation(ActorInitialPostion);
@@ -78,11 +79,14 @@ void Player::Move(const Vector2& Scale)
 
 void Player::Slide(const float& Scale, const InputTrigger& Trigger)
 {
-	// Transfer to Slide MovementMode
-	/*if (CurrentMovementMode == EMovementMode::FALLING)
-		return;*/
+	if (Trigger == DOWN)
+	{
+		MovementComp->SwitchMovementMode(EMovementMode::SLIDING);
+	}
+	else {
+		MovementComp->SwitchMovementMode(EMovementMode::GROUND);
+	}
 
-	MovementComp->SwitchMovementMode(Trigger == DOWN ? EMovementMode::SLIDING : EMovementMode::GROUND);
 }
 
 void Player::Jump(const float& Scale, const InputTrigger& Trigger)
@@ -102,13 +106,14 @@ void Player::PostUpdate()
 {
 	// Is Player Falling
 	Vector3 CurrentVelocity = PhysicsComp->GetLinearVelocity();
-	if (FloatEquals(CurrentVelocity.y, 0.0f)) {
+	if (FloatEquals(CurrentVelocity.y, 0.0f)) 
+	{
+		if(MovementComp->GetCurrentMovementMode() != EMovementMode::SLIDING)
 			MovementComp->SwitchMovementMode(EMovementMode::GROUND);
 	}
-	else 
+	else if (MovementComp->GetCurrentMovementMode() != EMovementMode::JUMPING)
 	{
-		if(MovementComp->GetCurrentMovementMode() != EMovementMode::JUMPING)
-			MovementComp->SwitchMovementMode(EMovementMode::FALLING);
+		MovementComp->SwitchMovementMode(EMovementMode::FALLING);
 	}
 
 	// Set Player Orientation

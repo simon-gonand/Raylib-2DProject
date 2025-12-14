@@ -10,7 +10,7 @@ MovementModeBase::MovementModeBase(float InAcceleration, float InDeceleration, f
 {
 }
 
-bool MovementModeBase::CanSwitchToMode(EMovementMode CurrentMovementMode) const
+bool MovementModeBase::CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const
 {
 	return true;
 }
@@ -42,6 +42,5 @@ Vector3 MovementModeBase::PerformMovement(float DeltaTime, const Vector2& Input,
 		Result.x = Clamp(Result.x, -TopSpeed, 0.0f);
 	}
 
-	std::cout << CurrentVelocity.x << "; " << CurrentVelocity.y << std::endl;
 	return Result;
 }

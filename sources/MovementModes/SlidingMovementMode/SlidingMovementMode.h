@@ -2,17 +2,18 @@
 
 #include "../MovementModeBase.h"
 
-class JumpingMovementMode : public MovementModeBase
+class SlidingMovementMode : public MovementModeBase
 {
 public:
-	JumpingMovementMode(float InAcceleration, float InDeceleration, float InTopSpeed, float InJumpSpeed, std::shared_ptr<MovementComponent> InMovementComponent);
+	SlidingMovementMode(float InAcceleration, float InDeceleration, float InTopSpeed, std::shared_ptr<MovementComponent> InMovementComp);
 
 protected:
 	virtual bool CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const override;
+	virtual void OnSwitch() override;
 	virtual Vector3 PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity) override;
 
 private:
-	float JumpSpeed;
+	float InitialVelocity;
 
 	std::shared_ptr<MovementComponent> MovementComp;
 };

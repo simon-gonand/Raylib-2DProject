@@ -40,7 +40,8 @@ void MovementComponent::SwitchMovementMode(EMovementMode NewMovementMode)
 		return;
 
 	auto NewMovementModeObj = MovementModes.find(NewMovementMode);
-	if (NewMovementModeObj != MovementModes.end() && (CurrentMovementMode == EMovementMode::NONE || NewMovementModeObj->second->CanSwitchToMode(CurrentMovementMode)))
+	if (NewMovementModeObj != MovementModes.end() && 
+		(CurrentMovementMode == EMovementMode::NONE || NewMovementModeObj->second->CanSwitchToMode(CurrentMovementMode, OwnerPhysicsComponent->GetLinearVelocity())))
 	{
 		PreviousMovementMode = CurrentMovementMode;
 		CurrentMovementMode = NewMovementMode;
