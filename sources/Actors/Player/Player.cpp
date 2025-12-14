@@ -15,6 +15,8 @@
 #include "../../Helpers/Globals/Globals.h"
 #include "../../Components/Renderer/2DRenderer/SpriteSheet2DRenderer/SpriteSheet2DRendererComponent.h"
 #include "Animation/PlayerAnimationManager.h"
+#include "../../Components/Movements/MovementComponent.h"
+#include "../../MovementModes/GroudMovementMode/GroundMovementMode.h"
 
 Player::Player()
 {
@@ -29,9 +31,6 @@ void Player::Initialize()
 	Actor::Initialize();
 
 	std::shared_ptr<Actor> PlayerSPtr = shared_from_this();
-
-	VelocityToAdd = Vector2Zero();
-	LastVelocityIncrease = Vector2Zero();
 
 	InputComp = std::make_shared<InputComponent>(PlayerSPtr);
 	AddComponent(InputComp);
@@ -56,41 +55,31 @@ void Player::Initialize()
 	RendererComp = std::make_shared<SpriteSheet2DRendererComponent>(PlayerSPtr, "", Vector3({ 2.5f, -15.0f }), QuaternionIdentity(), Vector3({1.0f, 1.0f}), Vector2({3.0f, 3.0f}), AnimManager);
 	AddComponent(RendererComp);
 
+	MovementComp = std::make_shared<MovementComponent>(PlayerSPtr, PhysicsComp);
+	MovementComp->AddNewMovementMode(EMovementMode::GROUND, std::make_shared<GroundMovementMode>(1.0f, 3.0f, 10.0f));
+	AddComponent(MovementComp);
+
 	SetActorLocation(ActorInitialPostion);
 	SetActorRotation(QuaternionIdentity());
 	SetActorScale({1.0f, 1.0f});
 
 	bIsJumping = false;
-	SetCurrentMovementMode(EMovementMode::FALLING);
+	MovementComp->SwitchMovementMode(EMovementMode::FALLING);
 }
 
 void Player::Move(const Vector2& Scale)
 {
 	float Magnitude = Vector2Length(Scale);
-	if (Magnitude > 0.0f)
-	{
-		DeaccelerateAlpha = 0.0f;
-		
-		VelocityToAdd.x = Scale.x > 0.0f ? Acceleration : -Acceleration;
-		LastVelocityIncrease = PhysicsComp->GetLinearVelocity();
-		bDecreaseVelocity = false;
-
-		// Animation
-	}
-	else 
-	{
-		bDecreaseVelocity = true;
-		VelocityToAdd = Vector2Zero();
-	}
+	MovementComp->SetMovementInput(Scale);
 }
 
 void Player::Slide(const float& Scale, const InputTrigger& Trigger)
 {
-	if (CurrentMovementMode == EMovementMode::FALLING)
-		return;
+	// Transfer to Slide MovementMode
+	/*if (CurrentMovementMode == EMovementMode::FALLING)
+		return;*/
 
-	std::cout << (Trigger == RELEASED ? "Stop Slide" : "Slide") << std::endl;
-	SetCurrentMovementMode(Trigger == DOWN ? EMovementMode::SLIDING : EMovementMode::GROUND);
+	MovementComp->SwitchMovementMode(Trigger == DOWN ? EMovementMode::SLIDING : EMovementMode::GROUND);
 }
 
 void Player::Jump(const float& Scale, const InputTrigger& Trigger)
@@ -102,30 +91,22 @@ void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 void Player::Update(float DeltaTime)
 {
 	Actor::Update(DeltaTime);
-	Vector2 NewVelocity = Vector2Add(PhysicsComp->GetLinearVelocity(), VelocityToAdd);
-	UpdateJumpVelocity(NewVelocity);
-	if (bDecreaseVelocity) 
-	{
-		DeaccelerateAlpha += DeltaTime * DecelerationScale;
-		DeaccelerateAlpha = Clamp(DeaccelerateAlpha, 0.0f, 1.0f);
-		NewVelocity.x = Lerp(LastVelocityIncrease.x, 0.0f, DeaccelerateAlpha);
-	}
-	ClampVelocity(NewVelocity);
-	PhysicsComp->SetLinearVelocity(NewVelocity);
+	//UpdateJumpVelocity(NewVelocity);
 }
 
 void Player::PostUpdate()
 {
-	Vector2 CurrentVelocity = PhysicsComp->GetLinearVelocity();
+	// Is Player Falling
+	Vector3 CurrentVelocity = PhysicsComp->GetLinearVelocity();
 	if (FloatEquals(CurrentVelocity.y, 0.0f)) {
-		if(CurrentMovementMode != EMovementMode::SLIDING)
-			SetCurrentMovementMode(EMovementMode::GROUND);
+			MovementComp->SwitchMovementMode(EMovementMode::GROUND);
 	}
 	else {
-		SetCurrentMovementMode(EMovementMode::FALLING);
+		MovementComp->SwitchMovementMode(EMovementMode::FALLING);
 	}
 
-	Vector2 NormalizedVelocity = Vector2Normalize(CurrentVelocity);
+	// Set Player Orientation
+	Vector3 NormalizedVelocity = Vector3Normalize(CurrentVelocity);
 	Quaternion RendererComponentRotation = RendererComp->GetComponentRotation();
 	if (NormalizedVelocity.x < 0.0f) {
 		RendererComponentRotation.y = -180.0f;
@@ -134,26 +115,16 @@ void Player::PostUpdate()
 		RendererComponentRotation.y = 0.0f;
 	}
 	RendererComp->SetComponentRotation(RendererComponentRotation);
-	PreviousMovementMode = CurrentMovementMode;
-}
-
-void Player::SetCurrentMovementMode(EMovementMode NewMovementMode)
-{
-	if (CurrentMovementMode == NewMovementMode)
-		return;
-
-	PreviousMovementMode = CurrentMovementMode;
-	CurrentMovementMode = NewMovementMode;
 }
 
 EMovementMode Player::GetCurrentMovementMode() const
 {
-	return CurrentMovementMode;
+	return MovementComp->GetCurrentMovementMode();
 }
 
 EMovementMode Player::GetPreviousMovementMode() const
 {
-	return PreviousMovementMode;
+	return MovementComp->GetPreviousMovementMode();
 }
 
 std::shared_ptr<class PhysicsComponent> Player::GetPhysicsComponent()
@@ -173,18 +144,6 @@ void Player::UpdateJumpVelocity(Vector2& NewVelocity)
 			NewVelocity.y = NewVelocity.y / 1.5f;
 
 		bWasJumpingLastFrame = false;
-	}
-}
-
-void Player::ClampVelocity(Vector2& NewVelocity)
-{
-	if (NewVelocity.x > 0.0f) 
-	{
-		NewVelocity.x = Clamp(NewVelocity.x, 0.0f, TopSpeed);
-	}
-	else 
-	{
-		NewVelocity.x = Clamp(NewVelocity.x, -TopSpeed, 0.0f);
 	}
 }
 

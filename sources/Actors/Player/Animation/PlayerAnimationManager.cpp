@@ -41,7 +41,7 @@ void PlayerAnimationManager::Update(const float& DeltaTime)
 void PlayerAnimationManager::ComputeDefaultAnimation()
 {
 	if (std::shared_ptr<PhysicsComponent> PlayerPhysicsComponent = Player->GetPhysicsComponent()) {
-		Vector2 LinearVelocity = PlayerPhysicsComponent->GetLinearVelocity();
+		Vector3 LinearVelocity = PlayerPhysicsComponent->GetLinearVelocity();
 		if (!FloatEquals(LinearVelocity.x, 0.0f)) {
 			SetCurrentAnimationState("Movement");
 		}

@@ -34,7 +34,7 @@ public:
 	void SetActorRotation(const Quaternion& NewRotation, bool bTriggerEvent = true);
 	void SetActorScale(const Vector3& NewScale);
 
-	virtual void Update(float Tick);
+	virtual void Update(float DeltaTime);
 	virtual void PostUpdate();
 
 	// Event Bindings

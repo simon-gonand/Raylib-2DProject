@@ -1,8 +1,9 @@
 #include "Box2DPhysicsComponent.h"
 
 #include "../../../Physics/Box2D/Box2DWorldManager.h"
-#include <iostream>
 #include "../../../Helpers/Globals/Globals.h"
+
+#include <iostream>
 
 Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Shape* Shape, 
 	const float& Density, const float& Friction, const float& GravityScale, bool bFixedRotation,
@@ -26,30 +27,30 @@ Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2B
 	BindEvents(InOwner);
 }
 
-Vector2 Box2DPhysicsComponent::GetWorldPhysicsLocation() const
+Vector3 Box2DPhysicsComponent::GetWorldPhysicsLocation() const
 {
 	b2Vec2 Position = Body->GetPosition();
-	return { Position.x, Position.y};
+	return { Position.x, Position.y };
 }
 
-Vector2 Box2DPhysicsComponent::GetLinearVelocity() const
+Vector3 Box2DPhysicsComponent::GetLinearVelocity() const
 {
 	b2Vec2 Velocity = Body->GetLinearVelocity();
 	return {Velocity.x, Velocity.y };
 }
 
-void Box2DPhysicsComponent::SetLinearVelocity(const Vector2& NewVelocity)
+void Box2DPhysicsComponent::SetLinearVelocity(const Vector3& NewVelocity)
 {
 	Body->SetLinearVelocity({ NewVelocity.x, NewVelocity.y });
 }
 
-void Box2DPhysicsComponent::AddLinearVelocity(const Vector2& VelocityToAdd)
+void Box2DPhysicsComponent::AddLinearVelocity(const Vector3& VelocityToAdd)
 {
 	b2Vec2 CurrentVelocity = Body->GetLinearVelocity();
 	Body->SetLinearVelocity({ CurrentVelocity.x + VelocityToAdd.x, CurrentVelocity.y + VelocityToAdd.y });
 }
 
-void Box2DPhysicsComponent::Update(float Tick)
+void Box2DPhysicsComponent::Update(float DeltaTime)
 {
 	if (GetOwner() && BodyDef->type != b2_staticBody) 
 	{

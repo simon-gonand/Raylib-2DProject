@@ -90,12 +90,12 @@ void Actor::SetActorScale(const Vector3& NewScale)
 	ActorTransform.scale = NewScale;
 }
 
-void Actor::Update(float Tick)
+void Actor::Update(float DeltaTime)
 {
 	for (std::shared_ptr<ComponentBase> Component : Components) 
 	{
 		if (Component)
-			Component->Update(Tick);
+			Component->Update(DeltaTime);
 	}
 }
 

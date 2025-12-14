@@ -7,7 +7,7 @@ PlayerCameraComponent::PlayerCameraComponent(std::shared_ptr<Actor> InOwner, con
 {
 }
 
-void PlayerCameraComponent::Update(float Tick)
+void PlayerCameraComponent::Update(float DeltaTime)
 {
 	if (std::shared_ptr<Actor> CurrentOwner = GetOwner()) 
 	{

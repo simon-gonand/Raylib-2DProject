@@ -20,5 +20,5 @@ public:
 	const Camera2D& GetCamera() const;
 
 	virtual void Initialize() override;
-	virtual void Update(float Tick) override;
+	virtual void Update(float DeltaTime) override;
 };

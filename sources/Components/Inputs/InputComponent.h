@@ -77,6 +77,6 @@ public:
 	}
 
 	// From ComponentBase
-	virtual void Update(float Tick) override;
+	virtual void Update(float DeltaTime) override;
 };
 

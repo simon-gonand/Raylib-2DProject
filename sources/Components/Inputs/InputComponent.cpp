@@ -8,7 +8,7 @@ InputComponent::InputComponent(std::shared_ptr<Actor> InOwner)
 {
 }
 
-void InputComponent::Update(float Tick)
+void InputComponent::Update(float DeltaTime)
 {
 	for (std::shared_ptr<InputBinding> BindedInput : BindedInputs)
 	{

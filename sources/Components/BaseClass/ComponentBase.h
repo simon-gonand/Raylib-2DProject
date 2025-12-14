@@ -17,7 +17,7 @@ public:
 	void SetOwner(std::shared_ptr<Actor> NewOwner);
 
 	virtual void Initialize() {};
-	virtual void Update(float Tick) = 0;
+	virtual void Update(float DeltaTime) = 0;
 
 	Vector3 GetOwnerLocation() const;
 	Quaternion GetOwnerRotation() const;
