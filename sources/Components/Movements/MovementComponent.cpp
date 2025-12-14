@@ -45,6 +45,7 @@ void MovementComponent::SwitchMovementMode(EMovementMode NewMovementMode)
 		PreviousMovementMode = CurrentMovementMode;
 		CurrentMovementMode = NewMovementMode;
 		CurrentMovementModeObj = NewMovementModeObj->second;
+		CurrentMovementModeObj->OnSwitch();
 	}
 }
 

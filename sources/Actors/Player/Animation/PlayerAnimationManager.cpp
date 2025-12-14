@@ -20,7 +20,7 @@ void PlayerAnimationManager::Update(const float& DeltaTime)
 	if (!Player)
 		return;
 
-	if (Player->GetCurrentMovementMode() == EMovementMode::FALLING) {
+	if (Player->GetCurrentMovementMode() == EMovementMode::FALLING || Player->GetCurrentMovementMode() == EMovementMode::JUMPING) {
 		SetCurrentAnimationState("Jump");
 	}
 	else if (Player->GetCurrentMovementMode() == EMovementMode::SLIDING) {

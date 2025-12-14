@@ -3,11 +3,11 @@
 #include <iostream>
 #include <raymath.h>
 
+Vector3 MovementModeBase::LastVelocityIncrease = Vector3Zero();
+
 MovementModeBase::MovementModeBase(float InAcceleration, float InDeceleration, float InTopSpeed):
-	Acceleration{InAcceleration}, Deceleration{InDeceleration}, TopSpeed{InTopSpeed}
+	Acceleration{InAcceleration}, Deceleration{InDeceleration}, TopSpeed{InTopSpeed}, DeaccelerateAlpha{0.0f}
 {
-	LastVelocityIncrease = Vector3Zero();
-	DeaccelerateAlpha = 0.0f;
 }
 
 bool MovementModeBase::CanSwitchToMode(EMovementMode CurrentMovementMode) const
@@ -15,7 +15,7 @@ bool MovementModeBase::CanSwitchToMode(EMovementMode CurrentMovementMode) const
 	return true;
 }
 
-Vector3 MovementModeBase::PerformMovement(float DeltaTime, const Vector2 Input, const Vector3& CurrentVelocity)
+Vector3 MovementModeBase::PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity)
 {
 	float Magnitude = Vector2Length(Input);
 	Vector3 Result = CurrentVelocity;
@@ -25,7 +25,7 @@ Vector3 MovementModeBase::PerformMovement(float DeltaTime, const Vector2 Input, 
 		DeaccelerateAlpha = 0.0f;
 		LastVelocityIncrease = CurrentVelocity;
 	}
-	else
+	else if (!FloatEquals(Result.x, 0.0f))
 	{
 		DeaccelerateAlpha += DeltaTime * Deceleration;
 		DeaccelerateAlpha = Clamp(DeaccelerateAlpha, 0.0f, 1.0f);
@@ -42,5 +42,6 @@ Vector3 MovementModeBase::PerformMovement(float DeltaTime, const Vector2 Input, 
 		Result.x = Clamp(Result.x, -TopSpeed, 0.0f);
 	}
 
+	std::cout << CurrentVelocity.x << "; " << CurrentVelocity.y << std::endl;
 	return Result;
 }

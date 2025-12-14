@@ -30,13 +30,6 @@ private:
 	std::shared_ptr<class RendererComponent> RendererComp;
 	std::shared_ptr<class MovementComponent> MovementComp;
 
-	float JumpSpeed = -20.0f;
-
-	bool bWasJumpingLastFrame = false;
-	bool bIsJumping = false;
-
-	void UpdateJumpVelocity(Vector2& NewVelocity);
-
 	std::shared_ptr<class AnimationManager> CreatePlayerAnimationManager();
 };
 

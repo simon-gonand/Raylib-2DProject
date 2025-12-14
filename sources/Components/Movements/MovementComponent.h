@@ -9,6 +9,7 @@ enum class EMovementMode : int
 {
 	NONE, // First MovementMode
 	GROUND,
+	JUMPING,
 	FALLING,
 	SLIDING
 };

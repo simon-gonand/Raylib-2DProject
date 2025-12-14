@@ -17,6 +17,8 @@
 #include "Animation/PlayerAnimationManager.h"
 #include "../../Components/Movements/MovementComponent.h"
 #include "../../MovementModes/GroudMovementMode/GroundMovementMode.h"
+#include "../../MovementModes/JumpingMovementMode/JumpingMovementMode.h"
+#include "../../MovementModes/FallingMovementMode/FallingMovementMode.h"
 
 Player::Player()
 {
@@ -57,13 +59,14 @@ void Player::Initialize()
 
 	MovementComp = std::make_shared<MovementComponent>(PlayerSPtr, PhysicsComp);
 	MovementComp->AddNewMovementMode(EMovementMode::GROUND, std::make_shared<GroundMovementMode>(1.0f, 3.0f, 10.0f));
+	MovementComp->AddNewMovementMode(EMovementMode::JUMPING, std::make_shared<JumpingMovementMode>(1.0f, 3.0f, 10.0f, -20.0f, MovementComp));
+	MovementComp->AddNewMovementMode(EMovementMode::FALLING, std::make_shared<FallingMovementMode>(1.0f, 3.0f, 10.0f, 30.0f, 1.5f));
 	AddComponent(MovementComp);
 
 	SetActorLocation(ActorInitialPostion);
 	SetActorRotation(QuaternionIdentity());
 	SetActorScale({1.0f, 1.0f});
 
-	bIsJumping = false;
 	MovementComp->SwitchMovementMode(EMovementMode::FALLING);
 }
 
@@ -84,14 +87,15 @@ void Player::Slide(const float& Scale, const InputTrigger& Trigger)
 
 void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 {
-	bWasJumpingLastFrame = bIsJumping;
-	bIsJumping = Trigger == DOWN;
+	if (Trigger == DOWN)
+		MovementComp->SwitchMovementMode(EMovementMode::JUMPING);
+	else
+		MovementComp->SwitchMovementMode(EMovementMode::FALLING);
 }
 
 void Player::Update(float DeltaTime)
 {
 	Actor::Update(DeltaTime);
-	//UpdateJumpVelocity(NewVelocity);
 }
 
 void Player::PostUpdate()
@@ -101,8 +105,10 @@ void Player::PostUpdate()
 	if (FloatEquals(CurrentVelocity.y, 0.0f)) {
 			MovementComp->SwitchMovementMode(EMovementMode::GROUND);
 	}
-	else {
-		MovementComp->SwitchMovementMode(EMovementMode::FALLING);
+	else 
+	{
+		if(MovementComp->GetCurrentMovementMode() != EMovementMode::JUMPING)
+			MovementComp->SwitchMovementMode(EMovementMode::FALLING);
 	}
 
 	// Set Player Orientation
@@ -130,21 +136,6 @@ EMovementMode Player::GetPreviousMovementMode() const
 std::shared_ptr<class PhysicsComponent> Player::GetPhysicsComponent()
 {
 	return PhysicsComp;
-}
-
-void Player::UpdateJumpVelocity(Vector2& NewVelocity)
-{
-	if (bIsJumping && FloatEquals(NewVelocity.y, 0.0f))
-	{
-		NewVelocity = Vector2Add(NewVelocity, { 0.0f, JumpSpeed });
-	}
-	else if (bWasJumpingLastFrame)
-	{
-		if(!bIsJumping && NewVelocity.y < 0.0f)
-			NewVelocity.y = NewVelocity.y / 1.5f;
-
-		bWasJumpingLastFrame = false;
-	}
 }
 
 std::shared_ptr<AnimationManager> Player::CreatePlayerAnimationManager()
