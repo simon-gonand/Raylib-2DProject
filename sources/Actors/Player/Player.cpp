@@ -19,6 +19,7 @@
 #include "../../MovementModes/JumpingMovementMode/JumpingMovementMode.h"
 #include "../../MovementModes/FallingMovementMode/FallingMovementMode.h"
 #include "../../MovementModes/SlidingMovementMode/SlidingMovementMode.h"
+#include "../../MovementModes/GroundMovementMode/GroundMovementMode.h"
 
 Player::Player()
 {
@@ -58,7 +59,7 @@ void Player::Initialize()
 	AddComponent(RendererComp);
 
 	MovementComp = std::make_shared<MovementComponent>(PlayerSPtr, PhysicsComp);
-	MovementComp->AddNewMovementMode(EMovementMode::GROUND, std::make_shared<MovementModeBase>(1.0f, 3.0f, 10.0f));
+	MovementComp->AddNewMovementMode(EMovementMode::GROUND, std::make_shared<GroundMovementMode>(1.0f, 3.0f, 10.0f));
 	MovementComp->AddNewMovementMode(EMovementMode::JUMPING, std::make_shared<JumpingMovementMode>(1.0f, 3.0f, 10.0f, -20.0f, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::FALLING, std::make_shared<FallingMovementMode>(1.0f, 3.0f, 10.0f, 30.0f, 1.5f));
 	MovementComp->AddNewMovementMode(EMovementMode::SLIDING, std::make_shared<SlidingMovementMode>(1.0f, 0.75f, 10.0f, MovementComp));
