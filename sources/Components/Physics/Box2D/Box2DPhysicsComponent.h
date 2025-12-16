@@ -17,14 +17,13 @@ public:
 	virtual void SetLinearVelocity(const Vector3& NewVelocity) override;
 	virtual void AddLinearVelocity(const Vector3& VelocityToAdd) override;
 
+	void EditCollisionShape(b2Shape* NewShape);
+
 protected:
 	virtual void Update(float DeltaTime) override;
 
 private:
-	b2BodyDef* BodyDef;
 	b2Body* Body;
-	b2Shape* BodyShape;
-	b2FixtureDef* FixtureDef;
 	b2Fixture* Fixture;
 
 	void BindEvents(std::shared_ptr<Actor> InOwner);

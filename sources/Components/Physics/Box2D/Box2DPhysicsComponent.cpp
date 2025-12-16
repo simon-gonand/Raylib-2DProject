@@ -11,15 +11,14 @@ Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2B
 	: PhysicsComponent(InOwner, InLocation, InRotation, InScale)
 {
 	Vector3 WorldLocation = GetWorldLocation();
-	BodyDef = new b2BodyDef();
+	b2BodyDef* BodyDef = new b2BodyDef();
 	BodyDef->type = Type;
 	BodyDef->position = b2Vec2(WorldLocation.x, WorldLocation.y);
 	BodyDef->gravityScale = GravityScale;
 	BodyDef->fixedRotation = bFixedRotation;
 	Body = ((Box2DWorldManager*)Box2DWorldManager::Get(BOX2D).get())->CreateBody(BodyDef);
-	BodyShape = Shape;
-	FixtureDef = new b2FixtureDef();
-	FixtureDef->shape = BodyShape;
+	b2FixtureDef* FixtureDef = new b2FixtureDef();
+	FixtureDef->shape = Shape;
 	FixtureDef->density = Density;
 	FixtureDef->friction = Friction;
 	Fixture = Body->CreateFixture(FixtureDef);
@@ -50,9 +49,22 @@ void Box2DPhysicsComponent::AddLinearVelocity(const Vector3& VelocityToAdd)
 	Body->SetLinearVelocity({ CurrentVelocity.x + VelocityToAdd.x, CurrentVelocity.y + VelocityToAdd.y });
 }
 
+void Box2DPhysicsComponent::EditCollisionShape(b2Shape* NewShape)
+{
+	if (!NewShape || NewShape == Fixture->GetShape())
+		return;
+
+	b2FixtureDef* FixtureDef = new b2FixtureDef();
+	FixtureDef->shape = NewShape;
+	FixtureDef->density = Fixture->GetDensity();
+	FixtureDef->friction = Fixture->GetFriction();
+	Body->DestroyFixture(Fixture);
+	Fixture = Body->CreateFixture(FixtureDef);
+}
+
 void Box2DPhysicsComponent::Update(float DeltaTime)
 {
-	if (GetOwner() && BodyDef->type != b2_staticBody) 
+	if (GetOwner() && Body->GetType() != b2_staticBody)
 	{
 		b2Vec2 Position = Body->GetPosition();
 		Vector3 VPosition({ Position.x * PTM_RATIO, Position.y * PTM_RATIO });

@@ -43,11 +43,17 @@ void Player::Initialize()
 	InputComp->BindInput<Player, &Player::Slide>("Slide", RELEASED, this);
 	InputComp->BindAxis<Player, &Player::Move>("Move", this);
 
-	b2PolygonShape PhysicsShape;
-	PhysicsShape.SetAsBox(0.8f, 1.6f);
-	Vector3 ActorInitialPostion = { 0.0f, -100.0f, 0.0f};
+	Vector3 ActorInitialPostion = { 0.0f, -50.0f, 0.0f};
 
-	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, &PhysicsShape, 1.0f, 0.0f, 3.0f, true);
+	std::shared_ptr<b2PolygonShape> GroundPhysicsShape = std::make_shared<b2PolygonShape>();
+	GroundPhysicsShape->SetAsBox(0.8f, 1.6f);
+	CollisionShapes.insert({ EMovementMode::GROUND, GroundPhysicsShape });
+
+	std::shared_ptr<b2PolygonShape> SlidingPhysicsShape = std::make_shared<b2PolygonShape>();
+	SlidingPhysicsShape->SetAsBox(1.3f, 0.5f, b2Vec2(0.0f, 1.0f), 0.0f);
+	CollisionShapes.insert({ EMovementMode::SLIDING, SlidingPhysicsShape });
+
+	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, GroundPhysicsShape.get(), 1.0f, 0.0f, 3.0f, true);
 	AddComponent(PhysicsComp);
 
 	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, Vector2({ ActorInitialPostion.x, ActorInitialPostion.y }), Vector2({ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }), 0.0f, 2.5f);
@@ -102,8 +108,8 @@ void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 
 void Player::Update(float DeltaTime)
 {
+	UpdateCollision();
 	Actor::Update(DeltaTime);
-
 	UpdateSlidingAvailability(DeltaTime);
 }
 
@@ -153,6 +159,28 @@ std::shared_ptr<AnimationManager> Player::CreatePlayerAnimationManager()
 	std::shared_ptr<PlayerAnimationManager> Result = std::make_shared<PlayerAnimationManager>();
 	Result->Initialize(std::static_pointer_cast<Player>(shared_from_this()));
 	return Result;
+}
+
+void Player::UpdateCollision()
+{
+	if (MovementComp->GetCurrentMovementMode() != MovementComp->GetPreviousMovementMode())
+	{
+		std::shared_ptr<b2Shape> Shape = nullptr;
+		auto CollisionShape = CollisionShapes.find(MovementComp->GetCurrentMovementMode());
+		if (CollisionShape != CollisionShapes.end())
+		{
+			Shape = CollisionShape->second;
+		}
+		else
+		{
+			Shape = CollisionShapes[EMovementMode::GROUND];
+		}
+		std::shared_ptr<Box2DPhysicsComponent> Box2DPhysicsComp = std::dynamic_pointer_cast<Box2DPhysicsComponent>(PhysicsComp);
+		if (Box2DPhysicsComp)
+		{
+			Box2DPhysicsComp->EditCollisionShape(Shape.get());
+		}
+	}
 }
 
 void Player::UpdateSlidingAvailability(float DeltaTime)

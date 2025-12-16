@@ -3,6 +3,9 @@
 #include "../BaseClass/Actor.h"
 #include "../../Components/Movements/MovementComponent.h"
 
+#include <box2d/box2d.h>
+#include <unordered_map>
+
 class Player: public Actor
 {
 public:
@@ -32,9 +35,12 @@ private:
 
 	std::shared_ptr<class AnimationManager> CreatePlayerAnimationManager();
 
+	std::unordered_map<EMovementMode, std::shared_ptr<b2Shape>> CollisionShapes;
+
 	float TimeBeforeActivateSliding = 0.5f;
 	float CurrentTimeBeforeActivateSliding = 0.0f;
 
+	void UpdateCollision();
 	void UpdateSlidingAvailability(float DeltaTime);
 };
 
