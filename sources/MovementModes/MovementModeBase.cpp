@@ -6,13 +6,13 @@
 Vector3 MovementModeBase::LastVelocityIncrease = Vector3Zero();
 
 MovementModeBase::MovementModeBase(float InAcceleration, float InDeceleration, float InTopSpeed):
-	Acceleration{InAcceleration}, Deceleration{InDeceleration}, TopSpeed{InTopSpeed}, DeaccelerateAlpha{0.0f}
+	Acceleration{InAcceleration}, Deceleration{InDeceleration}, TopSpeed{InTopSpeed}, DeaccelerateAlpha{0.0f}, bIsActive{true}
 {
 }
 
 bool MovementModeBase::CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const
 {
-	return true;
+	return IsActive();
 }
 
 Vector3 MovementModeBase::PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity)
@@ -43,4 +43,24 @@ Vector3 MovementModeBase::PerformMovement(float DeltaTime, const Vector2& Input,
 	}
 
 	return Result;
+}
+
+void MovementModeBase::Activate()
+{
+	bIsActive = true;
+}
+
+void MovementModeBase::Deactivate()
+{
+	bIsActive = false;
+}
+
+bool MovementModeBase::IsActive() const
+{
+	return bIsActive;
+}
+
+float MovementModeBase::GetTopSpeed() const
+{
+	return TopSpeed;
 }

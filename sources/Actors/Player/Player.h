@@ -31,5 +31,10 @@ private:
 	std::shared_ptr<class MovementComponent> MovementComp;
 
 	std::shared_ptr<class AnimationManager> CreatePlayerAnimationManager();
+
+	float TimeBeforeActivateSliding = 0.5f;
+	float CurrentTimeBeforeActivateSliding = 0.0f;
+
+	void UpdateSlidingAvailability(float DeltaTime);
 };
 

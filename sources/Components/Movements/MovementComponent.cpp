@@ -56,6 +56,43 @@ void MovementComponent::AddNewMovementMode(EMovementMode NewMovementMode, std::s
 		MovementModes.insert({ NewMovementMode, NewMovementModeObj });
 }
 
+void MovementComponent::DeactivateMovementMode(EMovementMode MovementModeToDeactivate)
+{
+	auto MovementMode = MovementModes.find(MovementModeToDeactivate);
+	if (MovementMode != MovementModes.end() && MovementMode->second)
+	{
+		MovementMode->second->Deactivate();
+	}
+}
+
+void MovementComponent::ActivateMovementMode(EMovementMode MovementModeToActivate)
+{
+	auto MovementMode = MovementModes.find(MovementModeToActivate);
+	if (MovementMode != MovementModes.end() && MovementMode->second)
+	{
+		MovementMode->second->Activate();
+	}
+}
+
+bool MovementComponent::IsMovementModeActivated(EMovementMode MovementModeToCheck) const
+{
+	auto MovementMode = MovementModes.find(MovementModeToCheck);
+	if (MovementMode != MovementModes.end() && MovementMode->second)
+	{
+		return MovementMode->second->IsActive();
+	}
+	return false;
+}
+
+float MovementComponent::GetCurrentMovementTopSpeed() const
+{
+	if (CurrentMovementModeObj) 
+	{
+		return CurrentMovementModeObj->GetTopSpeed();
+	}
+	return 0.0f;
+}
+
 void MovementComponent::Update(float DeltaTime)
 {
 	if (CurrentMovementModeObj)

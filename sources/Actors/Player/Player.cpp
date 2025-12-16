@@ -70,6 +70,7 @@ void Player::Initialize()
 	SetActorScale({1.0f, 1.0f});
 
 	MovementComp->SwitchMovementMode(EMovementMode::FALLING);
+	MovementComp->DeactivateMovementMode(EMovementMode::SLIDING);
 }
 
 void Player::Move(const Vector2& Scale)
@@ -101,6 +102,8 @@ void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 void Player::Update(float DeltaTime)
 {
 	Actor::Update(DeltaTime);
+
+	UpdateSlidingAvailability(DeltaTime);
 }
 
 void Player::PostUpdate()
@@ -149,4 +152,21 @@ std::shared_ptr<AnimationManager> Player::CreatePlayerAnimationManager()
 	std::shared_ptr<PlayerAnimationManager> Result = std::make_shared<PlayerAnimationManager>();
 	Result->Initialize(std::static_pointer_cast<Player>(shared_from_this()));
 	return Result;
+}
+
+void Player::UpdateSlidingAvailability(float DeltaTime)
+{
+	Vector3 CurrentVelocity = PhysicsComp->GetLinearVelocity();
+	float TopSpeed = MovementComp->GetCurrentMovementTopSpeed();
+	if ((CurrentVelocity.x < -TopSpeed / 2.0f) || (CurrentVelocity.x > TopSpeed / 2.0f))
+	{
+		CurrentTimeBeforeActivateSliding += DeltaTime;
+		if (CurrentTimeBeforeActivateSliding >= TimeBeforeActivateSliding)
+			MovementComp->ActivateMovementMode(EMovementMode::SLIDING);
+	}
+	else
+	{
+		CurrentTimeBeforeActivateSliding = 0.0f;
+		MovementComp->DeactivateMovementMode(EMovementMode::SLIDING);
+	}
 }

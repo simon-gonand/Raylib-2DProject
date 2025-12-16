@@ -30,6 +30,12 @@ public:
 
 	void AddNewMovementMode(EMovementMode NewMovementMode, std::shared_ptr<class MovementModeBase> NewMovementModeObj);
 
+	void DeactivateMovementMode(EMovementMode MovementModeToDeactivate);
+	void ActivateMovementMode(EMovementMode MovementModeToActivate);
+	bool IsMovementModeActivated(EMovementMode MovementModeToCheck) const;
+
+	float GetCurrentMovementTopSpeed() const;
+
 protected:
 	virtual void Update(float DeltaTime) override;
 

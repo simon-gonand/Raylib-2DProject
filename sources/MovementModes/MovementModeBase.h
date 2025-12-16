@@ -13,6 +13,12 @@ public:
 	virtual void OnSwitch() {}
 	virtual Vector3 PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity);
 
+	void Activate();
+	void Deactivate();
+	bool IsActive() const;
+
+	float GetTopSpeed() const;
+
 protected:
 	float Acceleration;
 	float Deceleration;
@@ -21,4 +27,6 @@ protected:
 	float TopSpeed;
 
 	static Vector3 LastVelocityIncrease; // Need to be shared to all MovementModeBase instances
+
+	bool bIsActive;
 };

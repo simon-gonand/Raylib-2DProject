@@ -7,5 +7,5 @@ GroundMovementMode::GroundMovementMode(float InAcceleration, float InDeceleratio
 
 bool GroundMovementMode::CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const
 {
-	return FloatEquals(CurrentVelocity.y, 0.0f);
+	return FloatEquals(CurrentVelocity.y, 0.0f) && MovementModeBase::CanSwitchToMode(CurrentMovementMode, CurrentVelocity);
 }
