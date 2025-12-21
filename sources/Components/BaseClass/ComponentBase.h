@@ -9,8 +9,10 @@ class ComponentBase
 private:
 	std::shared_ptr<Actor> Owner;
 
+	bool bIsActive;
+
 public:
-	ComponentBase(std::shared_ptr<Actor> InOwner);
+	ComponentBase(std::shared_ptr<Actor> InOwner, bool bAutoActivate = true);
 	virtual ~ComponentBase(){}
 
 	std::shared_ptr<Actor> GetOwner() const;
@@ -18,6 +20,10 @@ public:
 
 	virtual void Initialize() {};
 	virtual void Update(float DeltaTime) = 0;
+
+	void Activate();
+	void Deactivate();
+	bool IsActive() const;
 
 	Vector3 GetOwnerLocation() const;
 	Quaternion GetOwnerRotation() const;

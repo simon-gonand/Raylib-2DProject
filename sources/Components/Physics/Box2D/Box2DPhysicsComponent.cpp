@@ -6,9 +6,9 @@
 #include <iostream>
 
 Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Shape* Shape, 
-	const float& Density, const float& Friction, const float& GravityScale, bool bFixedRotation,
+	const float& Density, const float& Friction, const float& GravityScale, bool bFixedRotation, bool bAutoActivate,
 	const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale)
-	: PhysicsComponent(InOwner, InLocation, InRotation, InScale)
+	: PhysicsComponent(InOwner, bAutoActivate, InLocation, InRotation, InScale)
 {
 	Vector3 WorldLocation = GetWorldLocation();
 	b2BodyDef* BodyDef = new b2BodyDef();

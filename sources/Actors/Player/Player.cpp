@@ -58,15 +58,15 @@ void Player::Initialize()
 	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, GroundPhysicsShape.get(), 1.0f, 0.0f, 3.0f, true);
 	AddComponent(PhysicsComp);
 
-	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, Vector2({ ActorInitialPostion.x, ActorInitialPostion.y }), Vector2({ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }), 0.0f, 2.5f);
+	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, true, Vector2({ ActorInitialPostion.x, ActorInitialPostion.y }), Vector2({ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }), 0.0f, 2.5f);
 	AddComponent(CameraComp);
 
 	// Create Animation Manager + add Idle animation
 	std::shared_ptr<AnimationManager> AnimManager = CreatePlayerAnimationManager();
-	RendererComp = std::make_shared<SpriteSheet2DRendererComponent>(PlayerSPtr, "", Vector3({ 2.5f, -15.0f }), QuaternionIdentity(), Vector3({1.0f, 1.0f}), Vector2({3.0f, 3.0f}), AnimManager);
+	RendererComp = std::make_shared<SpriteSheet2DRendererComponent>(PlayerSPtr, "", true, Vector3({ 2.5f, -15.0f }), QuaternionIdentity(), Vector3({1.0f, 1.0f}), Vector2({3.0f, 3.0f}), AnimManager);
 	AddComponent(RendererComp);
 
-	MovementComp = std::make_shared<MovementComponent>(PlayerSPtr, PhysicsComp);
+	MovementComp = std::make_shared<MovementComponent>(PlayerSPtr, PhysicsComp, true);
 	MovementComp->AddNewMovementMode(EMovementMode::GROUND, std::make_shared<GroundMovementMode>(1.0f, 3.0f, 10.0f));
 	MovementComp->AddNewMovementMode(EMovementMode::JUMPING, std::make_shared<JumpingMovementMode>(1.0f, 3.0f, 10.0f, -20.0f, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::FALLING, std::make_shared<FallingMovementMode>(1.0f, 3.0f, 10.0f, 30.0f, 1.5f));

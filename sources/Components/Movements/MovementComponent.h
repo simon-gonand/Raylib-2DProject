@@ -17,7 +17,7 @@ enum class EMovementMode : int
 class MovementComponent : public ComponentBase
 {
 public:
-	MovementComponent(std::shared_ptr<Actor> Owner, std::shared_ptr<PhysicsComponent> InOwnerPhysicsComponent);
+	MovementComponent(std::shared_ptr<Actor> Owner, std::shared_ptr<PhysicsComponent> InOwnerPhysicsComponent, bool bAutoActivate = true);
 
 	const Vector3& GetMovementVelocity();
 

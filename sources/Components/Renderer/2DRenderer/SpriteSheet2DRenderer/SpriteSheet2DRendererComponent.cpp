@@ -1,8 +1,9 @@
 #include "SpriteSheet2DRendererComponent.h"
 #include <raymath.h>
 
-SpriteSheet2DRendererComponent::SpriteSheet2DRendererComponent(std::shared_ptr<Actor> Owner, const char* DefaultTexturePath, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale, const Vector2& InSize, std::shared_ptr<AnimationManager> InAnimManager) :
-	Renderer2DComponent(Owner, DefaultTexturePath, InLocation, InRotation, InScale, InSize, InAnimManager)
+SpriteSheet2DRendererComponent::SpriteSheet2DRendererComponent(std::shared_ptr<Actor> Owner, const char* DefaultTexturePath, bool bAutoActivate, 
+	const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale, const Vector2& InSize, std::shared_ptr<AnimationManager> InAnimManager) :
+	Renderer2DComponent(Owner, DefaultTexturePath, bAutoActivate, InLocation, InRotation, InScale, InSize, InAnimManager)
 {
 }
 

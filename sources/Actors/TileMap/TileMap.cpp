@@ -347,7 +347,7 @@ void TileMap::InitializeColliders()
 		}
 
 		std::shared_ptr<Box2DPhysicsComponent> PhysicsComp =
-			std::make_shared<Box2DPhysicsComponent>(shared_from_this(), b2_staticBody, Shape, 1.0f, 0.3f, 1.0f, false, Location);
+			std::make_shared<Box2DPhysicsComponent>(shared_from_this(), b2_staticBody, Shape, 1.0f, 0.3f, 1.0f, false, true, Location);
 		PhysicsComps.push_back(PhysicsComp);
 		AddComponent(PhysicsComp);
 	}

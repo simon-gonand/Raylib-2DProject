@@ -1,7 +1,7 @@
 #include "TransformComponent.h"
 
-TransformComponent::TransformComponent(std::shared_ptr<Actor> InOwner, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale):
-	ComponentBase(InOwner)
+TransformComponent::TransformComponent(std::shared_ptr<Actor> InOwner, bool bAutoActivate, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale):
+	ComponentBase(InOwner, bAutoActivate)
 {
 	RelativeTransform.translation = InLocation;
 	RelativeTransform.rotation = InRotation;

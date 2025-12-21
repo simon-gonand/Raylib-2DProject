@@ -94,7 +94,7 @@ void Actor::Update(float DeltaTime)
 {
 	for (std::shared_ptr<ComponentBase> Component : Components) 
 	{
-		if (Component)
+		if (Component && Component->IsActive())
 			Component->Update(DeltaTime);
 	}
 }

@@ -2,9 +2,9 @@
 
 #include "../../Managers/Camera/CameraManager.h"
 
-CameraComponent::CameraComponent(std::shared_ptr<Actor> InOwner,
+CameraComponent::CameraComponent(std::shared_ptr<Actor> InOwner, bool bAutoActivate,
 	const Vector2& InitialPos, const Vector2& Offset, const float& Rotation, const float& Zoom):
-	ComponentBase(InOwner)
+	ComponentBase(InOwner, bAutoActivate)
 {
 	Camera = Camera2D();
 	Camera.target = InitialPos;

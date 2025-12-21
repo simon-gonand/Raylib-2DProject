@@ -52,7 +52,7 @@ private:
 	std::vector <std::shared_ptr<AxisBinding>> BindedAxes;
 
 public:
-	InputComponent(std::shared_ptr<Actor> InOwner);
+	InputComponent(std::shared_ptr<Actor> InOwner, bool bAutoActivate = true);
 
 	template<class C, void (C::* Function)(const float&, const InputTrigger&)>
 	void BindInput(const std::string& EventName, const InputTrigger& Trigger, C* Instance)

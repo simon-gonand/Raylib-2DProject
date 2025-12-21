@@ -2,9 +2,9 @@
 
 #include <raymath.h>
 
-ComponentBase::ComponentBase(std::shared_ptr<Actor> InOwner)
+ComponentBase::ComponentBase(std::shared_ptr<Actor> InOwner, bool bAutoActivate)
+	: Owner {InOwner}, bIsActive{bAutoActivate}
 {
-	Owner = InOwner;
 }
 
 std::shared_ptr<Actor> ComponentBase::GetOwner() const
@@ -15,6 +15,21 @@ std::shared_ptr<Actor> ComponentBase::GetOwner() const
 void ComponentBase::SetOwner(std::shared_ptr<Actor> NewOwner)
 {
 	Owner = NewOwner;
+}
+
+void ComponentBase::Activate()
+{
+	bIsActive = true;
+}
+
+void ComponentBase::Deactivate()
+{
+	bIsActive = false;
+}
+
+bool ComponentBase::IsActive() const
+{
+	return bIsActive;
 }
 
 Vector3 ComponentBase::GetOwnerLocation() const

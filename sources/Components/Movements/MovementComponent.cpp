@@ -5,8 +5,8 @@
 
 #include <raymath.h>
 
-MovementComponent::MovementComponent(std::shared_ptr<Actor> Owner, std::shared_ptr<PhysicsComponent> InOwnerPhysicsComponent)
-	: ComponentBase(Owner), OwnerPhysicsComponent{InOwnerPhysicsComponent}
+MovementComponent::MovementComponent(std::shared_ptr<Actor> Owner, std::shared_ptr<PhysicsComponent> InOwnerPhysicsComponent, bool bAutoActivate)
+	: ComponentBase(Owner, bAutoActivate), OwnerPhysicsComponent{InOwnerPhysicsComponent}
 {
 	MovementVelocity = Vector3Zero();
 	CurrentMovementMode = EMovementMode::NONE;

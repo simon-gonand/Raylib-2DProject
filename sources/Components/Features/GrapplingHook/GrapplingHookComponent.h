@@ -12,7 +12,7 @@ class GrapplingHookComponent : public TransformComponent
 	static_assert(std::is_base_of<Renderer2DComponent, GrapplingHookRendererComponent>::value, "GrapplingHookRendererComponent class must derive from Renderer2DComponent");
 
 public:
-	GrapplingHookComponent(std::shared_ptr<Actor> InOwner, const char* InAimTexturePath, const Vector2& InAimRendererSize = { 1.0f, 1.0f }, float InAimSpeed = 1.0f, const Vector3 & InLocation = { 0.0f }, const Quaternion & InRotation = { 0.0f }, const Vector3 & InScale = { 1.0f, 1.0f, 1.0f });
+	GrapplingHookComponent(std::shared_ptr<Actor> InOwner, const char* InAimTexturePath, const Vector2& InAimRendererSize = { 1.0f, 1.0f }, float InAimSpeed = 1.0f, bool bAutoActivate = true, const Vector3 & InLocation = { 0.0f }, const Quaternion & InRotation = { 0.0f }, const Vector3 & InScale = { 1.0f, 1.0f, 1.0f });
 	
 	void UpdateAimPosition(const Vector2& InScale);
 
@@ -31,11 +31,11 @@ private:
 // Template function implementation must be in header
 
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
-inline GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::GrapplingHookComponent(std::shared_ptr<Actor> InOwner, const char* InAimTexturePath, const Vector2& InAimRendererSize, float InAimSpeed, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale)
-	: TransformComponent(InOwner, InLocation, InRotation, InScale), AimSpeed {InAimSpeed}
+inline GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::GrapplingHookComponent(std::shared_ptr<Actor> InOwner, const char* InAimTexturePath, const Vector2& InAimRendererSize, float InAimSpeed, bool bAutoActivate, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale)
+	: TransformComponent(InOwner, bAutoActivate, InLocation, InRotation, InScale), AimSpeed {InAimSpeed}
 {
-	AimRendererComp = std::make_shared<AimRendererComponent>(InOwner, InAimTexturePath, InLocation, InRotation, InScale, InAimRendererSize);
-	CableRendererComp = std::make_shared<GrapplingHookRendererComponent>(InOwner, "", true, InLocation, InRotation, InScale);
+	AimRendererComp = std::make_shared<AimRendererComponent>(InOwner, InAimTexturePath, true, InLocation, InRotation, InScale, InAimRendererSize);
+	CableRendererComp = std::make_shared<GrapplingHookRendererComponent>(InOwner, "", true, false, InLocation, InRotation, InScale);
 	if (InOwner) 
 	{
 		InOwner->AddComponent(AimRendererComp);

@@ -3,8 +3,8 @@
 #include "../../../../Helpers/Math/Vectors/Vectors.h"
 #include "../../../../Managers/Camera/CameraManager.h"
 
-TileMapRendererComponent::TileMapRendererComponent(std::shared_ptr<Actor> Owner, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale, const Vector2& InSize):
-	Renderer2DComponent(Owner, "", InLocation, InRotation, InScale, InSize)
+TileMapRendererComponent::TileMapRendererComponent(std::shared_ptr<Actor> Owner, bool bAutoActivate, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale, const Vector2& InSize):
+	Renderer2DComponent(Owner, "", bAutoActivate, InLocation, InRotation, InScale, InSize)
 {
 	if (Owner && typeid(*Owner) == typeid(TileMap)) {
 		TileMapOwner = std::static_pointer_cast<TileMap>(Owner);

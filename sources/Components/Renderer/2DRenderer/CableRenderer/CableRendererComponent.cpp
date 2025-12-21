@@ -1,8 +1,9 @@
 #include "CableRendererComponent.h"
 #include "../../../../Helpers/Math/Vectors/Vectors.h"
 
-CableRendererComponent::CableRendererComponent(std::shared_ptr<Actor> InOwner, const char* TexturePath, bool bInUseComponentLocationAsStartPosition, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale, const Vector2& InSize, std::shared_ptr<AnimationManager> InAnimManager)
-	: Renderer2DComponent(InOwner, TexturePath, InLocation, InRotation, InScale, InSize, InAnimManager), 
+CableRendererComponent::CableRendererComponent(std::shared_ptr<Actor> InOwner, const char* TexturePath, bool bInUseComponentLocationAsStartPosition, 
+	bool bAutoActivate, const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale, const Vector2& InSize, std::shared_ptr<AnimationManager> InAnimManager)
+	: Renderer2DComponent(InOwner, TexturePath, bAutoActivate, InLocation, InRotation, InScale, InSize, InAnimManager), 
 	bUseComponentLocationAsStartPosition{ bInUseComponentLocationAsStartPosition }, EndPosition {0.0f}
 {
 	if (!bInUseComponentLocationAsStartPosition)

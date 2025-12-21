@@ -7,7 +7,7 @@
 class TransformComponent : public ComponentBase
 {
 public:
-	TransformComponent(std::shared_ptr<Actor> InOwner, const Vector3& InLocation = {0.0f}, const Quaternion& InRotation = {0.0f}, const Vector3& InScale = {1.0f, 1.0f, 1.0f});
+	TransformComponent(std::shared_ptr<Actor> InOwner, bool bAutoActivate = true, const Vector3& InLocation = {0.0f}, const Quaternion& InRotation = {0.0f}, const Vector3& InScale = {1.0f, 1.0f, 1.0f});
 
 	void SetComponentLocation(const Vector3& NewLocation);
 	void SetComponentRotation(const Quaternion& NewRotation);

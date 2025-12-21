@@ -5,7 +5,7 @@
 class CableRendererComponent : public Renderer2DComponent
 {
 public:
-	CableRendererComponent(std::shared_ptr<Actor> InOwner, const char* TexturePath, bool bInUseComponentLocationAsStartPosition, const Vector3& InLocation = {0.0f}, const Quaternion& InRotation = {0.0f}, const Vector3& InScale = {1.0f, 1.0f, 1.0f}, const Vector2& InSize = {1.0f, 1.0f}, std::shared_ptr<AnimationManager> InAnimManager = nullptr);
+	CableRendererComponent(std::shared_ptr<Actor> InOwner, const char* TexturePath, bool bInUseComponentLocationAsStartPosition, bool bAutoActivate = true, const Vector3& InLocation = {0.0f}, const Quaternion& InRotation = {0.0f}, const Vector3& InScale = {1.0f, 1.0f, 1.0f}, const Vector2& InSize = {1.0f, 1.0f}, std::shared_ptr<AnimationManager> InAnimManager = nullptr);
 	
 	void SetStartPosition(const Vector2& InStartPosition);
 	void SetEndPosition(const Vector2& InEndPosition);

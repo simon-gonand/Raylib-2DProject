@@ -3,8 +3,8 @@
 #include <iostream>
 #include <raymath.h>
 
-InputComponent::InputComponent(std::shared_ptr<Actor> InOwner)
-	:ComponentBase(InOwner)
+InputComponent::InputComponent(std::shared_ptr<Actor> InOwner, bool bAutoActivate)
+	:ComponentBase(InOwner, bAutoActivate)
 {
 }
 
