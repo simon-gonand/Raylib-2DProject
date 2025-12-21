@@ -2,6 +2,7 @@
 
 #include "../BaseClass/Actor.h"
 #include "../../Components/Movements/MovementComponent.h"
+#include "../../Components/Features/GrapplingHook/GrapplingHookComponent.h"
 
 #include <box2d/box2d.h>
 #include <unordered_map>
@@ -32,6 +33,7 @@ private:
 	std::shared_ptr<class PlayerCameraComponent> CameraComp;
 	std::shared_ptr<class RendererComponent> RendererComp;
 	std::shared_ptr<class MovementComponent> MovementComp;
+	std::shared_ptr<GrapplingHookComponent<Renderer2DComponent>> GrapplingHookComp;
 
 	std::shared_ptr<class AnimationManager> CreatePlayerAnimationManager();
 

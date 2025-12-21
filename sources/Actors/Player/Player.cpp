@@ -71,6 +71,9 @@ void Player::Initialize()
 	MovementComp->AddNewMovementMode(EMovementMode::SLIDING, std::make_shared<SlidingMovementMode>(1.0f, 0.75f, 10.0f, MovementComp));
 	AddComponent(MovementComp);
 
+	GrapplingHookComp = std::make_shared<GrapplingHookComponent<Renderer2DComponent>>(PlayerSPtr, "assets/Aim/GrapplingHookAim.png", Vector2({1.5f, 1.5f}));
+	AddComponent(GrapplingHookComp);
+
 	SetActorLocation(ActorInitialPostion);
 	SetActorRotation(QuaternionIdentity());
 	SetActorScale({1.0f, 1.0f});
