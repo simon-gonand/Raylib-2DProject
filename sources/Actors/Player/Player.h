@@ -16,6 +16,7 @@ public:
 	virtual void Initialize() override;
 
 	void Move(const Vector2& Scale);
+	void Aim(const Vector2& Scale);
 	void Jump(const float& Scale, const enum InputTrigger& Trigger);
 	void Slide(const float& Scale, const enum InputTrigger& Trigger);
 

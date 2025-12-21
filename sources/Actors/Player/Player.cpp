@@ -42,6 +42,7 @@ void Player::Initialize()
 	InputComp->BindInput<Player, &Player::Slide>("Slide", DOWN, this);
 	InputComp->BindInput<Player, &Player::Slide>("Slide", RELEASED, this);
 	InputComp->BindAxis<Player, &Player::Move>("Move", this);
+	InputComp->BindAxis<Player, &Player::Aim>("Aim", this);
 
 	Vector3 ActorInitialPostion = { 0.0f, -50.0f, 0.0f};
 
@@ -71,7 +72,7 @@ void Player::Initialize()
 	MovementComp->AddNewMovementMode(EMovementMode::SLIDING, std::make_shared<SlidingMovementMode>(1.0f, 0.75f, 10.0f, MovementComp));
 	AddComponent(MovementComp);
 
-	GrapplingHookComp = std::make_shared<GrapplingHookComponent<Renderer2DComponent>>(PlayerSPtr, "assets/Aim/GrapplingHookAim.png", Vector2({1.5f, 1.5f}));
+	GrapplingHookComp = std::make_shared<GrapplingHookComponent<Renderer2DComponent>>(PlayerSPtr, "assets/Aim/GrapplingHookAim.png", Vector2({1.5f, 1.5f}), 2.0f);
 	AddComponent(GrapplingHookComp);
 
 	SetActorLocation(ActorInitialPostion);
@@ -86,6 +87,11 @@ void Player::Move(const Vector2& Scale)
 {
 	float Magnitude = Vector2Length(Scale);
 	MovementComp->SetMovementInput(Scale);
+}
+
+void Player::Aim(const Vector2& Scale)
+{
+	GrapplingHookComp->UpdateAimPosition(Scale);
 }
 
 void Player::Slide(const float& Scale, const InputTrigger& Trigger)

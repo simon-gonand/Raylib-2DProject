@@ -15,8 +15,12 @@ public:
 
 	void Update(float DeltaTime);
 
+	void SetCenterMouseEveryFrame(bool bNewValue);
+
 private:
 	std::vector<std::shared_ptr<Actor>> Actors;
 
 	std::shared_ptr<PhysicsWorldManager> PhysicsManager;
+
+	bool bCenterMouseEveryFrame = true;
 };

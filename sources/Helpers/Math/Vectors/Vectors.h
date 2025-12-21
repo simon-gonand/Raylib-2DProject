@@ -19,4 +19,5 @@ namespace Vector
 	inline const Vector2& LeftVector2 = { -1.0f, 0.0f};
 
 	Vector2 Vector3ToVector2(Vector3 Vector);
+	Vector3 Vector2ToVector3(Vector2 Vector);
 }

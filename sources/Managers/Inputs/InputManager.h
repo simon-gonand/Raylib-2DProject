@@ -19,6 +19,7 @@ enum InputTrigger
 enum InputType 
 {
 	KEYBOARD = 0,
+	MOUSE_POSITION,
 	GAMEPAD
 };
 
@@ -78,5 +79,5 @@ public:
 	bool IsEventExists(std::string EventName) const;
 
 	bool IsAxisExists(std::string AxisName) const;
-	void GetAxisValue(std::string EventName, Vector2& Direction) const;
+	void GetAxisValue(std::string EventName, Vector2& Direction);
 };

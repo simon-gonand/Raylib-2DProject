@@ -8,6 +8,8 @@ World::World()
 		PhysicsManager->Initialize({ 0.0f, 9.81f, 0.0f });
 		PhysicsManager->SetDebugMode(false);
 	}
+
+	HideCursor();
 }
 
 void World::AddActor(std::shared_ptr<Actor> InActor)
@@ -37,4 +39,12 @@ void World::Update(float DeltaTime)
 
 	if (PhysicsManager)
 		PhysicsManager->DrawDebug();
+
+	if (bCenterMouseEveryFrame)
+		SetMousePosition(GetScreenWidth() / 2, GetScreenHeight() / 2);
+}
+
+void World::SetCenterMouseEveryFrame(bool bNewValue)
+{
+	bCenterMouseEveryFrame = bNewValue;
 }
