@@ -6,6 +6,7 @@
 
 #include <box2d/box2d.h>
 #include <unordered_map>
+#include "../../Components/Renderer/2DRenderer/CableRenderer/CableRendererComponent.h"
 
 class Player: public Actor
 {
@@ -35,7 +36,7 @@ private:
 	std::shared_ptr<class PlayerCameraComponent> CameraComp;
 	std::shared_ptr<class RendererComponent> RendererComp;
 	std::shared_ptr<class MovementComponent> MovementComp;
-	std::shared_ptr<GrapplingHookComponent<Renderer2DComponent>> GrapplingHookComp;
+	std::shared_ptr<GrapplingHookComponent<Renderer2DComponent, CableRendererComponent>> GrapplingHookComp;
 
 	std::shared_ptr<class AnimationManager> CreatePlayerAnimationManager();
 
