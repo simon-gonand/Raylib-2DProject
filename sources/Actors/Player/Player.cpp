@@ -41,6 +41,7 @@ void Player::Initialize()
 	InputComp->BindInput<Player, &Player::Jump>("Jump", RELEASED, this);
 	InputComp->BindInput<Player, &Player::Slide>("Slide", DOWN, this);
 	InputComp->BindInput<Player, &Player::Slide>("Slide", RELEASED, this);
+	InputComp->BindInput<Player, &Player::Hook>("Hook", PRESSED, this);
 	InputComp->BindAxis<Player, &Player::Move>("Move", this);
 	InputComp->BindAxis<Player, &Player::Aim>("Aim", this);
 
@@ -113,6 +114,10 @@ void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 		MovementComp->SwitchMovementMode(EMovementMode::JUMPING);
 	else
 		MovementComp->SwitchMovementMode(EMovementMode::FALLING);
+}
+
+void Player::Hook(const float& Scale, const InputTrigger& Trigger)
+{
 }
 
 void Player::Update(float DeltaTime)

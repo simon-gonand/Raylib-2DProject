@@ -10,6 +10,8 @@ InputManager::InputManager()
 {
     //TODO Create function to help add and remove inputs / events
 
+    // --- Input Events ---
+
     // Jump Events
     std::string JumpEventName = "Jump";
     std::vector<std::shared_ptr<InputKey>> JumpEventInputs;
@@ -24,7 +26,16 @@ InputManager::InputManager()
     SlideEventInputs.push_back(std::make_shared<InputKey>(GAMEPAD, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT, 1.0f));
     EventsBindedInputs.insert(std::make_pair(SlideEventName, SlideEventInputs));
 
-    // Move Events
+    // Grappling Hook Events
+    std::string HookEventName = "Hook";
+    std::vector<std::shared_ptr<InputKey>> HookEventInputs;
+    HookEventInputs.push_back(std::make_shared<InputKey>(KEYBOARD, MOUSE_BUTTON_LEFT, 1.0f));
+    HookEventInputs.push_back(std::make_shared<InputKey>(GAMEPAD, GAMEPAD_BUTTON_RIGHT_TRIGGER_1, 1.0f));
+    EventsBindedInputs.insert(std::make_pair(HookEventName, HookEventInputs));
+
+    // --- Axis ---
+
+    // Move Axis
     std::string MoveAxisName = "Move";
     std::vector<std::shared_ptr<InputAxis>> MoveAxisInputs;
 
@@ -39,7 +50,7 @@ InputManager::InputManager()
 
     AxisBindedInputs.insert(std::make_pair(MoveAxisName, MoveAxisInputs));
 
-    // Aim Events
+    // Aim Axis
     std::string AimAxisName = "Aim";
     std::vector<std::shared_ptr<InputAxis>> AimAxisInputs;
 
