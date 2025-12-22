@@ -95,6 +95,8 @@ float MovementComponent::GetCurrentMovementTopSpeed() const
 
 void MovementComponent::Update(float DeltaTime)
 {
+	ComponentBase::Update(DeltaTime);
+
 	if (CurrentMovementModeObj)
 	{
 		MovementVelocity = CurrentMovementModeObj->PerformMovement(DeltaTime, MovementInput, OwnerPhysicsComponent->GetLinearVelocity());

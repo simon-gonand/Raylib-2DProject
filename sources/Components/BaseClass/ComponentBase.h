@@ -10,6 +10,7 @@ private:
 	std::shared_ptr<Actor> Owner;
 
 	bool bIsActive;
+	bool bDrawDebug = false;
 
 public:
 	ComponentBase(std::shared_ptr<Actor> InOwner, bool bAutoActivate = true);
@@ -18,8 +19,9 @@ public:
 	std::shared_ptr<Actor> GetOwner() const;
 	void SetOwner(std::shared_ptr<Actor> NewOwner);
 
-	virtual void Initialize() {};
-	virtual void Update(float DeltaTime) = 0;
+	virtual void Initialize() {}
+	virtual void Update(float DeltaTime);
+	virtual void DrawDebug(float DeltaTime) {}
 
 	void Activate();
 	void Deactivate();
@@ -28,5 +30,7 @@ public:
 	Vector3 GetOwnerLocation() const;
 	Quaternion GetOwnerRotation() const;
 	Vector3 GetOwnerScale() const;
+
+	void SetDrawDebug(bool bInDrawDebug);
 };
 

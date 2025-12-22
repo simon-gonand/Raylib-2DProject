@@ -2,6 +2,8 @@
 
 #include "Box2DDrawDebug.h"
 
+#include "../../Helpers/Globals/Globals.h"
+
 Box2DWorldManager::Box2DWorldManager()
 {
 }
@@ -34,4 +36,29 @@ b2Body* Box2DWorldManager::CreateBody(const b2BodyDef* BodyDef)
 		return World->CreateBody(BodyDef);
 	}
 	return nullptr;
+}
+
+RaycastResult Box2DWorldManager::Raycast(Vector3 StartLocation, Vector3 EndLocation)
+{
+	FirstHitRaycastCallback* HitRaycastCallback = new FirstHitRaycastCallback();
+	StartLocation = Vector3Scale(StartLocation,  1 / PTM_RATIO);
+	EndLocation = Vector3Scale(EndLocation,  1 / PTM_RATIO);
+	World->RayCast(HitRaycastCallback, b2Vec2{ StartLocation.x, StartLocation.y }, b2Vec2{ EndLocation.x, EndLocation.y });
+	return HitRaycastCallback->Result;
+}
+
+float FirstHitRaycastCallback::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float fraction)
+{
+	if (!fixture || !fixture->GetBody())
+		return -1.0f;
+
+	Result.bHasHit = true;
+	Result.HitLocation = Vector3{ point.x, point.y };
+	Result.HitLocation = Vector3Scale(Result.HitLocation, PTM_RATIO);
+	Result.Normal = Vector3{ normal.x, normal.y };
+
+	if(uintptr_t ptr = fixture->GetBody()->GetUserData().pointer)
+		Result.HitActor = reinterpret_cast<Actor*>(ptr);
+
+	return fraction;
 }

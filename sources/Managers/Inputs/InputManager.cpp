@@ -95,7 +95,7 @@ bool InputManager::IsBindKeyboardInputTriggered(int Input, InputTrigger Trigger)
     switch (Trigger)
     {
     case PRESSED:
-        return IsKeyPressed(Input);
+        return IsKeyPressed(Input) || IsMouseButtonPressed(Input);
     case RELEASED:
         return IsKeyReleased(Input);
     case UP:

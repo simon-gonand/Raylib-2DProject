@@ -17,6 +17,8 @@ void Renderer2DComponent::Initialize()
 
 void Renderer2DComponent::Update(float DeltaTime)
 {
+	ComponentBase::Update(DeltaTime);
+
 	Vector3 DrawLocation = GetWorldLocation();
 	Quaternion DrawRotation = GetWorldRotation();
 	Vector2 ScaleSize = GetSizeScaledWithRatio();

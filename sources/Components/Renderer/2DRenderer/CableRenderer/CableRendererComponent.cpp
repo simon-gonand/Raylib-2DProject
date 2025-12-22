@@ -23,6 +23,8 @@ void CableRendererComponent::SetEndPosition(const Vector2& InEndPosition)
 
 void CableRendererComponent::Update(float DeltaTime)
 {
+	ComponentBase::Update(DeltaTime);
+
 	if (bUseComponentLocationAsStartPosition) 
 	{
 		StartPosition = Vector::Vector3ToVector2(GetWorldLocation());

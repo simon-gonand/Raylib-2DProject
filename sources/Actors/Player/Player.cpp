@@ -74,6 +74,7 @@ void Player::Initialize()
 	AddComponent(MovementComp);
 
 	GrapplingHookComp = std::make_shared<GrapplingHookComponent<Renderer2DComponent, CableRendererComponent>>(PlayerSPtr, "assets/Aim/GrapplingHookAim.png", Vector2({1.5f, 1.5f}), 100.0f);
+	//GrapplingHookComp->SetDrawDebug(true);
 	AddComponent(GrapplingHookComp);
 
 	SetActorLocation(ActorInitialPostion);
@@ -118,6 +119,7 @@ void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 
 void Player::Hook(const float& Scale, const InputTrigger& Trigger)
 {
+ 	GrapplingHookComp->TriggerGrapplingHook();
 }
 
 void Player::Update(float DeltaTime)

@@ -9,6 +9,8 @@ PlayerCameraComponent::PlayerCameraComponent(std::shared_ptr<Actor> InOwner, boo
 
 void PlayerCameraComponent::Update(float DeltaTime)
 {
+	CameraComponent::Update(DeltaTime);
+
 	if (std::shared_ptr<Actor> CurrentOwner = GetOwner()) 
 	{
 		Vector3 ActorLocation = CurrentOwner->GetActorLocation();

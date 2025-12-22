@@ -17,6 +17,12 @@ void ComponentBase::SetOwner(std::shared_ptr<Actor> NewOwner)
 	Owner = NewOwner;
 }
 
+void ComponentBase::Update(float DeltaTime)
+{
+	if (bDrawDebug)
+		DrawDebug(DeltaTime);
+}
+
 void ComponentBase::Activate()
 {
 	bIsActive = true;
@@ -60,4 +66,9 @@ Vector3 ComponentBase::GetOwnerScale() const
 	}
 
 	return Vector3Zero();
+}
+
+void ComponentBase::SetDrawDebug(bool bInDrawDebug)
+{
+	bDrawDebug = bInDrawDebug;
 }

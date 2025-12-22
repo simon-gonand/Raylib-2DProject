@@ -9,10 +9,20 @@ enum PhysicsEngineType
 	BOX2D
 };
 
+struct RaycastResult
+{
+	bool bHasHit = false;;
+	Vector3 HitLocation = { 0.0f };
+	class Actor* HitActor = nullptr;
+	Vector3 Normal = { 0.0f };
+};
+
 class PhysicsWorldManager
 {
 private:
 	static std::shared_ptr<PhysicsWorldManager> Instance;
+
+	static PhysicsEngineType EngineType;
 
 	PhysicsWorldManager(PhysicsWorldManager& InPhysicsWorldManager) = delete;
 	void operator=(const PhysicsWorldManager& InPhysicsWorldManager) = delete;
@@ -23,11 +33,15 @@ protected:
 	bool bDebugMode;
 
 public:
-	static std::shared_ptr<PhysicsWorldManager> Get(PhysicsEngineType InPhysicsEngineType);
+	static void SetPhysicsEngineType(PhysicsEngineType InEngineType);
+	static std::shared_ptr<PhysicsWorldManager> Get();
 
 	virtual void Initialize(const Vector3& InGravity) = 0;
 	virtual void Update(float DeltaTime) = 0;
+
 	virtual void DrawDebug() = 0;
 	void SetDebugMode(bool bInDebug);
+
+	virtual RaycastResult Raycast(Vector3 StartLocation, Vector3 EndLocation) = 0;
 };
 

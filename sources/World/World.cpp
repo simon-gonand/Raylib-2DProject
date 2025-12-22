@@ -2,7 +2,8 @@
 
 World::World()
 {
-	PhysicsManager = std::shared_ptr<PhysicsWorldManager>(PhysicsWorldManager::Get(BOX2D));
+	PhysicsWorldManager::SetPhysicsEngineType(BOX2D);
+	PhysicsManager = std::shared_ptr<PhysicsWorldManager>(PhysicsWorldManager::Get());
 	if (PhysicsManager)
 	{
 		PhysicsManager->Initialize({ 0.0f, 9.81f, 0.0f });

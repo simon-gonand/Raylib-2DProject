@@ -20,6 +20,8 @@ void TileMapRendererComponent::Initialize()
 
 void TileMapRendererComponent::Update(float DeltaTime)
 {
+	ComponentBase::Update(DeltaTime);
+
 	if (!TileMapOwner)
 		return;
 

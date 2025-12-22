@@ -32,7 +32,3 @@ void CameraComponent::Initialize()
 {
 	CameraManager::Get()->RegisterCameraComponent(shared_from_this());
 }
-
-void CameraComponent::Update(float DeltaTime)
-{
-}

@@ -16,7 +16,8 @@ Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2B
 	BodyDef->position = b2Vec2(WorldLocation.x, WorldLocation.y);
 	BodyDef->gravityScale = GravityScale;
 	BodyDef->fixedRotation = bFixedRotation;
-	Body = ((Box2DWorldManager*)Box2DWorldManager::Get(BOX2D).get())->CreateBody(BodyDef);
+	Body = ((Box2DWorldManager*)Box2DWorldManager::Get().get())->CreateBody(BodyDef);
+	Body->GetUserData().pointer = reinterpret_cast<uintptr_t>(InOwner.get());
 	b2FixtureDef* FixtureDef = new b2FixtureDef();
 	FixtureDef->shape = Shape;
 	FixtureDef->density = Density;
@@ -64,6 +65,8 @@ void Box2DPhysicsComponent::EditCollisionShape(b2Shape* NewShape)
 
 void Box2DPhysicsComponent::Update(float DeltaTime)
 {
+	PhysicsComponent::Update(DeltaTime);
+
 	if (GetOwner() && Body->GetType() != b2_staticBody)
 	{
 		b2Vec2 Position = Body->GetPosition();

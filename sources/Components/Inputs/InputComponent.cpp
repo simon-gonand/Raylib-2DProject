@@ -10,6 +10,8 @@ InputComponent::InputComponent(std::shared_ptr<Actor> InOwner, bool bAutoActivat
 
 void InputComponent::Update(float DeltaTime)
 {
+	ComponentBase::Update(DeltaTime);
+
 	for (std::shared_ptr<InputBinding> BindedInput : BindedInputs)
 	{
 		int PressedInput;

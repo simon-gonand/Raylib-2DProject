@@ -16,6 +16,7 @@ void SpriteSheet2DRendererComponent::Initialize()
 
 void SpriteSheet2DRendererComponent::Update(float DeltaTime)
 {
+	ComponentBase::Update(DeltaTime);
 
 	Vector3 DrawLocation = GetWorldLocation();
 	Quaternion DrawRotation = GetWorldRotation();

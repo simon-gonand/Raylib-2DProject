@@ -4,16 +4,22 @@
 #include <memory>
 
 std::shared_ptr<PhysicsWorldManager> PhysicsWorldManager::Instance;
+PhysicsEngineType PhysicsWorldManager::EngineType;
 
 PhysicsWorldManager::PhysicsWorldManager()
 {
 }
 
-std::shared_ptr<PhysicsWorldManager> PhysicsWorldManager::Get(PhysicsEngineType InPhysicsEngineType)
+void PhysicsWorldManager::SetPhysicsEngineType(PhysicsEngineType InEngineType)
+{
+    EngineType = InEngineType;
+}
+
+std::shared_ptr<PhysicsWorldManager> PhysicsWorldManager::Get()
 {
     if (!Instance)
     {
-        switch (InPhysicsEngineType) 
+        switch (EngineType)
         {
         case BOX2D:
             Instance = std::make_shared<Box2DWorldManager>();
