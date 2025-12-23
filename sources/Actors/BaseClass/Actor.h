@@ -1,16 +1,16 @@
 #pragma once
 
-#include <list>
 #include <memory>
 #include "raylib.h"
 #include <vector>
+#include <list>
 
 #include "../../Utils/Delegates/DelegateBase/DelegateBase.h"
 
 class Actor: public std::enable_shared_from_this<Actor>
 {
 private:
-	std::list<std::shared_ptr<class ComponentBase>> Components;
+	std::vector<std::shared_ptr<class ComponentBase>> Components;
 
 	Transform ActorTransform; // Will be stored in a Root Component ?
 	
@@ -22,7 +22,18 @@ public:
 
 	void AddComponent(std::shared_ptr<ComponentBase> Component);
 	void RemoveComponent(std::shared_ptr<ComponentBase> Component);
-	const std::list<std::shared_ptr<ComponentBase>>& GetAllComponents() const;
+	const std::vector<std::shared_ptr<ComponentBase>>& GetAllComponents() const;
+	template<class C>
+	std::shared_ptr<C> GetComponentByClass()
+	{
+		for (std::shared_ptr<ComponentBase> Component : Components)
+		{
+			if (std::shared_ptr<C> CastedComponent = std::dynamic_pointer_cast<C>(Component))
+				return CastedComponent;
+		}
+
+		return nullptr;
+	}
 
 	const Transform& GetActorTransform() const;
 	const Vector3& GetActorLocation() const;

@@ -21,10 +21,12 @@ void Actor::AddComponent(std::shared_ptr<ComponentBase> Component)
 
 void Actor::RemoveComponent(std::shared_ptr<ComponentBase> Component)
 {
-	Components.remove(Component);
+	std::vector<std::shared_ptr<ComponentBase>>::iterator ElementToRemove = std::find(Components.begin(), Components.end(), Component);
+	if(ElementToRemove != Components.end())
+		Components.erase(ElementToRemove);
 }
 
-const std::list<std::shared_ptr<ComponentBase>>& Actor::GetAllComponents() const
+const std::vector<std::shared_ptr<ComponentBase>>& Actor::GetAllComponents() const
 {
 	return Components;
 }

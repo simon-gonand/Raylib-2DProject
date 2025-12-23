@@ -119,6 +119,8 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 			bIsHookActivated = false;
 
 			// Attract Owner
+			std::shared_ptr<PhysicsComponent> OwnerPhysicsComp = GetOwner()->GetComponentByClass<PhysicsComponent>();
+			
 		}
 		Vector2 CurrentEndHookLocation = Vector2Lerp(Vector::Vector3ToVector2(GetWorldLocation()), EndHookLocation, CurrentEndHookAlpha);
 		CableRendererComp->SetEndPosition(CurrentEndHookLocation);
