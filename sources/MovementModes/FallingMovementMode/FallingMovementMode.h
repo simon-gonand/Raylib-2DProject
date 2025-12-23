@@ -9,6 +9,7 @@ public:
 
 protected:
 	virtual void OnSwitch();
+	virtual bool CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const;
 	virtual Vector3 PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity) override;
 
 private:

@@ -11,6 +11,11 @@ void FallingMovementMode::OnSwitch()
 	bFirstPerformMovement = true;
 }
 
+bool FallingMovementMode::CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const
+{
+	return MovementModeBase::CanSwitchToMode(CurrentMovementMode, CurrentVelocity) && CurrentMovementMode != EMovementMode::THROWN;
+}
+
 Vector3 FallingMovementMode::PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity)
 {
 	Vector3 Result = MovementModeBase::PerformMovement(DeltaTime, Input, CurrentVelocity);

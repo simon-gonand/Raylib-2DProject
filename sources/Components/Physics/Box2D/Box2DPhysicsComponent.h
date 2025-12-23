@@ -17,6 +17,10 @@ public:
 	virtual void SetLinearVelocity(const Vector3& NewVelocity) override;
 	virtual void AddLinearVelocity(const Vector3& VelocityToAdd) override;
 
+	virtual void ApplyForce(const Vector3& Force) override;
+
+	virtual void SetFriction(float NewFriction) override;
+
 	void EditCollisionShape(b2Shape* NewShape);
 
 protected:

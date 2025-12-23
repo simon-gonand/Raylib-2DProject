@@ -50,6 +50,16 @@ void Box2DPhysicsComponent::AddLinearVelocity(const Vector3& VelocityToAdd)
 	Body->SetLinearVelocity({ CurrentVelocity.x + VelocityToAdd.x, CurrentVelocity.y + VelocityToAdd.y });
 }
 
+void Box2DPhysicsComponent::ApplyForce(const Vector3& Force)
+{
+	Body->ApplyForceToCenter({Force.x, Force.y}, true);
+}
+
+void Box2DPhysicsComponent::SetFriction(float NewFriction)
+{
+	Fixture->SetFriction(NewFriction);
+}
+
 void Box2DPhysicsComponent::EditCollisionShape(b2Shape* NewShape)
 {
 	if (!NewShape || NewShape == Fixture->GetShape())

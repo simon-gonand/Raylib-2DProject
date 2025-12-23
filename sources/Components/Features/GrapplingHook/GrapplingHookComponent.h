@@ -27,7 +27,7 @@ private:
 	float AimSpeed;
 
 	bool bIsHookActivated;
-	Vector2 EndHookLocation { 0.0f };
+	Vector3 EndHookLocation { 0.0f };
 	float CurrentEndHookAlpha { 0.0f };
 
 	std::shared_ptr<GrapplingHookRendererComponent> CableRendererComp;
@@ -71,11 +71,11 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 	RaycastResult Result = PhysicsWorldManager::Get()->Raycast(GetWorldLocation(), AimRendererComp->GetWorldLocation());
 	if (Result.bHasHit)
 	{
-		EndHookLocation = Vector::Vector3ToVector2(Result.HitLocation);
+		EndHookLocation = Result.HitLocation;
 	}
 	else
 	{
-		EndHookLocation = Vector::Vector3ToVector2(AimRendererComp->GetWorldLocation());
+		EndHookLocation = AimRendererComp->GetWorldLocation();
 	}
 
 	CurrentEndHookAlpha = 0.0f;
@@ -119,10 +119,19 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 			bIsHookActivated = false;
 
 			// Attract Owner
-			std::shared_ptr<PhysicsComponent> OwnerPhysicsComp = GetOwner()->GetComponentByClass<PhysicsComponent>();
-			
+			std::shared_ptr<MovementComponent> OwnerMovementComp = GetOwner()->GetComponentByClass<MovementComponent>();
+			if (OwnerMovementComp)
+			{
+				OwnerMovementComp->SwitchMovementMode(EMovementMode::THROWN);
+			}
+
+			if (std::shared_ptr<PhysicsComponent> OwnerPhysicsComp = GetOwner()->GetComponentByClass<PhysicsComponent>())
+			{
+				Vector3 Direction = Vector3Subtract(EndHookLocation, GetOwner()->GetActorLocation());
+				OwnerPhysicsComp->ApplyForce(Vector3Scale(Direction, 100.0f));
+			}
 		}
-		Vector2 CurrentEndHookLocation = Vector2Lerp(Vector::Vector3ToVector2(GetWorldLocation()), EndHookLocation, CurrentEndHookAlpha);
-		CableRendererComp->SetEndPosition(CurrentEndHookLocation);
+		Vector3 CurrentEndHookLocation = Vector3Lerp(GetWorldLocation(), EndHookLocation, CurrentEndHookAlpha);
+		CableRendererComp->SetEndPosition(Vector::Vector3ToVector2(CurrentEndHookLocation));
 	}
 }

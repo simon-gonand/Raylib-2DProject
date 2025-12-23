@@ -4,6 +4,7 @@
 #include "../Helpers/Math/Vectors/Vectors.h"
 
 #include <raymath.h>
+#include <iostream>
 
 MovementComponent::MovementComponent(std::shared_ptr<Actor> Owner, std::shared_ptr<PhysicsComponent> InOwnerPhysicsComponent, bool bAutoActivate)
 	: ComponentBase(Owner, bAutoActivate), OwnerPhysicsComponent{InOwnerPhysicsComponent}

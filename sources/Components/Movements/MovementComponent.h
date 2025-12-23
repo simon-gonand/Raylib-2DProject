@@ -11,7 +11,8 @@ enum class EMovementMode : int
 	GROUND,
 	JUMPING,
 	FALLING,
-	SLIDING
+	SLIDING,
+	THROWN
 };
 
 class MovementComponent : public ComponentBase
