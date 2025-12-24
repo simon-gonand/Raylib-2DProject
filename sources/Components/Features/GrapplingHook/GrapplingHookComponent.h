@@ -36,6 +36,9 @@ private:
 
 	void UpdateAimRendererLocation(float DeltaTime);
 	void UpdateGrapplingHookRenderer(float DeltaTime);
+
+	DelegateBase<void, EMovementMode, EMovementMode>* OnMovementModeSwitchToGroundDelegate;
+	void OnMovementModeSwitchToGround(EMovementMode PreviousMovementMode, EMovementMode CurrentMovementMode);
 };
 
 // Template function implementation must be in header
@@ -123,6 +126,11 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 			if (OwnerMovementComp)
 			{
 				OwnerMovementComp->SwitchMovementMode(EMovementMode::GRAPPLING_THROWN);
+				OnMovementModeSwitchToGroundDelegate =
+					OwnerMovementComp->BindToOnMovementModeSwitch< 
+					GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>, 
+					&GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::OnMovementModeSwitchToGround
+					>(this);
 			}
 
 			if (std::shared_ptr<PhysicsComponent> OwnerPhysicsComp = GetOwner()->GetComponentByClass<PhysicsComponent>())
@@ -134,5 +142,16 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 		}
 		Vector3 CurrentEndHookLocation = Vector3Lerp(GetWorldLocation(), EndHookLocation, CurrentEndHookAlpha);
 		CableRendererComp->SetEndPosition(Vector::Vector3ToVector2(CurrentEndHookLocation));
+	}
+}
+
+template<class AimRendererComponent, class GrapplingHookRendererComponent>
+inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::OnMovementModeSwitchToGround(EMovementMode PreviousMovementMode, EMovementMode CurrentMovementMode)
+{
+	CableRendererComp->Deactivate();
+	std::shared_ptr<MovementComponent> OwnerMovementComp = GetOwner()->GetComponentByClass<MovementComponent>();
+	if (OwnerMovementComp)
+	{
+		OwnerMovementComp->UnbindToOnMovementModeSwitch(OnMovementModeSwitchToGroundDelegate);
 	}
 }

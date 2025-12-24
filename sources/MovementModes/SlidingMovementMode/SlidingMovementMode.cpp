@@ -7,7 +7,8 @@ SlidingMovementMode::SlidingMovementMode(float InAcceleration, float InDecelerat
 
 bool SlidingMovementMode::CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const
 {
-	return CurrentMovementMode != EMovementMode::JUMPING && CurrentMovementMode != EMovementMode::FALLING && CurrentMovementMode != EMovementMode::THROWN &&
+	return CurrentMovementMode != EMovementMode::JUMPING && CurrentMovementMode != EMovementMode::FALLING && 
+		CurrentMovementMode != EMovementMode::THROWN && CurrentMovementMode != EMovementMode::GRAPPLING_THROWN &&
 		MovementModeBase::CanSwitchToMode(CurrentMovementMode, CurrentVelocity);
 }
 

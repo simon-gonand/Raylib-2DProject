@@ -48,6 +48,7 @@ void MovementComponent::SwitchMovementMode(EMovementMode NewMovementMode)
 		CurrentMovementMode = NewMovementMode;
 		CurrentMovementModeObj = NewMovementModeObj->second;
 		CurrentMovementModeObj->OnSwitch();
+		BroadcastOnMovementModeSwitch();
 	}
 }
 
@@ -92,6 +93,23 @@ float MovementComponent::GetCurrentMovementTopSpeed() const
 		return CurrentMovementModeObj->GetTopSpeed();
 	}
 	return 0.0f;
+}
+
+void MovementComponent::UnbindToOnMovementModeSwitch(DelegateBase<void, EMovementMode, EMovementMode>* DelegateToUnbind)
+{
+	std::vector<DelegateBase<void, EMovementMode, EMovementMode>*>::iterator ToRemove = std::find(OnMovementModeSwitches.begin(), OnMovementModeSwitches.end(), DelegateToUnbind);
+	if (ToRemove != OnMovementModeSwitches.end()) 
+	{
+		OnMovementModeSwitches.erase(ToRemove);
+	}
+}
+
+void MovementComponent::BroadcastOnMovementModeSwitch()
+{
+	for (DelegateBase<void, EMovementMode, EMovementMode>* Delegate : OnMovementModeSwitches)
+	{
+		Delegate->Invoke(PreviousMovementMode, CurrentMovementMode);
+	}
 }
 
 void MovementComponent::Update(float DeltaTime)

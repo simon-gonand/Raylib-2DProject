@@ -7,7 +7,8 @@ JumpingMovementMode::JumpingMovementMode(float InAcceleration, float InDecelerat
 
 bool JumpingMovementMode::CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const
 {
-	return CurrentMovementMode != EMovementMode::FALLING && CurrentMovementMode != EMovementMode::THROWN && MovementModeBase::CanSwitchToMode(CurrentMovementMode, CurrentVelocity);
+	return CurrentMovementMode != EMovementMode::FALLING && CurrentMovementMode != EMovementMode::THROWN && CurrentMovementMode != EMovementMode::GRAPPLING_THROWN &&
+		MovementModeBase::CanSwitchToMode(CurrentMovementMode, CurrentVelocity);
 }
 
 Vector3 JumpingMovementMode::PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity)

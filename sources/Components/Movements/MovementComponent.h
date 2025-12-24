@@ -38,6 +38,19 @@ public:
 
 	float GetCurrentMovementTopSpeed() const;
 
+	template<class C, void (C::* Function)(EMovementMode, EMovementMode)>
+	DelegateBase<void, EMovementMode, EMovementMode>* BindToOnMovementModeSwitch(C* Instance)
+	{
+		DelegateBase<void, EMovementMode, EMovementMode>* Delegate = new DelegateBase<void, EMovementMode, EMovementMode>();
+		Delegate->Bind<C, Function>(Instance);
+		OnMovementModeSwitches.push_back(Delegate);
+		return Delegate;
+	}
+
+	void UnbindToOnMovementModeSwitch(DelegateBase<void, EMovementMode, EMovementMode>* DelegateToUnbind);
+	
+	void BroadcastOnMovementModeSwitch();
+
 protected:
 	virtual void Update(float DeltaTime) override;
 
@@ -52,4 +65,6 @@ private:
 	Vector2 MovementInput;
 
 	std::unordered_map<EMovementMode, std::shared_ptr<MovementModeBase>> MovementModes;
+
+	std::vector<DelegateBase<void, EMovementMode, EMovementMode>*> OnMovementModeSwitches;
 };

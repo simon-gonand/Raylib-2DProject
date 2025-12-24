@@ -17,6 +17,11 @@ Vector3 GrapplingThrownMovementMode::PerformMovement(float DeltaTime, const Vect
 		LastVelocityIncrease = CurrentVelocity;
 		MovementComp->SwitchMovementMode(EMovementMode::GROUND);
 	}
+	else if (FloatEquals(CurrentVelocity.x, 0.0f))
+	{
+		LastVelocityIncrease = CurrentVelocity;
+		MovementComp->SwitchMovementMode(EMovementMode::FALLING);
+	}
 
 	return ThrownMovementMode::PerformMovement(DeltaTime, Input, CurrentVelocity);
 }

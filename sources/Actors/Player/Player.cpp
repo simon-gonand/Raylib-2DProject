@@ -139,10 +139,14 @@ void Player::PostUpdate()
 	Vector3 CurrentVelocity = PhysicsComp->GetLinearVelocity();
 	if (FloatEquals(CurrentVelocity.y, 0.0f)) 
 	{
-		if(MovementComp->GetCurrentMovementMode() != EMovementMode::SLIDING && MovementComp->GetCurrentMovementMode() != EMovementMode::THROWN)
+		if(MovementComp->GetCurrentMovementMode() != EMovementMode::SLIDING && 
+			MovementComp->GetCurrentMovementMode() != EMovementMode::THROWN &&
+			MovementComp->GetCurrentMovementMode() != EMovementMode::GRAPPLING_THROWN )
 			MovementComp->SwitchMovementMode(EMovementMode::GROUND);
 	}
-	else if (MovementComp->GetCurrentMovementMode() != EMovementMode::JUMPING && MovementComp->GetCurrentMovementMode() != EMovementMode::THROWN)
+	else if (MovementComp->GetCurrentMovementMode() != EMovementMode::JUMPING && 
+		GetCurrentMovementMode() != EMovementMode::THROWN && 
+		GetCurrentMovementMode() != EMovementMode::GRAPPLING_THROWN)
 	{
 		MovementComp->SwitchMovementMode(EMovementMode::FALLING);
 	}
