@@ -122,7 +122,7 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 			std::shared_ptr<MovementComponent> OwnerMovementComp = GetOwner()->GetComponentByClass<MovementComponent>();
 			if (OwnerMovementComp)
 			{
-				OwnerMovementComp->SwitchMovementMode(EMovementMode::THROWN);
+				OwnerMovementComp->SwitchMovementMode(EMovementMode::GRAPPLING_THROWN);
 			}
 
 			if (std::shared_ptr<PhysicsComponent> OwnerPhysicsComp = GetOwner()->GetComponentByClass<PhysicsComponent>())
