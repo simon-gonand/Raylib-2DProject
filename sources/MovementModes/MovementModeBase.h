@@ -10,8 +10,9 @@ public:
 	MovementModeBase(float InAcceleration, float InDeceleration, float InTopSpeed);
 
 	virtual bool CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const;
-	virtual void OnSwitch() {}
+	virtual void OnSwitch();
 	virtual Vector3 PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity);
+	virtual void OnEndMovement() {}
 
 	void Activate();
 	void Deactivate();

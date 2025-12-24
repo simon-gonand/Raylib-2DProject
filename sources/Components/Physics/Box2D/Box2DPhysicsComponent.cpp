@@ -60,6 +60,11 @@ void Box2DPhysicsComponent::SetFriction(float NewFriction)
 	Fixture->SetFriction(NewFriction);
 }
 
+float Box2DPhysicsComponent::GetFriction() const
+{
+	return Fixture->GetFriction();
+}
+
 void Box2DPhysicsComponent::EditCollisionShape(b2Shape* NewShape)
 {
 	if (!NewShape || NewShape == Fixture->GetShape())

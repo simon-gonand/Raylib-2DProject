@@ -21,6 +21,7 @@
 #include "../../MovementModes/SlidingMovementMode/SlidingMovementMode.h"
 #include "../../MovementModes/GroundMovementMode/GroundMovementMode.h"
 #include "../../MovementModes/ThrownMovementMode/ThrownMovementMode.h"
+#include "../../MovementModes/ThrownMovementMode/GrapplingThrownMovementMode/GrapplingThrownMovementMode.h"
 
 Player::Player()
 {
@@ -72,7 +73,7 @@ void Player::Initialize()
 	MovementComp->AddNewMovementMode(EMovementMode::JUMPING, std::make_shared<JumpingMovementMode>(1.0f, 3.0f, 10.0f, -20.0f, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::FALLING, std::make_shared<FallingMovementMode>(1.0f, 3.0f, 10.0f, 30.0f, 1.5f));
 	MovementComp->AddNewMovementMode(EMovementMode::SLIDING, std::make_shared<SlidingMovementMode>(1.0f, 0.75f, 10.0f, MovementComp));
-	MovementComp->AddNewMovementMode(EMovementMode::THROWN, std::make_shared<ThrownMovementMode>(PhysicsComp, MovementComp));
+	MovementComp->AddNewMovementMode(EMovementMode::THROWN, std::make_shared<GrapplingThrownMovementMode>(PhysicsComp, MovementComp));
 	AddComponent(MovementComp);
 
 	GrapplingHookComp = std::make_shared<GrapplingHookComponent<Renderer2DComponent, CableRendererComponent>>(PlayerSPtr, "assets/Aim/GrapplingHookAim.png", Vector2({1.5f, 1.5f}), 100.0f);

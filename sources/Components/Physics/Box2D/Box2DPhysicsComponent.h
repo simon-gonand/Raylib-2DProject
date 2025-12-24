@@ -20,6 +20,7 @@ public:
 	virtual void ApplyForce(const Vector3& Force) override;
 
 	virtual void SetFriction(float NewFriction) override;
+	virtual float GetFriction() const override;
 
 	void EditCollisionShape(b2Shape* NewShape);
 

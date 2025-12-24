@@ -128,7 +128,8 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 			if (std::shared_ptr<PhysicsComponent> OwnerPhysicsComp = GetOwner()->GetComponentByClass<PhysicsComponent>())
 			{
 				Vector3 Direction = Vector3Subtract(EndHookLocation, GetOwner()->GetActorLocation());
-				OwnerPhysicsComp->ApplyForce(Vector3Scale(Direction, 100.0f));
+				Direction = Vector3Normalize(Direction);
+				OwnerPhysicsComp->ApplyForce(Vector3Scale(Direction, 7500.0f));
 			}
 		}
 		Vector3 CurrentEndHookLocation = Vector3Lerp(GetWorldLocation(), EndHookLocation, CurrentEndHookAlpha);

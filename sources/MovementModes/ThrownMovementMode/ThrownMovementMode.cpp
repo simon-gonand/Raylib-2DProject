@@ -9,7 +9,8 @@ ThrownMovementMode::ThrownMovementMode(std::shared_ptr<PhysicsComponent> OwnerPh
 
 void ThrownMovementMode::OnSwitch()
 {
-     PhysicsComp->SetFriction(0.5f);
+    BaseFriction = PhysicsComp->GetFriction();
+    PhysicsComp->SetFriction(0.5f);
 }
 
 Vector3 ThrownMovementMode::PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity)
@@ -19,7 +20,7 @@ Vector3 ThrownMovementMode::PerformMovement(float DeltaTime, const Vector2& Inpu
     if (Vector3Equals(CurrentVelocity, Vector3Zero()))
     {
         MovementComp->SwitchMovementMode(EMovementMode::GROUND);
-        PhysicsComp->SetFriction(0.0f);
+        PhysicsComp->SetFriction(BaseFriction);
     }
 
     return CurrentVelocity;

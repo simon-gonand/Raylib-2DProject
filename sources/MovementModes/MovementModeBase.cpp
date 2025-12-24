@@ -15,6 +15,11 @@ bool MovementModeBase::CanSwitchToMode(EMovementMode CurrentMovementMode, const 
 	return IsActive();
 }
 
+void MovementModeBase::OnSwitch()
+{
+	DeaccelerateAlpha = 0.0f;
+}
+
 Vector3 MovementModeBase::PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity)
 {
 	float Magnitude = Vector2Length(Input);
