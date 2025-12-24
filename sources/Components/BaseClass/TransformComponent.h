@@ -2,6 +2,7 @@
 
 #include "ComponentBase.h"
 
+#include <raylib.h> // Must Include raylib before raymath to avoid Vector struct redefinitions
 #include <raymath.h>
 
 class TransformComponent : public ComponentBase

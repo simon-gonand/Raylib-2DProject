@@ -24,6 +24,8 @@ public:
 
 	void EditCollisionShape(b2Shape* NewShape);
 
+	b2Body* GetBody() const;
+
 protected:
 	virtual void Update(float DeltaTime) override;
 

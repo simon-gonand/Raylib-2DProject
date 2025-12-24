@@ -1,6 +1,7 @@
 #pragma once
 
-#include "raymath.h"
+#include <raylib.h> // Must Include raylib before raymath to avoid Vector struct redefinitions
+#include <raymath.h>
 
 #include <memory>
 
@@ -43,5 +44,6 @@ public:
 	void SetDebugMode(bool bInDebug);
 
 	virtual RaycastResult Raycast(Vector3 StartLocation, Vector3 EndLocation) = 0;
+	virtual void* CreateDistanceJointBetween(std::shared_ptr<class PhysicsComponent> PhysicsCompA, std::shared_ptr<PhysicsComponent> PhysicsCompB, const Vector3& AttachPointA, const Vector3& AttachPointB) = 0;
+	virtual void DestroyJoint(void* Joint) = 0;
 };
-

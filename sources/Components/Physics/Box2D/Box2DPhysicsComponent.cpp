@@ -78,6 +78,11 @@ void Box2DPhysicsComponent::EditCollisionShape(b2Shape* NewShape)
 	Fixture = Body->CreateFixture(FixtureDef);
 }
 
+b2Body* Box2DPhysicsComponent::GetBody() const
+{
+	return Body;
+}
+
 void Box2DPhysicsComponent::Update(float DeltaTime)
 {
 	PhysicsComponent::Update(DeltaTime);

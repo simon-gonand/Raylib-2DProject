@@ -27,8 +27,11 @@ private:
 	float AimSpeed;
 
 	bool bIsHookActivated;
+	RaycastResult HookAttachedRaycastResult;
 	Vector3 EndHookLocation { 0.0f };
 	float CurrentEndHookAlpha { 0.0f };
+
+	void* CurrentAttachedJoint = nullptr;
 
 	float MinGrapplingHookDistance{ 0.0f };
 
@@ -71,16 +74,22 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 {
 	Vector3 WorldLocation = GetWorldLocation();
 	Vector3 AimRendererWorldLocation = AimRendererComp->GetWorldLocation();
+	if (CurrentAttachedJoint != nullptr)
+	{
+		PhysicsWorldManager::Get()->DestroyJoint(CurrentAttachedJoint);
+		CurrentAttachedJoint = nullptr;
+		return;
+	}
 	if (bIsHookActivated || Vector3Distance(WorldLocation, AimRendererWorldLocation) < MinGrapplingHookDistance)
 		return;
 
 	bIsHookActivated = true;
 
 	// Raycast to get end hook location
-	RaycastResult Result = PhysicsWorldManager::Get()->Raycast(WorldLocation, AimRendererWorldLocation);
-	if (Result.bHasHit)
+	HookAttachedRaycastResult = PhysicsWorldManager::Get()->Raycast(WorldLocation, AimRendererWorldLocation);
+	if (HookAttachedRaycastResult.bHasHit)
 	{
-		EndHookLocation = Result.HitLocation;
+		EndHookLocation = HookAttachedRaycastResult.HitLocation;
 	}
 	else
 	{
@@ -128,8 +137,9 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 			bIsHookActivated = false;
 
 			// Attract Owner
+			Vector3 WorldLocation = GetWorldLocation();
 			std::shared_ptr<MovementComponent> OwnerMovementComp = GetOwner()->GetComponentByClass<MovementComponent>();
-			if (OwnerMovementComp)
+			/*if (OwnerMovementComp)
 			{
 				OwnerMovementComp->SwitchMovementMode(EMovementMode::GRAPPLING_THROWN);
 				OnMovementModeSwitchToGroundDelegate =
@@ -144,6 +154,13 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 				Vector3 Direction = Vector3Subtract(EndHookLocation, GetOwner()->GetActorLocation());
 				Direction = Vector3Normalize(Direction);
 				OwnerPhysicsComp->ApplyForce(Vector3Scale(Direction, 7500.0f));
+			}*/
+
+			if (HookAttachedRaycastResult.bHasHit)
+			{
+				CurrentAttachedJoint = PhysicsWorldManager::Get()->CreateDistanceJointBetween(GetOwner()->GetComponentByClass<PhysicsComponent>(),
+					HookAttachedRaycastResult.HitActor->GetComponentByClass<PhysicsComponent>(),
+					WorldLocation, HookAttachedRaycastResult.HitLocation);
 			}
 		}
 		Vector3 CurrentEndHookLocation = Vector3Lerp(GetWorldLocation(), EndHookLocation, CurrentEndHookAlpha);

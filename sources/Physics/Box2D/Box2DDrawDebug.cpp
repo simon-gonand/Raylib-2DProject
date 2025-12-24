@@ -34,7 +34,9 @@ void Box2DDrawDebug::DrawSolidCircle(const b2Vec2& center, float radius, const b
 
 void Box2DDrawDebug::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
 {
-    DrawLine(p1.x * PTM_RATIO, p1.y * PTM_RATIO, p2.x * PTM_RATIO, p2.y * PTM_RATIO, ConvertToColor(color));
+    Vector2 P1 = { p1.x * PTM_RATIO, p1.y * PTM_RATIO};
+    Vector2 P2 = { p2.x * PTM_RATIO, p2.y * PTM_RATIO};
+    DrawLineEx(P1, P2, 2.0f, ConvertToColor(color));
 }
 
 void Box2DDrawDebug::DrawTransform(const b2Transform& xf)
