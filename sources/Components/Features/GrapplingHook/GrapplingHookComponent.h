@@ -109,6 +109,7 @@ inline bool GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 		bAttractGrapplingHookTriggered = false;
 		bBalanceGrapplingHookTriggered = false;
 		bIsHookActivated = false;
+		CableRendererComp->Deactivate();
 
 		return true;
 	}
@@ -212,6 +213,10 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 		{
 			OwnerMovementComp->SwitchMovementMode(EMovementMode::GRAPPLING_BALANCE);
 		}
+	}
+	else
+	{
+		CableRendererComp->Deactivate();
 	}
 }
 
