@@ -1,13 +1,25 @@
 #include "JumpingMovementMode.h"
 
-JumpingMovementMode::JumpingMovementMode(float InAcceleration, float InDeceleration, float InTopSpeed, float InJumpSpeed, std::shared_ptr<MovementComponent> InMovementComponent)
-	: MovementModeBase(InAcceleration, InDeceleration, InTopSpeed), JumpSpeed{ InJumpSpeed }, MovementComp {InMovementComponent}
+JumpingMovementMode::JumpingMovementMode(float InAcceleration, float InDeceleration, float InTopSpeed, float InJumpSpeed, int InMaxJumpCount,
+	std::shared_ptr<MovementComponent> InMovementComponent)
+	: MovementModeBase(InAcceleration, InDeceleration, InTopSpeed), JumpSpeed{ InJumpSpeed }, MaxJumpCount{InMaxJumpCount}, MovementComp {InMovementComponent}
 {
+}
+
+void JumpingMovementMode::IncrementJumpCount()
+{
+	++JumpCount;
+}
+
+void JumpingMovementMode::ResetJumpCount()
+{
+	JumpCount = 0;
+	PreviousFrameJumpCount = 0;
 }
 
 bool JumpingMovementMode::CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const
 {
-	return CurrentMovementMode != EMovementMode::FALLING && CurrentMovementMode != EMovementMode::THROWN && CurrentMovementMode != EMovementMode::GRAPPLING_THROWN &&
+	return JumpCount < MaxJumpCount && CurrentMovementMode != EMovementMode::THROWN && CurrentMovementMode != EMovementMode::GRAPPLING_THROWN &&
 		MovementModeBase::CanSwitchToMode(CurrentMovementMode, CurrentVelocity);
 }
 
@@ -15,8 +27,10 @@ Vector3 JumpingMovementMode::PerformMovement(float DeltaTime, const Vector2& Inp
 {
 	Vector3 Result = MovementModeBase::PerformMovement(DeltaTime, Input, CurrentVelocity);
 
-	if(FloatEquals(Result.y, 0.0f))
+	if(PreviousFrameJumpCount < JumpCount)
 		Result = Vector3Add(Result, { 0.0f, JumpSpeed });
+
+	PreviousFrameJumpCount = JumpCount;
 
 	if(Result.y > 0.0f)
  		MovementComp->SwitchMovementMode(EMovementMode::FALLING);

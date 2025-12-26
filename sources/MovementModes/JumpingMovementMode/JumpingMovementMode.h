@@ -5,7 +5,11 @@
 class JumpingMovementMode : public MovementModeBase
 {
 public:
-	JumpingMovementMode(float InAcceleration, float InDeceleration, float InTopSpeed, float InJumpSpeed, std::shared_ptr<MovementComponent> InMovementComponent);
+	JumpingMovementMode(float InAcceleration, float InDeceleration, float InTopSpeed, float InJumpSpeed, int InMaxJumpCount,
+		std::shared_ptr<MovementComponent> InMovementComponent);
+
+	void IncrementJumpCount();
+	virtual void ResetJumpCount();
 
 protected:
 	virtual bool CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const override;
@@ -13,6 +17,10 @@ protected:
 
 private:
 	float JumpSpeed;
+
+	int JumpCount = 0;
+	int PreviousFrameJumpCount = 0;
+	int MaxJumpCount;
 
 	std::shared_ptr<MovementComponent> MovementComp;
 };

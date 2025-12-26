@@ -4,7 +4,8 @@
 #include "../Helpers/Math/Vectors/Vectors.h"
 
 #include <raymath.h>
-#include <iostream>
+
+#include <sstream>
 
 MovementComponent::MovementComponent(std::shared_ptr<Actor> Owner, std::shared_ptr<PhysicsComponent> InOwnerPhysicsComponent, bool bAutoActivate)
 	: ComponentBase(Owner, bAutoActivate), OwnerPhysicsComponent{InOwnerPhysicsComponent}
@@ -28,6 +29,19 @@ EMovementMode MovementComponent::GetCurrentMovementMode()
 EMovementMode MovementComponent::GetPreviousMovementMode()
 {
 	return PreviousMovementMode;
+}
+
+std::shared_ptr<MovementModeBase> MovementComponent::GetCurrentMovementModeObj() const
+{
+	return CurrentMovementModeObj;
+}
+
+std::shared_ptr<MovementModeBase> MovementComponent::GetMovementModeObj(EMovementMode MovementMode) const
+{
+	auto MovementModeObjIt = MovementModes.find(MovementMode);
+	if (MovementModeObjIt != MovementModes.end())
+		return MovementModeObjIt->second;
+	return nullptr;
 }
 
 void MovementComponent::SetMovementInput(const Vector2& Input)
@@ -120,5 +134,41 @@ void MovementComponent::Update(float DeltaTime)
 	{
 		MovementVelocity = CurrentMovementModeObj->PerformMovement(DeltaTime, MovementInput, OwnerPhysicsComponent->GetLinearVelocity());
 		OwnerPhysicsComponent->SetLinearVelocity(MovementVelocity);
+	}
+}
+
+void MovementComponent::DrawDebug(float DeltaTime)
+{
+	const char* CurrentMovementModeStr = DebugMovementModeStr(CurrentMovementMode);
+	std::ostringstream ss;
+	ss << "Current Movement Mode: " << CurrentMovementModeStr;
+	DrawText(ss.str().c_str(), 0, 0, 10, GREEN);
+	ss.str("");
+	ss.clear();
+	const char* PreviousMovementModeStr = DebugMovementModeStr(PreviousMovementMode);
+	ss << "Previous Movement Mode: " << PreviousMovementModeStr;
+	DrawText(ss.str().c_str(), 0, 10, 10, ORANGE);
+}
+
+const char* MovementComponent::DebugMovementModeStr(EMovementMode InMovementMode) const
+{
+	switch (InMovementMode)
+	{
+	case EMovementMode::GROUND:
+		return "GROUND";
+	case EMovementMode::JUMPING:
+		return "JUMPING";
+	case EMovementMode::FALLING:
+		return "FALLING";
+	case EMovementMode::SLIDING:
+		return "SLIDING";
+	case EMovementMode::THROWN:
+		return "THROWN";
+	case EMovementMode::GRAPPLING_THROWN:
+		return "GRAPPLING THROWN";
+	case EMovementMode::GRAPPLING_BALANCE:
+		return "GRAPPLING BALANCE";
+	default:
+		return "";
 	}
 }

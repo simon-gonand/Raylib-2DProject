@@ -72,12 +72,14 @@ void Player::Initialize()
 
 	MovementComp = std::make_shared<MovementComponent>(PlayerSPtr, PhysicsComp, true);
 	MovementComp->AddNewMovementMode(EMovementMode::GROUND, std::make_shared<GroundMovementMode>(1.0f, 3.0f, 10.0f));
-	MovementComp->AddNewMovementMode(EMovementMode::JUMPING, std::make_shared<JumpingMovementMode>(1.0f, 3.0f, 10.0f, -20.0f, MovementComp));
+	MovementComp->AddNewMovementMode(EMovementMode::JUMPING, std::make_shared<JumpingMovementMode>(1.0f, 3.0f, 10.0f, -20.0f, 2, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::FALLING, std::make_shared<FallingMovementMode>(1.0f, 3.0f, 10.0f, 30.0f, 1.5f));
 	MovementComp->AddNewMovementMode(EMovementMode::SLIDING, std::make_shared<SlidingMovementMode>(1.0f, 0.75f, 10.0f, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::THROWN, std::make_shared<ThrownMovementMode>(PhysicsComp, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_THROWN, std::make_shared<GrapplingThrownMovementMode>(PhysicsComp, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_BALANCE, std::make_shared<GrapplingBalanceMovementMode>(1.0f, 3.0f, 5.0f));
+	MovementComp->BindToOnMovementModeSwitch<Player, &Player::OnMovementModeSwitch>(this);
+	//MovementComp->SetDrawDebug(true);
 	AddComponent(MovementComp);
 
 	GrapplingHookComp = std::make_shared<GrapplingHookComponent<Renderer2DComponent, CableRendererComponent>>(PlayerSPtr, "assets/Aim/GrapplingHookAim.png", Vector2({1.5f, 1.5f}), 100.0f, 15.0f);
@@ -122,9 +124,21 @@ void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 	{
 		MovementComp->SwitchMovementMode(EMovementMode::JUMPING);
 		GrapplingHookComp->ClearBalanceGrapplingHook();
+		const std::shared_ptr<MovementModeBase> CurrentMovementModeObj = MovementComp->GetCurrentMovementModeObj();
+		if (bCanIncrementJump)
+		{
+			if (std::shared_ptr<JumpingMovementMode> JumpingMode = std::dynamic_pointer_cast<JumpingMovementMode>(CurrentMovementModeObj))
+			{
+				JumpingMode->IncrementJumpCount();
+				bCanIncrementJump = false;
+			}
+		}
 	}
 	else
+	{
 		MovementComp->SwitchMovementMode(EMovementMode::FALLING);
+		bCanIncrementJump = true;
+	}
 }
 
 void Player::AttractHook(const float& Scale, const InputTrigger& Trigger)
@@ -150,14 +164,16 @@ void Player::PostUpdate()
 	Vector3 CurrentVelocity = PhysicsComp->GetLinearVelocity();
 	if (FloatEquals(CurrentVelocity.y, 0.0f)) 
 	{
-		if(MovementComp->GetCurrentMovementMode() != EMovementMode::SLIDING && 
-			MovementComp->GetCurrentMovementMode() != EMovementMode::THROWN &&
-			MovementComp->GetCurrentMovementMode() != EMovementMode::GRAPPLING_THROWN )
+		if(GetCurrentMovementMode() != EMovementMode::SLIDING && 
+			GetCurrentMovementMode() != EMovementMode::THROWN &&
+			GetCurrentMovementMode() != EMovementMode::GRAPPLING_THROWN &&
+			GetCurrentMovementMode() != EMovementMode::GRAPPLING_BALANCE )
 			MovementComp->SwitchMovementMode(EMovementMode::GROUND);
 	}
-	else if (MovementComp->GetCurrentMovementMode() != EMovementMode::JUMPING && 
+	else if (GetCurrentMovementMode() != EMovementMode::JUMPING && 
 		GetCurrentMovementMode() != EMovementMode::THROWN && 
-		GetCurrentMovementMode() != EMovementMode::GRAPPLING_THROWN)
+		GetCurrentMovementMode() != EMovementMode::GRAPPLING_THROWN &&
+		GetCurrentMovementMode() != EMovementMode::GRAPPLING_BALANCE)
 	{
 		MovementComp->SwitchMovementMode(EMovementMode::FALLING);
 	}
@@ -232,5 +248,14 @@ void Player::UpdateSlidingAvailability(float DeltaTime)
 	{
 		CurrentTimeBeforeActivateSliding = 0.0f;
 		MovementComp->DeactivateMovementMode(EMovementMode::SLIDING);
+	}
+}
+
+void Player::OnMovementModeSwitch(EMovementMode PreviousMovementMode, EMovementMode CurrentMovementMode)
+{
+	if (CurrentMovementMode == EMovementMode::GROUND)
+	{
+		if (std::shared_ptr<JumpingMovementMode> JumpingMoveMode = std::dynamic_pointer_cast<JumpingMovementMode>(MovementComp->GetMovementModeObj(EMovementMode::JUMPING)))
+			JumpingMoveMode->ResetJumpCount();
 	}
 }

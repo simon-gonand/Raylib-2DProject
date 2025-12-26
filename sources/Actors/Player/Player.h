@@ -46,7 +46,11 @@ private:
 	float TimeBeforeActivateSliding = 0.5f;
 	float CurrentTimeBeforeActivateSliding = 0.0f;
 
+	bool bCanIncrementJump = true;
+
 	void UpdateCollision();
 	void UpdateSlidingAvailability(float DeltaTime);
+
+	void OnMovementModeSwitch(EMovementMode PreviousMovementMode, EMovementMode CurrentMovementMode);
 };
 

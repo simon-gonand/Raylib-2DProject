@@ -26,12 +26,14 @@ public:
 
 	EMovementMode GetCurrentMovementMode();
 	EMovementMode GetPreviousMovementMode();
+	std::shared_ptr<class MovementModeBase> GetCurrentMovementModeObj() const;
+	std::shared_ptr<MovementModeBase> GetMovementModeObj(EMovementMode MovementMode) const;
 
 	void SetMovementInput(const Vector2& Input);
 
 	void SwitchMovementMode(EMovementMode NewMovementMode);
 
-	void AddNewMovementMode(EMovementMode NewMovementMode, std::shared_ptr<class MovementModeBase> NewMovementModeObj);
+	void AddNewMovementMode(EMovementMode NewMovementMode, std::shared_ptr<MovementModeBase> NewMovementModeObj);
 
 	void DeactivateMovementMode(EMovementMode MovementModeToDeactivate);
 	void ActivateMovementMode(EMovementMode MovementModeToActivate);
@@ -54,6 +56,7 @@ public:
 
 protected:
 	virtual void Update(float DeltaTime) override;
+	virtual void DrawDebug(float DeltaTime) override;
 
 private:
 	std::shared_ptr<PhysicsComponent> OwnerPhysicsComponent;
@@ -68,4 +71,6 @@ private:
 	std::unordered_map<EMovementMode, std::shared_ptr<MovementModeBase>> MovementModes;
 
 	std::vector<DelegateBase<void, EMovementMode, EMovementMode>*> OnMovementModeSwitches;
+
+	const char* DebugMovementModeStr(EMovementMode InMovementMode) const;
 };
