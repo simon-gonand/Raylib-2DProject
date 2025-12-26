@@ -119,7 +119,10 @@ void Player::Slide(const float& Scale, const InputTrigger& Trigger)
 void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 {
 	if (Trigger == DOWN)
+	{
 		MovementComp->SwitchMovementMode(EMovementMode::JUMPING);
+		GrapplingHookComp->ClearBalanceGrapplingHook();
+	}
 	else
 		MovementComp->SwitchMovementMode(EMovementMode::FALLING);
 }
