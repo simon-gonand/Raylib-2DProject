@@ -12,6 +12,7 @@ public:
 	virtual void ResetJumpCount();
 
 protected:
+	virtual void OnSwitch() override;
 	virtual bool CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const override;
 	virtual Vector3 PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity) override;
 

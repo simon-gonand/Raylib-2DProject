@@ -5,8 +5,6 @@
 
 #include <raymath.h>
 
-#include <sstream>
-
 MovementComponent::MovementComponent(std::shared_ptr<Actor> Owner, std::shared_ptr<PhysicsComponent> InOwnerPhysicsComponent, bool bAutoActivate)
 	: ComponentBase(Owner, bAutoActivate), OwnerPhysicsComponent{InOwnerPhysicsComponent}
 {
@@ -140,14 +138,9 @@ void MovementComponent::Update(float DeltaTime)
 void MovementComponent::DrawDebug(float DeltaTime)
 {
 	const char* CurrentMovementModeStr = DebugMovementModeStr(CurrentMovementMode);
-	std::ostringstream ss;
-	ss << "Current Movement Mode: " << CurrentMovementModeStr;
-	DrawText(ss.str().c_str(), 0, 0, 10, GREEN);
-	ss.str("");
-	ss.clear();
+	DrawText(TextFormat("Current Movement Mode: %s", CurrentMovementModeStr), 0, 0, 10, GREEN);
 	const char* PreviousMovementModeStr = DebugMovementModeStr(PreviousMovementMode);
-	ss << "Previous Movement Mode: " << PreviousMovementModeStr;
-	DrawText(ss.str().c_str(), 0, 10, 10, ORANGE);
+	DrawText(TextFormat("Previous Movement Mode: %s", PreviousMovementModeStr), 0, 10, 10, ORANGE);
 }
 
 const char* MovementComponent::DebugMovementModeStr(EMovementMode InMovementMode) const

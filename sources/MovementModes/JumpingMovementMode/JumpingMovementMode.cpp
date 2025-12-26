@@ -17,6 +17,12 @@ void JumpingMovementMode::ResetJumpCount()
 	PreviousFrameJumpCount = 0;
 }
 
+void JumpingMovementMode::OnSwitch()
+{
+	if (JumpCount == 0 && MovementComp->GetPreviousMovementMode() == EMovementMode::FALLING)
+		++JumpCount;
+}
+
 bool JumpingMovementMode::CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const
 {
 	return JumpCount < MaxJumpCount && CurrentMovementMode != EMovementMode::THROWN && CurrentMovementMode != EMovementMode::GRAPPLING_THROWN &&
