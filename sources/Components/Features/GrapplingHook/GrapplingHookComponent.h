@@ -16,7 +16,9 @@ public:
 	GrapplingHookComponent(std::shared_ptr<Actor> InOwner, const char* InAimTexturePath, const Vector2& InAimRendererSize = { 1.0f, 1.0f }, float InAimSpeed = 1.0f, float InMinGrapplingDistance = 10.0f, bool bAutoActivate = true, const Vector3 & InLocation = { 0.0f }, const Quaternion & InRotation = { 0.0f }, const Vector3 & InScale = { 1.0f, 1.0f, 1.0f });
 	
 	void UpdateAimPosition(const Vector2& InScale);
-	void TriggerGrapplingHook();
+	void TriggerAttractGrapplingHook();
+	void TriggerBalanceGrapplingHook();
+	bool ClearBalanceGrapplingHook();
 
 protected:
 	virtual void Update(float DeltaTime) override;
@@ -31,6 +33,9 @@ private:
 	Vector3 EndHookLocation { 0.0f };
 	float CurrentEndHookAlpha { 0.0f };
 
+	bool bAttractGrapplingHookTriggered = false;
+	bool bBalanceGrapplingHookTriggered = false;
+
 	void* CurrentAttachedJoint = nullptr;
 
 	float MinGrapplingHookDistance{ 0.0f };
@@ -39,8 +44,14 @@ private:
 
 	Vector2 MovingDirection { 0.0f };
 
+	bool CanUseGrapplingHook() const;
+
 	void UpdateAimRendererLocation(float DeltaTime);
 	void UpdateGrapplingHookRenderer(float DeltaTime);
+	void UpdateGrapplingHookAttached();
+
+	void Attract();
+	void Balance();
 
 	DelegateBase<void, EMovementMode, EMovementMode>* OnMovementModeSwitchToGroundDelegate;
 	void OnMovementModeSwitchToGround(EMovementMode PreviousMovementMode, EMovementMode CurrentMovementMode);
@@ -70,18 +81,57 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 }
 
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
-inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::TriggerGrapplingHook()
+inline bool GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::CanUseGrapplingHook() const
 {
 	Vector3 WorldLocation = GetWorldLocation();
 	Vector3 AimRendererWorldLocation = AimRendererComp->GetWorldLocation();
+	return !bIsHookActivated && Vector3Distance(WorldLocation, AimRendererWorldLocation) >= MinGrapplingHookDistance && CurrentAttachedJoint == nullptr;
+}
+
+template<class AimRendererComponent, class GrapplingHookRendererComponent>
+inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::TriggerAttractGrapplingHook()
+{
+	if (!CanUseGrapplingHook())
+		return;
+
+	UpdateGrapplingHookAttached();
+	bAttractGrapplingHookTriggered = true;
+	bBalanceGrapplingHookTriggered = false;
+}
+
+template<class AimRendererComponent, class GrapplingHookRendererComponent>
+inline bool GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::ClearBalanceGrapplingHook()
+{
 	if (CurrentAttachedJoint != nullptr)
 	{
 		PhysicsWorldManager::Get()->DestroyJoint(CurrentAttachedJoint);
 		CurrentAttachedJoint = nullptr;
-		return;
+		bAttractGrapplingHookTriggered = false;
+		bBalanceGrapplingHookTriggered = false;
+		bIsHookActivated = false;
+
+		return true;
 	}
-	if (bIsHookActivated || Vector3Distance(WorldLocation, AimRendererWorldLocation) < MinGrapplingHookDistance)
+
+	return false;
+}
+
+template<class AimRendererComponent, class GrapplingHookRendererComponent>
+inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::TriggerBalanceGrapplingHook()
+{
+	if (ClearBalanceGrapplingHook() || !CanUseGrapplingHook())
 		return;
+
+	UpdateGrapplingHookAttached();
+	bAttractGrapplingHookTriggered = false;
+	bBalanceGrapplingHookTriggered = true;
+}
+
+template<class AimRendererComponent, class GrapplingHookRendererComponent>
+inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::UpdateGrapplingHookAttached()
+{
+	Vector3 WorldLocation = GetWorldLocation();
+	Vector3 AimRendererWorldLocation = AimRendererComp->GetWorldLocation();
 
 	bIsHookActivated = true;
 
@@ -126,6 +176,40 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 }
 
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
+inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::Attract()
+{
+	std::shared_ptr<MovementComponent> OwnerMovementComp = GetOwner()->GetComponentByClass<MovementComponent>();
+
+	if (OwnerMovementComp)
+	{
+		OwnerMovementComp->SwitchMovementMode(EMovementMode::GRAPPLING_THROWN);
+		OnMovementModeSwitchToGroundDelegate =
+			OwnerMovementComp->BindToOnMovementModeSwitch<
+			GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>,
+			&GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::OnMovementModeSwitchToGround
+			>(this);
+	}
+
+	if (std::shared_ptr<PhysicsComponent> OwnerPhysicsComp = GetOwner()->GetComponentByClass<PhysicsComponent>())
+	{
+		Vector3 Direction = Vector3Subtract(EndHookLocation, GetOwner()->GetActorLocation());
+		Direction = Vector3Normalize(Direction);
+		OwnerPhysicsComp->ApplyForce(Vector3Scale(Direction, 7500.0f));
+	}
+}
+
+template<class AimRendererComponent, class GrapplingHookRendererComponent>
+inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::Balance()
+{
+	if (HookAttachedRaycastResult.bHasHit)
+	{
+		CurrentAttachedJoint = PhysicsWorldManager::Get()->CreateDistanceJointBetween(GetOwner()->GetComponentByClass<PhysicsComponent>(),
+			HookAttachedRaycastResult.HitActor->GetComponentByClass<PhysicsComponent>(),
+			GetWorldLocation(), HookAttachedRaycastResult.HitLocation);
+	}
+}
+
+template<class AimRendererComponent, class GrapplingHookRendererComponent>
 inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::UpdateGrapplingHookRenderer(float DeltaTime)
 {
 	if (bIsHookActivated)
@@ -136,31 +220,13 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 			CurrentEndHookAlpha = 1.0f;
 			bIsHookActivated = false;
 
-			// Attract Owner
-			Vector3 WorldLocation = GetWorldLocation();
-			std::shared_ptr<MovementComponent> OwnerMovementComp = GetOwner()->GetComponentByClass<MovementComponent>();
-			/*if (OwnerMovementComp)
+			if (bAttractGrapplingHookTriggered)
 			{
-				OwnerMovementComp->SwitchMovementMode(EMovementMode::GRAPPLING_THROWN);
-				OnMovementModeSwitchToGroundDelegate =
-					OwnerMovementComp->BindToOnMovementModeSwitch< 
-					GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>, 
-					&GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::OnMovementModeSwitchToGround
-					>(this);
+				Attract();
 			}
-
-			if (std::shared_ptr<PhysicsComponent> OwnerPhysicsComp = GetOwner()->GetComponentByClass<PhysicsComponent>())
+			else if (bBalanceGrapplingHookTriggered)
 			{
-				Vector3 Direction = Vector3Subtract(EndHookLocation, GetOwner()->GetActorLocation());
-				Direction = Vector3Normalize(Direction);
-				OwnerPhysicsComp->ApplyForce(Vector3Scale(Direction, 7500.0f));
-			}*/
-
-			if (HookAttachedRaycastResult.bHasHit)
-			{
-				CurrentAttachedJoint = PhysicsWorldManager::Get()->CreateDistanceJointBetween(GetOwner()->GetComponentByClass<PhysicsComponent>(),
-					HookAttachedRaycastResult.HitActor->GetComponentByClass<PhysicsComponent>(),
-					WorldLocation, HookAttachedRaycastResult.HitLocation);
+				Balance();
 			}
 		}
 		Vector3 CurrentEndHookLocation = Vector3Lerp(GetWorldLocation(), EndHookLocation, CurrentEndHookAlpha);

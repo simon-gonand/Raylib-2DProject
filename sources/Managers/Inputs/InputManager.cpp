@@ -27,11 +27,17 @@ InputManager::InputManager()
     EventsBindedInputs.insert(std::make_pair(SlideEventName, SlideEventInputs));
 
     // Grappling Hook Events
-    std::string HookEventName = "Hook";
-    std::vector<std::shared_ptr<InputKey>> HookEventInputs;
-    HookEventInputs.push_back(std::make_shared<InputKey>(KEYBOARD, MOUSE_BUTTON_LEFT, 1.0f));
-    HookEventInputs.push_back(std::make_shared<InputKey>(GAMEPAD, GAMEPAD_BUTTON_RIGHT_TRIGGER_1, 1.0f));
-    EventsBindedInputs.insert(std::make_pair(HookEventName, HookEventInputs));
+    std::string AttractHookEventName = "AttractHook";
+    std::vector<std::shared_ptr<InputKey>> AttractHookEventInputs;
+    AttractHookEventInputs.push_back(std::make_shared<InputKey>(KEYBOARD, MOUSE_BUTTON_RIGHT, 1.0f));
+    AttractHookEventInputs.push_back(std::make_shared<InputKey>(GAMEPAD, GAMEPAD_BUTTON_RIGHT_TRIGGER_1, 1.0f));
+    EventsBindedInputs.insert(std::make_pair(AttractHookEventName, AttractHookEventInputs));
+
+    std::string BalanceHookEventName = "BalanceHook";
+    std::vector<std::shared_ptr<InputKey>> BalanceHookEventInputs;
+    BalanceHookEventInputs.push_back(std::make_shared<InputKey>(KEYBOARD, MOUSE_BUTTON_LEFT, 1.0f));
+    BalanceHookEventInputs.push_back(std::make_shared<InputKey>(GAMEPAD, GAMEPAD_BUTTON_LEFT_TRIGGER_1, 1.0f));
+    EventsBindedInputs.insert(std::make_pair(BalanceHookEventName, BalanceHookEventInputs));
 
     // --- Axis ---
 

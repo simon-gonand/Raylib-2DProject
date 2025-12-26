@@ -30,7 +30,7 @@ public:
 	b2Body* CreateBody(const b2BodyDef* BodyDef);
 
 	virtual RaycastResult Raycast(Vector3 StartLocation, Vector3 EndLocation) override;
-	virtual void* CreateDistanceJointBetween(std::shared_ptr<class PhysicsComponent> PhysicsCompA, std::shared_ptr<PhysicsComponent> PhysicsCompB, const Vector3& AttachPointA, const Vector3& AttachPointB) override;
+	virtual void* CreateDistanceJointBetween(std::shared_ptr<class PhysicsComponent> PhysicsCompA, std::shared_ptr<PhysicsComponent> PhysicsCompB, Vector3 AttachPointA, Vector3 AttachPointB) override;
 	virtual void DestroyJoint(void* Joint) override;
 };
 

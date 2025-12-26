@@ -20,7 +20,8 @@ public:
 	void Aim(const Vector2& Scale);
 	void Jump(const float& Scale, const enum InputTrigger& Trigger);
 	void Slide(const float& Scale, const enum InputTrigger& Trigger);
-	void Hook(const float& Scale, const enum InputTrigger& Trigger);
+	void AttractHook(const float& Scale, const enum InputTrigger& Trigger);
+	void BalanceHook(const float& Scale, const enum InputTrigger& Trigger);
 
 	virtual void Update(float DeltaTime) override;
 	virtual void PostUpdate() override;

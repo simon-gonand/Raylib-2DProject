@@ -49,7 +49,7 @@ RaycastResult Box2DWorldManager::Raycast(Vector3 StartLocation, Vector3 EndLocat
 	return HitRaycastCallback->Result;
 }
 
-void* Box2DWorldManager::CreateDistanceJointBetween(std::shared_ptr<PhysicsComponent> PhysicsCompA, std::shared_ptr<PhysicsComponent> PhysicsCompB, const Vector3& AttachPointA, const Vector3& AttachPointB)
+void* Box2DWorldManager::CreateDistanceJointBetween(std::shared_ptr<PhysicsComponent> PhysicsCompA, std::shared_ptr<PhysicsComponent> PhysicsCompB, Vector3 AttachPointA, Vector3 AttachPointB)
 {
 	std::shared_ptr<Box2DPhysicsComponent> Box2DPhysicsCompA = std::dynamic_pointer_cast<Box2DPhysicsComponent>(PhysicsCompA);
 	std::shared_ptr<Box2DPhysicsComponent> Box2DPhysicsCompB = std::dynamic_pointer_cast<Box2DPhysicsComponent>(PhysicsCompB);
