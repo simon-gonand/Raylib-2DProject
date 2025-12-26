@@ -204,15 +204,19 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 {
 	if (HookAttachedRaycastResult.bHasHit)
 	{
-		CurrentAttachedJoint = PhysicsWorldManager::Get()->CreateDistanceJointBetween(GetOwner()->GetComponentByClass<PhysicsComponent>(),
-			HookAttachedRaycastResult.HitActor->GetComponentByClass<PhysicsComponent>(),
-			GetWorldLocation(), HookAttachedRaycastResult.HitLocation);
-
 		std::shared_ptr<MovementComponent> OwnerMovementComp = GetOwner()->GetComponentByClass<MovementComponent>();
 		if (OwnerMovementComp)
 		{
-			OwnerMovementComp->SwitchMovementMode(EMovementMode::GRAPPLING_BALANCE);
+			if (!OwnerMovementComp->SwitchMovementMode(EMovementMode::GRAPPLING_BALANCE))
+			{
+				CableRendererComp->Deactivate();
+				return;
+			}
 		}
+
+		CurrentAttachedJoint = PhysicsWorldManager::Get()->CreateDistanceJointBetween(GetOwner()->GetComponentByClass<PhysicsComponent>(),
+			HookAttachedRaycastResult.HitActor->GetComponentByClass<PhysicsComponent>(),
+			GetWorldLocation(), HookAttachedRaycastResult.HitLocation);
 	}
 	else
 	{

@@ -31,7 +31,7 @@ public:
 
 	void SetMovementInput(const Vector2& Input);
 
-	void SwitchMovementMode(EMovementMode NewMovementMode);
+	bool SwitchMovementMode(EMovementMode NewMovementMode);
 
 	void AddNewMovementMode(EMovementMode NewMovementMode, std::shared_ptr<MovementModeBase> NewMovementModeObj);
 

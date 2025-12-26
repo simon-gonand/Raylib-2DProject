@@ -47,10 +47,10 @@ void MovementComponent::SetMovementInput(const Vector2& Input)
 	MovementInput = Input;
 }
 
-void MovementComponent::SwitchMovementMode(EMovementMode NewMovementMode)
+bool MovementComponent::SwitchMovementMode(EMovementMode NewMovementMode)
 {
 	if (NewMovementMode == CurrentMovementMode)
-		return;
+		return false;
 
 	auto NewMovementModeObj = MovementModes.find(NewMovementMode);
 	if (NewMovementModeObj != MovementModes.end() && 
@@ -61,7 +61,11 @@ void MovementComponent::SwitchMovementMode(EMovementMode NewMovementMode)
 		CurrentMovementModeObj = NewMovementModeObj->second;
 		CurrentMovementModeObj->OnSwitch();
 		BroadcastOnMovementModeSwitch();
+
+		return true;
 	}
+
+	return false;
 }
 
 void MovementComponent::AddNewMovementMode(EMovementMode NewMovementMode, std::shared_ptr<MovementModeBase> NewMovementModeObj)

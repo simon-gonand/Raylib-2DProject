@@ -7,5 +7,7 @@ GrapplingBalanceMovementMode::GrapplingBalanceMovementMode(float InAcceleration,
 
 bool GrapplingBalanceMovementMode::CanSwitchToMode(EMovementMode PreviousMovementMode, const Vector3& CurrentVelocity) const
 {
-	return MovementModeBase::CanSwitchToMode(PreviousMovementMode, CurrentVelocity) && PreviousMovementMode != EMovementMode::THROWN;
+	return MovementModeBase::CanSwitchToMode(PreviousMovementMode, CurrentVelocity) && 
+		PreviousMovementMode != EMovementMode::THROWN && PreviousMovementMode != EMovementMode::GROUND && 
+		PreviousMovementMode != EMovementMode::SLIDING;
 }
