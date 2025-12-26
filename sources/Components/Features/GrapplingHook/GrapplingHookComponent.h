@@ -206,6 +206,12 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 		CurrentAttachedJoint = PhysicsWorldManager::Get()->CreateDistanceJointBetween(GetOwner()->GetComponentByClass<PhysicsComponent>(),
 			HookAttachedRaycastResult.HitActor->GetComponentByClass<PhysicsComponent>(),
 			GetWorldLocation(), HookAttachedRaycastResult.HitLocation);
+
+		std::shared_ptr<MovementComponent> OwnerMovementComp = GetOwner()->GetComponentByClass<MovementComponent>();
+		if (OwnerMovementComp)
+		{
+			OwnerMovementComp->SwitchMovementMode(EMovementMode::GRAPPLING_BALANCE);
+		}
 	}
 }
 
@@ -228,9 +234,10 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 			{
 				Balance();
 			}
+
+			bAttractGrapplingHookTriggered = false;
+			bBalanceGrapplingHookTriggered = false;
 		}
-		bAttractGrapplingHookTriggered = false;
-		bBalanceGrapplingHookTriggered = false;
 
 		Vector3 CurrentEndHookLocation = Vector3Lerp(GetWorldLocation(), EndHookLocation, CurrentEndHookAlpha);
 		CableRendererComp->SetEndPosition(Vector::Vector3ToVector2(CurrentEndHookLocation));

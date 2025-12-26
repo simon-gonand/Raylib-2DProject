@@ -14,6 +14,7 @@ enum class EMovementMode : int
 	SLIDING,
 	THROWN,
 	GRAPPLING_THROWN,
+	GRAPPLING_BALANCE
 };
 
 class MovementComponent : public ComponentBase
