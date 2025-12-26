@@ -229,6 +229,9 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 				Balance();
 			}
 		}
+		bAttractGrapplingHookTriggered = false;
+		bBalanceGrapplingHookTriggered = false;
+
 		Vector3 CurrentEndHookLocation = Vector3Lerp(GetWorldLocation(), EndHookLocation, CurrentEndHookAlpha);
 		CableRendererComp->SetEndPosition(Vector::Vector3ToVector2(CurrentEndHookLocation));
 	}
