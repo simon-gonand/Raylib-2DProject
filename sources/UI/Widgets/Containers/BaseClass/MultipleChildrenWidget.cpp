@@ -15,6 +15,7 @@ void MultipleChildrenWidget::AddChild(std::shared_ptr<Widget> InChild)
 		return;
 	
 	std::shared_ptr<Slot> ChildSlot = std::make_shared<Slot>(ChildrenPadding);
+	ChildSlot->SetWidgetRef(InChild);
 	ChildSlots.push_back(ChildSlot);
 }
 

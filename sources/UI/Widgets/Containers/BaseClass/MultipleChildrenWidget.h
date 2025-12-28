@@ -17,7 +17,6 @@ protected:
 	virtual void Update(float DeltaTime, const Vector2& ParentPosition, const float& ParentRotation, const Vector2& ParentScale, const float& ParentOpacity) override;
 	virtual Vector2 GetSize(const Vector2& ParentScale) const override;
 
-private:
 	std::vector<std::shared_ptr<class Slot>> ChildSlots;
 
 	Vector4 ChildrenPadding;

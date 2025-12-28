@@ -35,10 +35,10 @@ int main(void)
 	P->Initialize();
 	W->AddActor(P);
 
+	std::vector<const char*> Texts = { "Pretty long Text Test to see auto size", "Second text a bit shorters" };
 	std::shared_ptr<TextsWithBackgroundUserWidget> TXBUW = std::make_shared<TextsWithBackgroundUserWidget>(
-		"", "Pretty long Text Test to see auto size", true, 
-		Vector2{0.0f}, 0.0f, Vector2{1.0f, 1.0f}, 1.0f, Vector4{10.0f, 10.0f, 10.0f, 10.0f});
-	TXBUW->Initialize();
+		"", Texts, true,
+		Vector2{0.0f}, 0.0f, Vector2{1.0f, 1.0f}, 1.0f, Vector4{10.0f, 10.0f, 10.0f, 10.0f}, Vector4{ 0.0f, 5.0f, 0.0f, 0.0f});
 	W->AddUserWidget(TXBUW);
 
 	// Target FPS

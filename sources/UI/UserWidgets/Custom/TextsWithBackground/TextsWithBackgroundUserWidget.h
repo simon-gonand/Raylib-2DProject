@@ -3,28 +3,22 @@
 #include "../../BaseClass/UserWidget.h"
 
 #include "../../../Widgets/Containers/Image/ImageWidget.h"
+#include "../../../Widgets/Containers/Boxes/HorizontalBox/HorizontalBox.h"
 
 #include <vector>
+#include "../../../Widgets/Containers/Boxes/VerticalBox/VerticalBox.h"
 
 class TextsWithBackgroundUserWidget : public UserWidget
 {
 public:
-	TextsWithBackgroundUserWidget(const char* InBackgroundTexturePath, const char* InTexts, bool bInTextOverrideBackgroundSize,
-		const Vector2& InPosition = { 0.0f }, float InRotation = 0.0f, const Vector2& InScale = {1.0f, 1.0f}, float Opacity = 1.0f, const Vector4& InTextPadding = {0.0f});
-
-	virtual void Initialize() override;
+	TextsWithBackgroundUserWidget(const char* InBackgroundTexturePath, std::vector<const char*> InTexts, bool bInTextOverrideBackgroundSize,
+		const Vector2& InPosition = { 0.0f }, float InRotation = 0.0f, const Vector2& InScale = {1.0f, 1.0f}, float Opacity = 1.0f, const Vector4& InImagePadding = { 0.0f }, const Vector4& InTextsPadding = {0.0f});
 
 protected:
 	virtual void Update(float DeltaTime) override;
 
 private:
-	const char* BackgroundTexturePath;
-	const char* Texts;
-
-	Vector4 TextPadding;
-
-	bool bTextOverrideBackgroundSize;
-
 	std::shared_ptr<ImageWidget> BackgroundImageWidget;
+	std::shared_ptr<VerticalBox> TextVerticalBox;
 };
 
