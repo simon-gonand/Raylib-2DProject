@@ -7,7 +7,7 @@ World::World()
 	if (PhysicsManager)
 	{
 		PhysicsManager->Initialize({ 0.0f, 9.81f, 0.0f });
-		PhysicsManager->SetDebugMode(true);
+		PhysicsManager->SetDebugMode(false);
 	}
 
 	HideCursor();
@@ -15,6 +15,9 @@ World::World()
 
 void World::AddActor(std::shared_ptr<Actor> InActor)
 {
+	if (!InActor)
+		return;
+
 	Actors.push_back(InActor);
 }
 
@@ -25,6 +28,23 @@ void World::RemoveActor(std::shared_ptr<Actor> InActor)
 		return;
 
 	Actors.erase(ActorToRemove);
+}
+
+void World::AddUserWidget(std::shared_ptr<UserWidget> InUserWidget)
+{
+	if (!InUserWidget)
+		return;
+
+	UserWidgets.push_back(InUserWidget);
+}
+
+void World::RemoveUserWidget(std::shared_ptr<UserWidget> InUserWidget)
+{
+	std::vector<std::shared_ptr<UserWidget>>::iterator UserWidgetToRemove = std::find(UserWidgets.begin(), UserWidgets.end(), InUserWidget);
+	if (UserWidgetToRemove == UserWidgets.end())
+		return;
+
+	UserWidgets.erase(UserWidgetToRemove);
 }
 
 void World::Update(float DeltaTime)
@@ -43,6 +63,15 @@ void World::Update(float DeltaTime)
 
 	if (bCenterMouseEveryFrame)
 		SetMousePosition(GetScreenWidth() / 2, GetScreenHeight() / 2);
+}
+
+void World::UpdateUI(float DeltaTime)
+{
+	for (std::shared_ptr<UserWidget> UI : UserWidgets)
+	{
+		if (UI)
+			UI->Update(DeltaTime);
+	}
 }
 
 void World::SetCenterMouseEveryFrame(bool bNewValue)

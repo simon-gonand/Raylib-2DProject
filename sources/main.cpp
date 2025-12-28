@@ -13,6 +13,7 @@
 #include "Helpers/Globals/Globals.h"
 #include "Actors/TileMap/TileMap.h"
 #include "World/World.h"
+#include "UI/UserWidgets/Custom/TextsWithBackground/TextsWithBackgroundUserWidget.h"
 
 int main(void) 
 {
@@ -34,6 +35,10 @@ int main(void)
 	P->Initialize();
 	W->AddActor(P);
 
+	std::shared_ptr<TextsWithBackgroundUserWidget> TXBUW = std::make_shared<TextsWithBackgroundUserWidget>("", "Pretty long Text Test to see auto size", true);
+	TXBUW->Initialize();
+	W->AddUserWidget(TXBUW);
+
 	// Target FPS
 	SetTargetFPS(60);
 
@@ -44,10 +49,13 @@ int main(void)
 		
 		BeginDrawing();
 			ClearBackground(BLACK);
+
 			Camera2D Camera = CameraManager::Get()->GetCameraToUse();
 			BeginMode2D(Camera);
 				W->Update(DeltaTime);
 			EndMode2D();
+
+			W->UpdateUI(DeltaTime);
 		EndDrawing();
 	}
 
