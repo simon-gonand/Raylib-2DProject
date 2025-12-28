@@ -2,8 +2,8 @@
 #include <raymath.h>
 
 ImageWidget::ImageWidget(const char* TexturePath, const Color& InImageColor, const Vector2& InImageSize,
-	const Vector2& InPosition, float InRotation, const Vector2& InScale, float InOpacity, bool bInChildOverrideMinSize)
-	: OneChildWidget(InPosition, InRotation, InScale, InOpacity, bInChildOverrideMinSize), ImageColor{InImageColor}, ImageSize{InImageSize}
+	const Vector2& InPosition, float InRotation, const Vector2& InScale, float InOpacity, const Vector4& InChildPadding, bool bInChildOverrideMinSize)
+	: OneChildWidget(InPosition, InRotation, InScale, InOpacity, InChildPadding, bInChildOverrideMinSize), ImageColor{InImageColor}, ImageSize{InImageSize}
 {
 	SetImageTexture(TexturePath);
 }

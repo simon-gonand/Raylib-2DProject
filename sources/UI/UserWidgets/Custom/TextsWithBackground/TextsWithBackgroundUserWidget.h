@@ -10,7 +10,7 @@ class TextsWithBackgroundUserWidget : public UserWidget
 {
 public:
 	TextsWithBackgroundUserWidget(const char* InBackgroundTexturePath, const char* InTexts, bool bInTextOverrideBackgroundSize,
-		const Vector2& InPosition = { 0.0f }, float InRotation = 0.0f, const Vector2& InScale = {1.0f, 1.0f}, float Opacity = 1.0f);
+		const Vector2& InPosition = { 0.0f }, float InRotation = 0.0f, const Vector2& InScale = {1.0f, 1.0f}, float Opacity = 1.0f, const Vector4& InTextPadding = {0.0f});
 
 	virtual void Initialize() override;
 
@@ -20,6 +20,8 @@ protected:
 private:
 	const char* BackgroundTexturePath;
 	const char* Texts;
+
+	Vector4 TextPadding;
 
 	bool bTextOverrideBackgroundSize;
 

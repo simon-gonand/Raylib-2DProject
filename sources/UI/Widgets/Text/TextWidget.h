@@ -2,6 +2,8 @@
 
 #include "../BaseClass/Widget.h"
 
+#include <memory>
+
 class TextWidget : public Widget
 {
 public:

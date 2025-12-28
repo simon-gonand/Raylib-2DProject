@@ -6,7 +6,7 @@ class ImageWidget : public OneChildWidget
 {
 public:
 	ImageWidget(const char* TexturePath, const Color& InImageColor, const Vector2& InImageSize = { 1.0f, 1.0f }, 
-		const Vector2 & InPosition = { 0.0f }, float InRotation = 0.0f, const Vector2 & InScale = { 1.0f, 1.0f }, float InOpacity = 1.0f, bool bInChildOverrideMinSize = false);
+		const Vector2& InPosition = { 0.0f }, float InRotation = 0.0f, const Vector2& InScale = { 1.0f, 1.0f }, float InOpacity = 1.0f, const Vector4& InChildPadding = { 0.0f }, bool bInChildOverrideMinSize = false);
 
 	void SetImageTexture(const char* TexturePath);
 	void SetImageTexture(const Texture2D& InImageTexture);

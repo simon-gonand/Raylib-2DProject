@@ -35,7 +35,9 @@ int main(void)
 	P->Initialize();
 	W->AddActor(P);
 
-	std::shared_ptr<TextsWithBackgroundUserWidget> TXBUW = std::make_shared<TextsWithBackgroundUserWidget>("", "Pretty long Text Test to see auto size", true);
+	std::shared_ptr<TextsWithBackgroundUserWidget> TXBUW = std::make_shared<TextsWithBackgroundUserWidget>(
+		"", "Pretty long Text Test to see auto size", true, 
+		Vector2{0.0f}, 0.0f, Vector2{1.0f, 1.0f}, 1.0f, Vector4{10.0f, 10.0f, 10.0f, 10.0f});
 	TXBUW->Initialize();
 	W->AddUserWidget(TXBUW);
 
