@@ -21,7 +21,7 @@ GameManager::~GameManager()
 std::shared_ptr<World> GameManager::GetWorld()
 {
 	std::shared_ptr<GameManager> GM = GameManager::Get();
-	return GM ? GM->GetWorld() : nullptr;
+	return GM ? GM->CurrentWorldInstance : nullptr;
 }
 
 void GameManager::SetWorld(std::shared_ptr<World> NewWorld)
