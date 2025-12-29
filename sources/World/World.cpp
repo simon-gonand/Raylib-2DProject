@@ -19,6 +19,9 @@ void World::AddActor(std::shared_ptr<Actor> InActor)
 		return;
 
 	Actors.push_back(InActor);
+
+	if (std::shared_ptr<Player> InPlayer = std::dynamic_pointer_cast<Player>(InActor))
+		PlayerActor = InPlayer;
 }
 
 void World::RemoveActor(std::shared_ptr<Actor> InActor)
@@ -28,6 +31,11 @@ void World::RemoveActor(std::shared_ptr<Actor> InActor)
 		return;
 
 	Actors.erase(ActorToRemove);
+}
+
+std::shared_ptr<Player> World::GetPlayer() const
+{
+	return PlayerActor;
 }
 
 void World::AddUserWidget(std::shared_ptr<UserWidget> InUserWidget)

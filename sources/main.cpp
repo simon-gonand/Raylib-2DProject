@@ -10,6 +10,7 @@
 #include "Components/Inputs/InputComponent.h"
 #include "Physics/PhysicsWorldManager.h"
 #include "Managers/Camera/CameraManager.h"
+#include "Managers/Game/GameManager.h"
 #include "Helpers/Globals/Globals.h"
 #include "Actors/TileMap/TileMap.h"
 #include "World/World.h"
@@ -22,7 +23,8 @@ int main(void)
 
 	InitWindow(ScreenWidth, ScreenHeight, "2D Project");
 
-	World* W = new World();
+	std::shared_ptr<World> W = std::make_shared<World>();
+	GameManager::SetWorld(W);
 
 	Vector2 TileSize = { 16.0f, 16.0f };
 	std::shared_ptr<TileMap> TM = std::make_shared<TileMap>("assets/TileMap/TMX/TestGround.tmx");
