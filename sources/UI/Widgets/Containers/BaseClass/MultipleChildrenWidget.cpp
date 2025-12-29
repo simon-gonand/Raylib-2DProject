@@ -33,6 +33,18 @@ void MultipleChildrenWidget::RemoveChild(std::shared_ptr<Widget> InChild)
 	ChildSlots.erase(ChildToRemove);
 }
 
+std::shared_ptr<Widget> MultipleChildrenWidget::GetChildAt(int Index)
+{
+	if (Index < 0 || Index >= ChildSlots.size())
+		return nullptr;
+
+	std::shared_ptr<Slot> Child = ChildSlots[Index];
+	if (Child)
+		return Child->GetWidgetRef();
+
+	return nullptr;
+}
+
 void MultipleChildrenWidget::Update(float DeltaTime, const Vector2& ParentPosition, const float& ParentRotation, const Vector2& ParentScale, const float& ParentOpacity)
 {
 	for (std::shared_ptr<Slot> Child : ChildSlots)

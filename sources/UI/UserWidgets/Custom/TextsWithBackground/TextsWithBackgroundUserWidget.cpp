@@ -19,6 +19,22 @@ TextsWithBackgroundUserWidget::TextsWithBackgroundUserWidget(const char* InBackg
 	}
 }
 
+void TextsWithBackgroundUserWidget::EditTextAtIndex(int Index, const char* NewText)
+{
+	if (Index < 0)
+		return;
+
+	std::shared_ptr<TextWidget> ChildTextWidget = std::dynamic_pointer_cast<TextWidget>(TextVerticalBox->GetChildAt(Index));
+	if (ChildTextWidget) 
+	{
+		ChildTextWidget->SetText(NewText);
+	}
+	else
+	{
+		TextVerticalBox->AddChild(std::make_shared<TextWidget>(NewText, GetFontDefault(), 10.0f));
+	}
+}
+
 void TextsWithBackgroundUserWidget::Update(float DeltaTime)
 {
 	UserWidget::Update(DeltaTime);

@@ -2,8 +2,9 @@
 
 #include "../BaseClass/ComponentBase.h"
 
-#include <unordered_map>
 #include "../Physics/PhysicsComponent.h"
+
+#include <unordered_map>
 
 enum class EMovementMode : int
 {
@@ -54,9 +55,10 @@ public:
 	
 	void BroadcastOnMovementModeSwitch();
 
+	const char* DebugMovementModeStr(EMovementMode InMovementMode) const;
+
 protected:
 	virtual void Update(float DeltaTime) override;
-	virtual void DrawDebug(float DeltaTime) override;
 
 private:
 	std::shared_ptr<PhysicsComponent> OwnerPhysicsComponent;
@@ -71,6 +73,4 @@ private:
 	std::unordered_map<EMovementMode, std::shared_ptr<MovementModeBase>> MovementModes;
 
 	std::vector<DelegateBase<void, EMovementMode, EMovementMode>*> OnMovementModeSwitches;
-
-	const char* DebugMovementModeStr(EMovementMode InMovementMode) const;
 };

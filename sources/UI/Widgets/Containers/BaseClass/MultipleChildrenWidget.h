@@ -12,6 +12,7 @@ public:
 
 	virtual void AddChild(std::shared_ptr<Widget> InChild);
 	void RemoveChild(std::shared_ptr<Widget> InChild);
+	std::shared_ptr<Widget> GetChildAt(int Index);
 
 protected:
 	virtual void Update(float DeltaTime, const Vector2& ParentPosition, const float& ParentRotation, const Vector2& ParentScale, const float& ParentOpacity) override;

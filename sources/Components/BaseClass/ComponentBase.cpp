@@ -1,6 +1,7 @@
 #include "ComponentBase.h"
 
 #include <raymath.h>
+#include "../../Managers/Game/GameManager.h"
 
 ComponentBase::ComponentBase(std::shared_ptr<Actor> InOwner, bool bAutoActivate)
 	: Owner {InOwner}, bIsActive{bAutoActivate}
@@ -21,6 +22,13 @@ void ComponentBase::Update(float DeltaTime)
 {
 	if (bDrawDebug)
 		DrawDebug(DeltaTime);
+}
+
+void ComponentBase::SetDebugUI(std::shared_ptr<UserWidget> DebugUI)
+{
+	if(bDrawDebug)
+		if (std::shared_ptr<World> CurrentWorld = GameManager::GetWorld())
+			CurrentWorld->AddUserWidget(DebugUI);
 }
 
 void ComponentBase::Activate()

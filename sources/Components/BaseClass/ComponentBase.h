@@ -23,6 +23,8 @@ public:
 	virtual void Update(float DeltaTime);
 	virtual void DrawDebug(float DeltaTime) {}
 
+	virtual void SetDebugUI(std::shared_ptr<class UserWidget> DebugUI);
+
 	void Activate();
 	void Deactivate();
 	bool IsActive() const;

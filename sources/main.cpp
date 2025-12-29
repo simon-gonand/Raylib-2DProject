@@ -28,20 +28,14 @@ int main(void)
 
 	Vector2 TileSize = { 16.0f, 16.0f };
 	std::shared_ptr<TileMap> TM = std::make_shared<TileMap>("assets/TileMap/TMX/TestGround.tmx");
+	W->AddActor(TM);
 	TM->Initialize();
 	TM->SetActorScale({ 0.05f, 0.05f });
 	TM->SetActorLocation({ -30 * 16.0f / 2, -20 * 16.0f / 2, 2.0f });
-	W->AddActor(TM);
 
 	std::shared_ptr<Player> P = std::make_shared<Player>();
-	P->Initialize();
 	W->AddActor(P);
-
-	std::vector<const char*> Texts = { "Pretty long Text Test to see auto size", "Second text a bit shorters" };
-	std::shared_ptr<TextsWithBackgroundUserWidget> TXBUW = std::make_shared<TextsWithBackgroundUserWidget>(
-		"", Texts, true,
-		Vector2{0.0f}, 0.0f, Vector2{1.0f, 1.0f}, 1.0f, Vector4{10.0f, 10.0f, 10.0f, 10.0f}, Vector4{ 0.0f, 5.0f, 0.0f, 0.0f});
-	W->AddUserWidget(TXBUW);
+	P->Initialize();
 
 	// Target FPS
 	SetTargetFPS(60);

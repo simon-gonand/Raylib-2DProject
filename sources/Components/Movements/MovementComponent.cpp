@@ -139,14 +139,6 @@ void MovementComponent::Update(float DeltaTime)
 	}
 }
 
-void MovementComponent::DrawDebug(float DeltaTime)
-{
-	const char* CurrentMovementModeStr = DebugMovementModeStr(CurrentMovementMode);
-	DrawText(TextFormat("Current Movement Mode: %s", CurrentMovementModeStr), 0, 0, 10, GREEN);
-	const char* PreviousMovementModeStr = DebugMovementModeStr(PreviousMovementMode);
-	DrawText(TextFormat("Previous Movement Mode: %s", PreviousMovementModeStr), 0, 10, 10, ORANGE);
-}
-
 const char* MovementComponent::DebugMovementModeStr(EMovementMode InMovementMode) const
 {
 	switch (InMovementMode)
