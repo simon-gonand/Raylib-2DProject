@@ -3,6 +3,7 @@
 #include "../../BaseClass/TransformComponent.h"
 #include "../../Renderer/2DRenderer/Renderer2DComponent.h"
 #include "../../../Physics/PhysicsWorldManager.h"
+#include "../../../Managers/Camera/CameraManager.h"
 
 #include <type_traits>
 
@@ -174,9 +175,18 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
 inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::UpdateAimRendererLocation(float DeltaTime)
 {
-	Vector2 ScaledSpeed = Vector2Scale(MovingDirection, AimSpeed * DeltaTime);
-	Vector3 NewLocation = Vector3Add(AimRendererComp->GetComponentLocation(), Vector::Vector2ToVector3(ScaledSpeed));
-	AimRendererComp->SetComponentLocation(NewLocation);
+	if (InputManager::Get()->GetIsInGamepadMode())
+	{
+		Vector2 ScaledSpeed = Vector2Scale(MovingDirection, AimSpeed * DeltaTime);
+		Vector3 NewLocation = Vector3Add(AimRendererComp->GetComponentLocation(), Vector::Vector2ToVector3(ScaledSpeed));
+		AimRendererComp->SetComponentLocation(NewLocation);
+	}
+	else
+	{
+		Vector3 NewLocation = Vector::Vector2ToVector3(GetScreenToWorld2D(MovingDirection, CameraManager::Get()->GetCameraToUse()));
+		AimRendererComp->SetWorldLocation(NewLocation);
+	}
+	
 }
 
 template<class AimRendererComponent, class GrapplingHookRendererComponent>

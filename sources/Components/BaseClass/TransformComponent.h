@@ -14,6 +14,10 @@ public:
 	void SetComponentRotation(const Quaternion& NewRotation);
 	void SetComponentScale(const Vector3& NewScale);
 
+	void SetWorldLocation(const Vector3& NewLocation);
+	void SetWorldRotation(const Quaternion& NewRotation);
+	void SetWorldScale(const Vector3& NewScale);
+
 	const Vector3& GetComponentLocation() const;
 	const Quaternion& GetComponentRotation() const;
 	const Vector3& GetComponentScale() const;

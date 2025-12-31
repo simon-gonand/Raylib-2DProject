@@ -23,6 +23,21 @@ void TransformComponent::SetComponentScale(const Vector3& NewScale)
 	RelativeTransform.scale = NewScale;
 }
 
+void TransformComponent::SetWorldLocation(const Vector3& NewLocation)
+{
+	RelativeTransform.translation = Vector3Subtract(NewLocation, GetOwnerLocation());
+}
+
+void TransformComponent::SetWorldRotation(const Quaternion& NewRotation)
+{
+	RelativeTransform.rotation = QuaternionSubtract(NewRotation, GetOwnerRotation());
+}
+
+void TransformComponent::SetWorldScale(const Vector3& NewScale)
+{
+	Vector3Divide(NewScale, GetOwnerScale());
+}
+
 const Vector3& TransformComponent::GetComponentLocation() const
 {
 	return RelativeTransform.translation;

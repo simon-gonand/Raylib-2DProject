@@ -10,7 +10,8 @@ World::World()
 		PhysicsManager->SetDebugMode(false);
 	}
 
-	HideCursor();
+	SetMousePosition(GetScreenWidth() / 2, GetScreenHeight() / 2);
+	DisableCursor();
 }
 
 void World::AddActor(std::shared_ptr<Actor> InActor)

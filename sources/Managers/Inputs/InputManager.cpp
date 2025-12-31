@@ -76,7 +76,7 @@ std::shared_ptr<InputManager> InputManager::Get()
     return Instance;
 }
 
-bool InputManager::IsEventTriggered(std::string EventName, InputTrigger Trigger, int& PressedInput, float& ScaleInput) const
+bool InputManager::IsEventTriggered(std::string EventName, InputTrigger Trigger, int& PressedInput, float& ScaleInput)
 {
     auto BindedInputs = EventsBindedInputs.find(EventName);
     if (BindedInputs != EventsBindedInputs.end())
@@ -88,6 +88,7 @@ bool InputManager::IsEventTriggered(std::string EventName, InputTrigger Trigger,
             {
                 PressedInput = BindedInput->GetValue();
                 ScaleInput = BindedInput->GetScale();
+                bIsInGamepadMode = BindedInput->GetType() == GAMEPAD;
                 return true;
             }
         }
@@ -142,6 +143,7 @@ bool InputManager::IsAxisExists(std::string EventName) const
 void InputManager::GetAxisValue(std::string EventName, Vector2& Direction)
 {
     Direction = Vector2Zero();
+    bool bMousePositionBinded = false;
     auto BindedInputs = AxisBindedInputs.find(EventName);
     if (BindedInputs != AxisBindedInputs.end())
     {
@@ -150,17 +152,28 @@ void InputManager::GetAxisValue(std::string EventName, Vector2& Direction)
             if (BindedInput->GetIsAxis()) 
             {
                 float AxisMovement = 0.0f;
-                Vector2 ScaledAxis = Vector2One();
+                Vector2 ScaledAxis = Vector2Zero();
                 if (BindedInput->GetType() == GAMEPAD)
                 {
                     AxisMovement = GetGamepadAxisMovement(0, BindedInput->GetValue()); 
+                    if (!FloatEquals(AxisMovement, 0))
+                        bIsInGamepadMode = true;
+
+                    if (!bIsInGamepadMode)
+                        continue;
+
                     ScaledAxis = Vector2Scale(BindedInput->GetScale(), AxisMovement);
                 }
                 else if (BindedInput->GetType() == MOUSE_POSITION)
                 {
-                    ScaledAxis = Vector2Subtract(GetMousePosition(), Vector2{GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f});
-                    ScaledAxis = Vector2Normalize(ScaledAxis);
-                    ScaledAxis = Vector2Multiply(BindedInput->GetScale(), ScaledAxis);
+                    bMousePositionBinded = true;
+                    if (!Vector2Equals(GetMouseDelta(), Vector2Zero()))
+                    {
+                        bIsInGamepadMode = false;
+                    }
+
+                    if (bIsInGamepadMode)
+                        continue;
                 }
                 Direction = Vector2Add(Direction, ScaledAxis);
             }
@@ -169,11 +182,17 @@ void InputManager::GetAxisValue(std::string EventName, Vector2& Direction)
                 if ((BindedInput->GetType() == GAMEPAD && IsGamepadButtonDown(0, BindedInput->GetValue())) || 
                     (BindedInput->GetType() == KEYBOARD && IsKeyDown(BindedInput->GetValue())))
                 {
+                    bIsInGamepadMode = BindedInput->GetType() == GAMEPAD;
                     Direction = Vector2Add(Direction, BindedInput->GetScale());
                 }
             }
         }
     }
 
-    Direction = Vector2Normalize(Direction);
+    Direction = (!bIsInGamepadMode && bMousePositionBinded) ? GetMousePosition() : Vector2Normalize(Direction);
+}
+
+bool InputManager::GetIsInGamepadMode() const
+{
+    return bIsInGamepadMode;
 }

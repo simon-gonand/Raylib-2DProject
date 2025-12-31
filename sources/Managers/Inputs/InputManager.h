@@ -65,6 +65,8 @@ private:
 
 	InputManager();
 
+	bool bIsInGamepadMode = false;
+
 protected:
 	std::unordered_map<std::string, std::vector<std::shared_ptr<InputKey>>> EventsBindedInputs;
 	std::unordered_map<std::string, std::vector<std::shared_ptr<InputAxis>>> AxisBindedInputs;
@@ -75,9 +77,11 @@ protected:
 public:
 	static std::shared_ptr<InputManager> Get();
 
-	bool IsEventTriggered(std::string EventName, InputTrigger Trigger, int& PressedInput, float& ScaleInput) const;
+	bool IsEventTriggered(std::string EventName, InputTrigger Trigger, int& PressedInput, float& ScaleInput);
 	bool IsEventExists(std::string EventName) const;
 
 	bool IsAxisExists(std::string AxisName) const;
 	void GetAxisValue(std::string EventName, Vector2& Direction);
+
+	bool GetIsInGamepadMode() const;
 };

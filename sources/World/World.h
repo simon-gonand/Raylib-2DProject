@@ -33,5 +33,5 @@ private:
 
 	std::shared_ptr<PhysicsWorldManager> PhysicsManager;
 
-	bool bCenterMouseEveryFrame = true;
+	bool bCenterMouseEveryFrame = false;
 };
