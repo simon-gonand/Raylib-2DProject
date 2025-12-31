@@ -85,7 +85,7 @@ void Player::Initialize()
 	MovementComp->SetDebugUI(PlayerMovementModeDebugUI);
 	AddComponent(MovementComp);
 
-	GrapplingHookComp = std::make_shared<GrapplingHookComponent<Renderer2DComponent, CableRendererComponent>>(PlayerSPtr, "assets/Aim/GrapplingHookAim.png", Vector2({1.5f, 1.5f}), 225.0f, 25.0f, 15.0f);
+	GrapplingHookComp = std::make_shared<GrapplingHookComponent<Renderer2DComponent, CableRendererComponent>>(PlayerSPtr, "assets/Aim/GrapplingHookAim.png", Vector2({1.5f, 1.5f}), 225.0f, 25.0f, 15.0f, 250.0f);
 	//GrapplingHookComp->SetDrawDebug(true);
 	AddComponent(GrapplingHookComp);
 
