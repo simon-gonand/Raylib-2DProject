@@ -46,6 +46,7 @@ void Player::Initialize()
 	InputComp->BindInput<Player, &Player::Slide>("Slide", DOWN, this);
 	InputComp->BindInput<Player, &Player::Slide>("Slide", RELEASED, this);
 	InputComp->BindInput<Player, &Player::AttractHook>("AttractHook", PRESSED, this);
+	InputComp->BindInput<Player, &Player::BalanceHook>("BalanceHook", RELEASED, this);
 	InputComp->BindInput<Player, &Player::BalanceHook>("BalanceHook", PRESSED, this);
 	InputComp->BindAxis<Player, &Player::Move>("Move", this);
 	InputComp->BindAxis<Player, &Player::Aim>("Aim", this);
@@ -151,7 +152,7 @@ void Player::AttractHook(const float& Scale, const InputTrigger& Trigger)
 
 void Player::BalanceHook(const float& Scale, const InputTrigger& Trigger)
 {
-	GrapplingHookComp->TriggerBalanceGrapplingHook();
+ 	GrapplingHookComp->TriggerBalanceGrapplingHook();
 }
 
 void Player::Update(float DeltaTime)

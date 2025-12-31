@@ -46,6 +46,8 @@ private:
 
 	std::shared_ptr<GrapplingHookRendererComponent> CableRendererComp;
 
+	std::shared_ptr<MovementComponent> OwnerMovementComp;
+
 	Vector2 MovingDirection { 0.0f };
 
 	bool CanUseGrapplingHook() const;
@@ -77,6 +79,7 @@ const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale)
 	{
 		InOwner->AddComponent(AimRendererComp);
 		InOwner->AddComponent(CableRendererComp);
+		OwnerMovementComp = InOwner->GetComponentByClass<MovementComponent>();
 	}
 }
 
@@ -127,7 +130,11 @@ template<class AimRendererComponent, class GrapplingHookRendererComponent>
 inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::TriggerBalanceGrapplingHook()
 {
 	if (ClearBalanceGrapplingHook() || !CanUseGrapplingHook())
+	{
+		if (OwnerMovementComp)
+			OwnerMovementComp->SwitchMovementMode(EMovementMode::FALLING);
 		return;
+	}
 
 	UpdateGrapplingHookAttached();
 	bAttractGrapplingHookTriggered = false;
@@ -193,8 +200,6 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
 inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::Attract()
 {
-	std::shared_ptr<MovementComponent> OwnerMovementComp = GetOwner()->GetComponentByClass<MovementComponent>();
-
 	if (OwnerMovementComp)
 	{
 		OwnerMovementComp->SwitchMovementMode(EMovementMode::GRAPPLING_THROWN);
@@ -218,7 +223,6 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 {
 	if (HookAttachedRaycastResult.bHasHit)
 	{
-		std::shared_ptr<MovementComponent> OwnerMovementComp = GetOwner()->GetComponentByClass<MovementComponent>();
 		if (OwnerMovementComp)
 		{
 			if (!OwnerMovementComp->SwitchMovementMode(EMovementMode::GRAPPLING_BALANCE))
