@@ -94,7 +94,8 @@ inline bool GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 {
 	Vector3 WorldLocation = GetWorldLocation();
 	Vector3 AimRendererWorldLocation = AimRendererComp->GetWorldLocation();
-	return !bIsHookActivated && Vector3Distance(WorldLocation, AimRendererWorldLocation) >= MinGrapplingHookDistance && CurrentAttachedJoint == nullptr;
+	return !bIsHookActivated && Vector3Distance(WorldLocation, AimRendererWorldLocation) >= MinGrapplingHookDistance && 
+		CurrentAttachedJoint == nullptr;
 }
 
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
@@ -120,6 +121,14 @@ inline bool GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 		bIsHookActivated = false;
 		CableRendererComp->Deactivate();
 
+		return true;
+	}
+	else if (bIsHookActivated && bBalanceGrapplingHookTriggered)
+	{
+		bAttractGrapplingHookTriggered = false;
+		bBalanceGrapplingHookTriggered = false;
+		bIsHookActivated = false;
+		CableRendererComp->Deactivate();
 		return true;
 	}
 
