@@ -257,7 +257,8 @@ void Player::UpdateSlidingAvailability(float DeltaTime)
 
 void Player::OnMovementModeSwitch(EMovementMode PreviousMovementMode, EMovementMode CurrentMovementMode)
 {
-	if (CurrentMovementMode == EMovementMode::GROUND)
+	if (CurrentMovementMode == EMovementMode::GROUND || CurrentMovementMode == EMovementMode::GRAPPLING_BALANCE ||
+		CurrentMovementMode == EMovementMode::GRAPPLING_THROWN)
 	{
 		if (std::shared_ptr<JumpingMovementMode> JumpingMoveMode = std::dynamic_pointer_cast<JumpingMovementMode>(MovementComp->GetMovementModeObj(EMovementMode::JUMPING)))
 			JumpingMoveMode->ResetJumpCount();
