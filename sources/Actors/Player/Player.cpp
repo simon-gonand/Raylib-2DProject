@@ -81,9 +81,9 @@ void Player::Initialize()
 	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_THROWN, std::make_shared<GrapplingThrownMovementMode>(PhysicsComp, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_BALANCE, std::make_shared<GrapplingBalanceMovementMode>(6.0f, 3.0f, 10.0f, PhysicsComp, 0.25f));
 	MovementComp->BindToOnMovementModeSwitch<Player, &Player::OnMovementModeSwitch>(this);
-	MovementComp->SetDrawDebug(true);
-	std::shared_ptr<MovementModeDebugWidget> PlayerMovementModeDebugUI = std::make_shared<MovementModeDebugWidget>("", MovementComp);
-	MovementComp->SetDebugUI(PlayerMovementModeDebugUI);
+	//MovementComp->SetDrawDebug(true);
+	//std::shared_ptr<MovementModeDebugWidget> PlayerMovementModeDebugUI = std::make_shared<MovementModeDebugWidget>("", MovementComp);
+	//MovementComp->SetDebugUI(PlayerMovementModeDebugUI);
 	AddComponent(MovementComp);
 
 	GrapplingHookComp = std::make_shared<GrapplingHookComponent<Renderer2DComponent, CableRendererComponent>>(PlayerSPtr, "assets/Aim/GrapplingHookAim.png", Vector2({1.5f, 1.5f}), 100.0f, 25.0f, 30.0f, 250.0f);

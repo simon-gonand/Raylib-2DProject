@@ -35,7 +35,7 @@ void MultipleChildrenWidget::RemoveChild(std::shared_ptr<Widget> InChild)
 
 std::shared_ptr<Widget> MultipleChildrenWidget::GetChildAt(int Index)
 {
-	if (Index < 0 || Index >= ChildSlots.size())
+	if (ChildSlots.empty() || Index < 0 || Index >= ChildSlots.size())
 		return nullptr;
 
 	std::shared_ptr<Slot> Child = ChildSlots[Index];
