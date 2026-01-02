@@ -44,15 +44,17 @@ private:
 	int Value;
 	bool IsAxis;
 	Vector2 Scale;
+	float DeadZone;
 
 public:
-	InputAxis(const InputType& InType, const int& InValue, const bool& InIsAxis, const Vector2& InScale = { 0.0f, 0.0f })
-		: Type{ InType }, Value{ InValue }, IsAxis{ InIsAxis }, Scale { InScale } {}
+	InputAxis(const InputType& InType, const int& InValue, const bool& InIsAxis, const Vector2& InScale = { 0.0f }, const float& InDeadZone = { 0.0f })
+		: Type{ InType }, Value{ InValue }, IsAxis{ InIsAxis }, Scale{ InScale }, DeadZone{ InDeadZone } {}
 
 	const InputType& GetType() const { return Type; }
 	const int& GetValue() const { return Value; }
 	const bool& GetIsAxis() const { return IsAxis; }
 	const Vector2& GetScale() const { return Scale; }
+	const float& GetDeadZone() const { return DeadZone; }
 };
 
 class InputManager

@@ -94,7 +94,7 @@ inline bool GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 {
 	Vector3 WorldLocation = GetWorldLocation();
 	Vector3 AimRendererWorldLocation = AimRendererComp->GetWorldLocation();
-	return !bIsHookActivated && Vector3Distance(WorldLocation, AimRendererWorldLocation) >= MinGrapplingHookDistance && 
+	return !bIsHookActivated && Vector3Distance(WorldLocation, AimRendererWorldLocation) >= MinGrapplingHookDistance &&	
 		CurrentAttachedJoint == nullptr;
 }
 
@@ -194,14 +194,17 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 {
 	if (InputManager::Get()->GetIsInGamepadMode())
 	{
-		Vector2 ScaledSpeed = Vector2Scale(MovingDirection, AimSpeed * DeltaTime);
-		Vector3 NewLocation = Vector3Add(AimRendererComp->GetComponentLocation(), Vector::Vector2ToVector3(ScaledSpeed));
-		AimRendererComp->SetComponentLocation(NewLocation);
+		if(Vector2Equals(MovingDirection, Vector2Zero()))
+			return;
+
+
+		AimRendererComp->SetComponentLocation(Vector3Add(GetComponentLocation(), 
+			Vector3Scale(Vector::Vector2ToVector3(MovingDirection), MinGrapplingHookDistance + 1))); // +1 on MinGrapplingHookDistance to avoid conflict with CanUseGrapplingHookTest
 	}
 	else
 	{
-		Vector3 NewLocation = Vector::Vector2ToVector3(GetScreenToWorld2D(MovingDirection, CameraManager::Get()->GetCameraToUse()));
-		AimRendererComp->SetWorldLocation(NewLocation);
+		Vector3 AimLocation = Vector::Vector2ToVector3(GetScreenToWorld2D(MovingDirection, CameraManager::Get()->GetCameraToUse()));
+		AimRendererComp->SetWorldLocation(AimLocation);
 	}
 	
 }
