@@ -275,6 +275,9 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
 inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::OnMovementModeSwitchToGround(EMovementMode PreviousMovementMode, EMovementMode CurrentMovementMode)
 {
+	if (bBalanceGrapplingHookTriggered)
+		return;
+
 	CableRendererComp->Deactivate();
 	std::shared_ptr<MovementComponent> OwnerMovementComp = GetOwner()->GetComponentByClass<MovementComponent>();
 	if (OwnerMovementComp)
