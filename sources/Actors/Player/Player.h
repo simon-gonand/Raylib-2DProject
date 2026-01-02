@@ -22,6 +22,7 @@ public:
 	void Slide(const float& Scale, const enum InputTrigger& Trigger);
 	void AttractHook(const float& Scale, const enum InputTrigger& Trigger);
 	void BalanceHook(const float& Scale, const enum InputTrigger& Trigger);
+	void ClearBalanceHook(const float& Scale, const enum InputTrigger& Trigger);
 
 	virtual void Update(float DeltaTime) override;
 	virtual void PostUpdate() override;
