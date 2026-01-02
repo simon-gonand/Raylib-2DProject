@@ -22,6 +22,9 @@ public:
 	virtual void SetFriction(float NewFriction) override;
 	virtual float GetFriction() const override;
 
+	virtual void SetLinearDamping(float NewAngularDamping) override;
+	virtual float GetLinearDamping() const override;
+
 	void EditCollisionShape(b2Shape* NewShape);
 
 	b2Body* GetBody() const;

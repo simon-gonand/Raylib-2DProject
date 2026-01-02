@@ -235,6 +235,7 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 		CurrentAttachedJoint = PhysicsWorldManager::Get()->CreateDistanceJointBetween(GetOwner()->GetComponentByClass<PhysicsComponent>(),
 			HookAttachedRaycastResult.HitActor->GetComponentByClass<PhysicsComponent>(),
 			GetWorldLocation(), HookAttachedRaycastResult.HitLocation);
+		
 	}
 	else
 	{

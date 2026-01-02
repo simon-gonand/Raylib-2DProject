@@ -65,6 +65,16 @@ float Box2DPhysicsComponent::GetFriction() const
 	return Fixture->GetFriction();
 }
 
+void Box2DPhysicsComponent::SetLinearDamping(float NewAngularDamping)
+{
+	Body->SetLinearDamping(NewAngularDamping);
+}
+
+float Box2DPhysicsComponent::GetLinearDamping() const
+{
+	return Body->GetLinearDamping();
+}
+
 void Box2DPhysicsComponent::EditCollisionShape(b2Shape* NewShape)
 {
 	if (!NewShape || NewShape == Fixture->GetShape())

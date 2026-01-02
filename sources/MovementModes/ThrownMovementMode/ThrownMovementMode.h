@@ -5,7 +5,7 @@
 class ThrownMovementMode : public MovementModeBase
 {
 public:
-	ThrownMovementMode(std::shared_ptr<PhysicsComponent> OwnerPhysicsComponent, std::shared_ptr<MovementComponent> OwnerMovementComp);
+	ThrownMovementMode(std::shared_ptr<PhysicsComponent> OwnerPhysicsComponent, std::shared_ptr<MovementComponent> OwnerMovementComp, float InFrictionOverride = 0.5f);
 
 protected:
 	virtual void OnSwitch();
@@ -17,5 +17,6 @@ private:
 	std::shared_ptr<PhysicsComponent> PhysicsComp;
 
 	float BaseFriction = 0.0f;
+	float FrictionOverride;
 };
 

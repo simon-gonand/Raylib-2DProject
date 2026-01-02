@@ -16,6 +16,9 @@ public:
 	virtual void SetFriction(float NewFriction) = 0;
 	virtual float GetFriction() const = 0;
 
+	virtual void SetLinearDamping(float NewAngularDamping) = 0;
+	virtual float GetLinearDamping() const = 0;
+
 protected:
 	PhysicsComponent(std::shared_ptr<Actor> InOwner, bool bAutoActivate = true, const Vector3& InLocation = { 0.0f }, const Quaternion& InRotation = { 0.0f }, const Vector3& InScale = { 1.0f, 1.0f, 1.0f });
 };

@@ -1,7 +1,7 @@
 #include "ThrownMovementMode.h"
 
-ThrownMovementMode::ThrownMovementMode(std::shared_ptr<PhysicsComponent> OwnerPhysicsComponent, std::shared_ptr<MovementComponent> OwnerMovementComp)
-    : MovementModeBase(0.0f, 0.0f, 0.0f)
+ThrownMovementMode::ThrownMovementMode(std::shared_ptr<PhysicsComponent> OwnerPhysicsComponent, std::shared_ptr<MovementComponent> OwnerMovementComp, float InFrictionOverride)
+    : MovementModeBase(0.0f, 0.0f, 0.0f), FrictionOverride{InFrictionOverride}
 {
     PhysicsComp = OwnerPhysicsComponent;
     MovementComp = OwnerMovementComp;
@@ -10,7 +10,7 @@ ThrownMovementMode::ThrownMovementMode(std::shared_ptr<PhysicsComponent> OwnerPh
 void ThrownMovementMode::OnSwitch()
 {
     BaseFriction = PhysicsComp->GetFriction();
-    PhysicsComp->SetFriction(0.5f);
+    PhysicsComp->SetFriction(FrictionOverride);
 }
 
 Vector3 ThrownMovementMode::PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity)

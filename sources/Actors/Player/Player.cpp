@@ -79,7 +79,7 @@ void Player::Initialize()
 	MovementComp->AddNewMovementMode(EMovementMode::SLIDING, std::make_shared<SlidingMovementMode>(1.0f, 0.75f, 10.0f, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::THROWN, std::make_shared<ThrownMovementMode>(PhysicsComp, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_THROWN, std::make_shared<GrapplingThrownMovementMode>(PhysicsComp, MovementComp));
-	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_BALANCE, std::make_shared<GrapplingBalanceMovementMode>(1.0f, 3.0f, 10.0f));
+	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_BALANCE, std::make_shared<GrapplingBalanceMovementMode>(1.0f, 3.0f, 10.0f, PhysicsComp, 0.25f));
 	MovementComp->BindToOnMovementModeSwitch<Player, &Player::OnMovementModeSwitch>(this);
 	MovementComp->SetDrawDebug(true);
 	std::shared_ptr<MovementModeDebugWidget> PlayerMovementModeDebugUI = std::make_shared<MovementModeDebugWidget>("", MovementComp);
