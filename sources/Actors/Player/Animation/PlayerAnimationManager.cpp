@@ -7,9 +7,9 @@ void PlayerAnimationManager::Initialize(std::shared_ptr<class Player> InPlayerOw
 {
 	Player = InPlayerOwner;
 
-	AddAnimationFromTexture("Idle", "assets/Characters/Player/SpriteSheets/_Idle.png", 10, 1, 0.15f, true, 0, 9, "");
+	AddAnimationFromTexture("Idle", "assets/Characters/Player/SpriteSheets/_Idle.png", 10, 1, 0.1f, true, 0, 9, "");
 	AddAnimationFromTexture("Jump", "assets/Characters/Player/SpriteSheets/_Jump.png", 3, 1, 0.05f, true, 0, 2, "");
-	AddAnimationFromTexture("Movement", "assets/Characters/Player/SpriteSheets/_Run.png", 10, 1, 0.05f, true, 0, 9, "");
+	AddAnimationFromTexture("Movement", "assets/Characters/Player/SpriteSheets/_Run.png", 10, 1, 0.025f, true, 0, 9, "");
 	AddAnimationFromTexture("StartSlide", "assets/Characters/Player/SpriteSheets/_SlideTransitionStart.png", 1, 1, 0.1f, false, 0, 0, "Slide");
 	AddAnimationFromTexture("Slide", "assets/Characters/Player/SpriteSheets/_Slide.png", 2, 1, 0.05f, true, 0, 1, "");
 	AddAnimationFromTexture<PlayerAnimationManager, &PlayerAnimationManager::OnEndSlideEnded>("EndSlide", "assets/Characters/Player/SpriteSheets/_SlideTransitionEnd.png", 1, 1, 0.15f, false, 0, 0, this);
