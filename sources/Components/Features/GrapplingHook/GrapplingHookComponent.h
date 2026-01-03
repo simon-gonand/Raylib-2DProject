@@ -14,7 +14,10 @@ class GrapplingHookComponent : public TransformComponent
 	static_assert(std::is_base_of<Renderer2DComponent, GrapplingHookRendererComponent>::value, "GrapplingHookRendererComponent class must derive from Renderer2DComponent");
 
 public:
-	GrapplingHookComponent(std::shared_ptr<Actor> InOwner, const char* InAimTexturePath, const Vector2& InAimRendererSize = { 1.0f, 1.0f }, float InAimSpeed = 1.0f, float InAttractSpeed = 25.0f, float InMinGrapplingDistance = 10.0f, float InMaxGrapplingDistance = 200.0f, bool bAutoActivate = true, const Vector3 & InLocation = { 0.0f }, const Quaternion & InRotation = { 0.0f }, const Vector3 & InScale = { 1.0f, 1.0f, 1.0f });
+	GrapplingHookComponent(std::shared_ptr<Actor> InOwner, const char* InAimTexturePath, const Vector2& InAimRendererSize = { 1.0f, 1.0f }, 
+		float InAimSpeed = 1.0f, float InAttractSpeed = 25.0f, float InMinGrapplingDistance = 10.0f, 
+		float InMaxBalanceGrapplingDistance = 200.0f, float InMaxAttractGrapplingDistance = 25.0f, bool bAutoActivate = true, 
+		const Vector3 & InLocation = { 0.0f }, const Quaternion & InRotation = { 0.0f }, const Vector3 & InScale = { 1.0f, 1.0f, 1.0f });
 	
 	void UpdateAimPosition(const Vector2& InScale);
 	void TriggerAttractGrapplingHook();
@@ -42,7 +45,8 @@ private:
 	void* CurrentAttachedJoint = nullptr;
 
 	float MinGrapplingHookDistance;
-	float MaxGrapplingHookDistance;
+	float MaxBalanceGrapplingHookDistance;
+	float MaxAttractGrapplingHookDistance;
 
 	std::shared_ptr<GrapplingHookRendererComponent> CableRendererComp;
 
@@ -68,10 +72,11 @@ private:
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
 inline GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::GrapplingHookComponent(std::shared_ptr<Actor> InOwner, 
 	const char* InAimTexturePath, const Vector2& InAimRendererSize, float InAimSpeed, float InAttractSpeed, 
-	float InMinGrapplingDistance, float InMaxGrapplingDistance,bool bAutoActivate, 
+	float InMinGrapplingDistance, float InMaxBalanceGrapplingDistance, float InMaxAttractGrapplingDistance, bool bAutoActivate, 
 const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale)
 	: TransformComponent(InOwner, bAutoActivate, InLocation, InRotation, InScale), AimSpeed {InAimSpeed}, AttractSpeed {InAttractSpeed},
-	bIsHookActivated{false}, MinGrapplingHookDistance {InMinGrapplingDistance}, MaxGrapplingHookDistance{InMaxGrapplingDistance}
+	bIsHookActivated{false}, MinGrapplingHookDistance {InMinGrapplingDistance}, MaxBalanceGrapplingHookDistance{InMaxBalanceGrapplingDistance},
+	MaxAttractGrapplingHookDistance{InMaxAttractGrapplingDistance}
 {
 	AimRendererComp = std::make_shared<AimRendererComponent>(InOwner, InAimTexturePath, true, InLocation, InRotation, InScale, InAimRendererSize);
 	CableRendererComp = std::make_shared<GrapplingHookRendererComponent>(InOwner, "", true, false, InLocation, InRotation, InScale);
@@ -104,9 +109,9 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 	if (!CanUseGrapplingHook())
 		return;
 
-	UpdateGrapplingHookAttached();
 	bAttractGrapplingHookTriggered = true;
 	bBalanceGrapplingHookTriggered = false;
+	UpdateGrapplingHookAttached();
 }
 
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
@@ -145,19 +150,25 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 		return;
 	}
 
-	UpdateGrapplingHookAttached();
 	bAttractGrapplingHookTriggered = false;
 	bBalanceGrapplingHookTriggered = true;
+	UpdateGrapplingHookAttached();
 }
 
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
 inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::UpdateGrapplingHookAttached()
 {
+	float GrapplingHookDistance = 0.0f;
+	if (bBalanceGrapplingHookTriggered)
+		GrapplingHookDistance = MaxBalanceGrapplingHookDistance;
+	else
+		GrapplingHookDistance = MaxAttractGrapplingHookDistance;
+
 	Vector3 WorldLocation = GetWorldLocation();
 	Vector3 AimRendererWorldLocation = AimRendererComp->GetWorldLocation();
 	Vector3 AimDirection = Vector3Subtract(AimRendererWorldLocation, WorldLocation);
 	AimDirection = Vector3Normalize(AimDirection);
-	EndHookLocation = Vector3Add(Vector3Scale(AimDirection, MaxGrapplingHookDistance), WorldLocation);
+	EndHookLocation = Vector3Add(Vector3Scale(AimDirection, GrapplingHookDistance), WorldLocation);
 
 	bIsHookActivated = true;
 
