@@ -27,6 +27,8 @@ public:
 	virtual void Update(float DeltaTime) override;
 	virtual void PostUpdate() override;
 
+	void Respawn();
+
 	EMovementMode GetCurrentMovementMode() const;
 	EMovementMode GetPreviousMovementMode() const;
 	
@@ -48,6 +50,8 @@ private:
 	float CurrentTimeBeforeActivateSliding = 0.0f;
 
 	bool bCanIncrementJump = true;
+
+	Vector3 ActorInitialPostion;
 
 	void UpdateCollision();
 	void UpdateSlidingAvailability(float DeltaTime);
