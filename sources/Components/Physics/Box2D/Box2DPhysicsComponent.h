@@ -7,7 +7,15 @@
 class Box2DPhysicsComponent : public PhysicsComponent
 {
 public:
-	Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Shape* Shape, 
+	Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Polygon Shape, 
+		const float& Density = 1.0f, const float& Friction = 0.3f, const float& GravityScale = 1.0f, bool bFixedRotation = false, bool bAutoActivate = true,
+		const Vector3& InLocation = { 0.0f }, const Quaternion& InRotation = { 0.0f }, const Vector3& InScale = { 1.0f, 1.0f, 1.0f });
+
+	Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Capsule Shape,
+		const float& Density = 1.0f, const float& Friction = 0.3f, const float& GravityScale = 1.0f, bool bFixedRotation = false, bool bAutoActivate = true,
+		const Vector3& InLocation = { 0.0f }, const Quaternion& InRotation = { 0.0f }, const Vector3& InScale = { 1.0f, 1.0f, 1.0f });
+
+	Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Circle Shape,
 		const float& Density = 1.0f, const float& Friction = 0.3f, const float& GravityScale = 1.0f, bool bFixedRotation = false, bool bAutoActivate = true,
 		const Vector3& InLocation = { 0.0f }, const Quaternion& InRotation = { 0.0f }, const Vector3& InScale = { 1.0f, 1.0f, 1.0f });
 	
@@ -22,19 +30,24 @@ public:
 	virtual void SetFriction(float NewFriction) override;
 	virtual float GetFriction() const override;
 
-	virtual void SetLinearDamping(float NewAngularDamping) override;
+	virtual void SetLinearDamping(float NewLinearDamping) override;
 	virtual float GetLinearDamping() const override;
 
-	void EditCollisionShape(b2Shape* NewShape);
+	void EditCollisionShape(b2Polygon NewShape);
+	void EditCollisionShape(b2Capsule NewShape);
+	void EditCollisionShape(b2Circle NewShape);
 
-	b2Body* GetBody() const;
+	const b2BodyId& GetBody() const;
 
 protected:
 	virtual void Update(float DeltaTime) override;
 
 private:
-	b2Body* Body;
-	b2Fixture* Fixture;
+	b2BodyId Body;
+	b2ShapeId ShapeId;
+
+	void CreateBody(const b2BodyType& Type, float GravityScale, bool bFixedRotation, std::shared_ptr<Actor> InOwner);
+	b2ShapeDef CreateShapeDef(float Density, float Friction);
 
 	void BindEvents(std::shared_ptr<Actor> InOwner);
 

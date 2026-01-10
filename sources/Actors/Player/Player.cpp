@@ -23,7 +23,6 @@
 #include "../../MovementModes/ThrownMovementMode/ThrownMovementMode.h"
 #include "../../MovementModes/ThrownMovementMode/GrapplingThrownMovementMode/GrapplingThrownMovementMode.h"
 #include "../../MovementModes/GrapplingBalanceMovementMode/GrapplingBalanceMovementMode.h"
-#include "../../UI/UserWidgets/Debug/MovementModeDebug/MovementModeDebugWidget.h"
 
 Player::Player()
 {
@@ -52,16 +51,17 @@ void Player::Initialize()
 	InputComp->BindAxis<Player, &Player::Aim>("Aim", this);
 
 	ActorInitialPostion = { 0.0f, -50.0f, 0.0f};
+	SetActorLocation(ActorInitialPostion);
+	SetActorRotation(QuaternionIdentity());
+	SetActorScale({ 1.0f, 1.0f });
 
-	std::shared_ptr<b2PolygonShape> GroundPhysicsShape = std::make_shared<b2PolygonShape>();
-	GroundPhysicsShape->SetAsBox(0.8f, 1.6f);
+	b2Polygon GroundPhysicsShape = b2MakeBox(0.8f, 1.6f);
 	CollisionShapes.insert({ EMovementMode::GROUND, GroundPhysicsShape });
 
-	std::shared_ptr<b2PolygonShape> SlidingPhysicsShape = std::make_shared<b2PolygonShape>();
-	SlidingPhysicsShape->SetAsBox(1.3f, 0.5f, b2Vec2(0.0f, 1.0f), 0.0f);
+	b2Polygon SlidingPhysicsShape = b2MakeOffsetBox(1.3f, 0.5f, b2Vec2({ 0.0f, 1.0f }), b2MakeRot(0.0f));
 	CollisionShapes.insert({ EMovementMode::SLIDING, SlidingPhysicsShape });
 
-	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, GroundPhysicsShape.get(), 1.0f, 0.0f, 3.0f, true);
+	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, GroundPhysicsShape, 1.0f, 0.0f, 3.0f, true);
 	AddComponent(PhysicsComp);
 
 	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, true, Vector2({ ActorInitialPostion.x, ActorInitialPostion.y }), Vector2({ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }), 0.0f, 2.5f);
@@ -90,10 +90,6 @@ void Player::Initialize()
 		"assets/Aim/GrapplingHookAim.png", Vector2({1.5f, 1.5f}), 225.0f, 25.0f, 30.0f, 150.0f, 100.0f);
 	GrapplingHookComp->SetDrawDebug(true);
 	AddComponent(GrapplingHookComp);
-
-	SetActorLocation(ActorInitialPostion);
-	SetActorRotation(QuaternionIdentity());
-	SetActorScale({1.0f, 1.0f});
 
 	MovementComp->SwitchMovementMode(EMovementMode::FALLING);
 	MovementComp->DeactivateMovementMode(EMovementMode::SLIDING);
@@ -232,7 +228,7 @@ void Player::UpdateCollision()
 {
 	if (MovementComp->GetCurrentMovementMode() != MovementComp->GetPreviousMovementMode())
 	{
-		std::shared_ptr<b2Shape> Shape = nullptr;
+		b2Polygon Shape;
 		auto CollisionShape = CollisionShapes.find(MovementComp->GetCurrentMovementMode());
 		if (CollisionShape != CollisionShapes.end())
 		{
@@ -245,7 +241,7 @@ void Player::UpdateCollision()
 		std::shared_ptr<Box2DPhysicsComponent> Box2DPhysicsComp = std::dynamic_pointer_cast<Box2DPhysicsComponent>(PhysicsComp);
 		if (Box2DPhysicsComp)
 		{
-			Box2DPhysicsComp->EditCollisionShape(Shape.get());
+			Box2DPhysicsComp->EditCollisionShape(Shape);
 		}
 	}
 }

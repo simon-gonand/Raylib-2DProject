@@ -29,9 +29,9 @@ int main(void)
 	Vector2 TileSize = { 16.0f, 16.0f };
 	std::shared_ptr<TileMap> TM = std::make_shared<TileMap>("assets/TileMap/TMX/TestGround.tmx");
 	W->AddActor(TM);
+	TM->SetActorLocation({ -30 * 16.0f / 2, -20 * 16.0f / 2, 2.0f });
 	TM->Initialize();
 	TM->SetActorScale({ 0.05f, 0.05f });
-	TM->SetActorLocation({ -30 * 16.0f / 2, -20 * 16.0f / 2, 2.0f });
 
 	std::shared_ptr<Player> P = std::make_shared<Player>();
 	W->AddActor(P);

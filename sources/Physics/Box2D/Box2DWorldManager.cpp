@@ -1,10 +1,10 @@
 #include "Box2DWorldManager.h"
 
-#include "Box2DDrawDebug.h"
-
 #include "../../Helpers/Globals/Globals.h"
 
 #include "../../Components/Physics/Box2D/Box2DPhysicsComponent.h"
+
+#include <box2d/base.h>
 
 Box2DWorldManager::Box2DWorldManager()
 {
@@ -12,41 +12,51 @@ Box2DWorldManager::Box2DWorldManager()
 
 void Box2DWorldManager::Initialize(const Vector3& InGravity)
 {
-	b2Vec2 Gravity = b2Vec2(InGravity.x, InGravity.y);
-	World = new b2World(Gravity);
+	b2WorldDef worldDef = b2DefaultWorldDef();
+	b2Vec2 Gravity = b2Vec2({ InGravity.x, InGravity.y });
+	worldDef.gravity = Gravity;
 
-	DebugDrawObj = new Box2DDrawDebug();
-	DebugDrawObj->SetFlags(b2Draw::e_shapeBit | b2Draw::e_centerOfMassBit | b2Draw::e_jointBit);
-	World->SetDebugDraw(DebugDrawObj);
+	DebugDraw = b2DefaultDebugDraw();
+	DebugDraw.drawShapes = true;
+	DebugDraw.drawMass = true;
+	DebugDraw.drawJoints = true;
+	DebugDraw.DrawPolygonFcn = &Box2DDrawDebug::DrawPolygon;
+	DebugDraw.DrawSolidPolygonFcn = &Box2DDrawDebug::DrawSolidPolygon;
+	DebugDraw.DrawCircleFcn = &Box2DDrawDebug::DrawCircle;
+	DebugDraw.DrawSolidCircleFcn = &Box2DDrawDebug::DrawSolidCircle;
+	DebugDraw.DrawSegmentFcn = &Box2DDrawDebug::DrawSegment;
+	DebugDraw.DrawTransformFcn = &Box2DDrawDebug::DrawTransform;
+	DebugDraw.DrawPointFcn = &Box2DDrawDebug::DrawPoint;
+	DebugDraw.DrawStringFcn = &Box2DDrawDebug::DrawString;
+
+	WorldId = b2CreateWorld(&worldDef);
 }
 
 void Box2DWorldManager::Update(float DeltaTime)
 {
-	World->Step(DeltaTime, 8, 3); // Velocity iterations and Position iterations values are set as advised on the Box2D doc
+	b2World_Step(WorldId, 1.0f / 60.0f, 4); // Velocity iterations and Position iterations values are set as advised on the Box2D doc
 }
 
 void Box2DWorldManager::DrawDebug()
 {
 	if (bDebugMode)
-		World->DebugDraw();
+		b2World_Draw(WorldId, &DebugDraw);
 }
 
-b2Body* Box2DWorldManager::CreateBody(const b2BodyDef* BodyDef)
+b2BodyId Box2DWorldManager::CreateBody(const b2BodyDef* BodyDef, void* UserData)
 {
-	if (World) 
-	{
-		return World->CreateBody(BodyDef);
-	}
-	return nullptr;
+	b2BodyId BodyId = b2CreateBody(WorldId, BodyDef);
+	b2Body_SetUserData(BodyId, UserData);
+	return BodyId;
 }
 
 RaycastResult Box2DWorldManager::Raycast(Vector3 StartLocation, Vector3 EndLocation)
 {
-	FirstHitRaycastCallback* HitRaycastCallback = new FirstHitRaycastCallback();
+	RaycastResult HitRaycastResult;
 	StartLocation = Vector3Scale(StartLocation,  1 / PTM_RATIO);
 	EndLocation = Vector3Scale(EndLocation,  1 / PTM_RATIO);
-	World->RayCast(HitRaycastCallback, b2Vec2{ StartLocation.x, StartLocation.y }, b2Vec2{ EndLocation.x, EndLocation.y });
-	return HitRaycastCallback->Result;
+	b2World_CastRay(WorldId, b2Vec2({ StartLocation.x, StartLocation.y }), b2Vec2({ EndLocation.x, EndLocation.y }), b2DefaultQueryFilter(), &FirstHitRaycastCallback, &HitRaycastResult);
+	return HitRaycastResult;
 }
 
 void* Box2DWorldManager::CreateDistanceJointBetween(std::shared_ptr<PhysicsComponent> PhysicsCompA, std::shared_ptr<PhysicsComponent> PhysicsCompB, Vector3 AttachPointA, Vector3 AttachPointB)
@@ -57,40 +67,102 @@ void* Box2DWorldManager::CreateDistanceJointBetween(std::shared_ptr<PhysicsCompo
 	if (!Box2DPhysicsCompA || !Box2DPhysicsCompB)
 		return nullptr;
 
-	b2Body* BodyA = Box2DPhysicsCompA->GetBody();
-	b2Body* BodyB = Box2DPhysicsCompB->GetBody();
+	b2BodyId BodyA = Box2DPhysicsCompA->GetBody();
+	b2BodyId BodyB = Box2DPhysicsCompB->GetBody();
 	b2Vec2 B2WorldAttachPointA = { AttachPointA.x / PTM_RATIO, AttachPointA.y / PTM_RATIO };
 	b2Vec2 B2WorldAttachPointB = { AttachPointB.x / PTM_RATIO, AttachPointB.y / PTM_RATIO };
-	b2Vec2 B2LocalAttachPointA = BodyA->GetLocalPoint(B2WorldAttachPointA);
-	b2Vec2 B2LocalAttachPointB = BodyB->GetLocalPoint(B2WorldAttachPointB);
+	b2Vec2 B2LocalAttachPointA = b2Body_GetLocalPoint(BodyA, B2WorldAttachPointA);
+	b2Vec2 B2LocalAttachPointB = b2Body_GetLocalPoint(BodyB, B2WorldAttachPointB);
 
 	b2DistanceJointDef JointDef = b2DistanceJointDef();
-	JointDef.Initialize(BodyA, BodyB, B2WorldAttachPointA, B2WorldAttachPointB);
+	JointDef.bodyIdA = BodyA;
+	JointDef.bodyIdB = BodyB;
+	JointDef.localAnchorA = B2WorldAttachPointA;
+	JointDef.localAnchorB = B2WorldAttachPointB;
 	JointDef.collideConnected = true;
 
-	return World->CreateJoint(&JointDef);
+	return &b2CreateDistanceJoint(WorldId, &JointDef);
 }
 
 void Box2DWorldManager::DestroyJoint(void* Joint)
 {
-	b2Joint* B2Joint = static_cast<b2Joint*>(Joint);
+	b2JointId* B2Joint = static_cast<b2JointId*>(Joint);
 	if(B2Joint)
-		World->DestroyJoint(B2Joint);
+		DestroyJoint(B2Joint);
 	Joint = nullptr;
 }
 
-float FirstHitRaycastCallback::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float fraction)
+float FirstHitRaycastCallback(b2ShapeId shapeId, b2Vec2 point, b2Vec2 normal, float fraction, void* context)
 {
-	if (!fixture || !fixture->GetBody())
+	if (B2_IS_NULL(shapeId) || !context)
 		return -1.0f;
 
-	Result.bHasHit = true;
-	Result.HitLocation = Vector3{ point.x, point.y };
-	Result.HitLocation = Vector3Scale(Result.HitLocation, PTM_RATIO);
-	Result.Normal = Vector3{ normal.x, normal.y };
+	RaycastResult* Result = reinterpret_cast<RaycastResult*>(context);
 
-	if(uintptr_t ptr = fixture->GetBody()->GetUserData().pointer)
-		Result.HitActor = reinterpret_cast<Actor*>(ptr);
+	b2BodyId BodyId = b2Shape_GetBody(shapeId);
+	if (B2_IS_NULL(b2Shape_GetBody(shapeId)))
+		return 1.0f;
+
+	Result->bHasHit = true;
+	Result->HitLocation = Vector3{ point.x, point.y };
+	Result->HitLocation = Vector3Scale(Result->HitLocation, PTM_RATIO);
+	Result->Normal = Vector3{ normal.x, normal.y };
+
+	if(void* ptr = b2Body_GetUserData(BodyId))
+		Result->HitActor = reinterpret_cast<Actor*>(ptr);
 
 	return fraction;
+}
+
+void Box2DDrawDebug::DrawSolidPolygon(b2Transform transform, const b2Vec2* vertices, int vertexCount, float radius, b2HexColor color, void* context)
+{
+	Box2DDrawDebug::DrawPolygon(vertices, vertexCount, color, context);
+}
+
+void Box2DDrawDebug::DrawPolygon(const b2Vec2* vertices, int vertexCount, b2HexColor color, void* context)
+{
+	for (int i = 0; i < vertexCount; i++) {
+		b2Vec2 StartVertex = vertices[i];
+		b2Vec2 EndVertex = i == vertexCount - 1 ? vertices[0] : vertices[i + 1];
+		DrawLineEx({ StartVertex.x * PTM_RATIO, StartVertex.y * PTM_RATIO }, { EndVertex.x * PTM_RATIO, EndVertex.y * PTM_RATIO }, 1.0f, ConvertToColor(color));
+	}
+}
+
+void Box2DDrawDebug::DrawSolidCircle(b2Transform transform, float radius, b2HexColor color, void* context)
+{
+	Box2DDrawDebug::DrawCircle(transform.p, radius, color, context);
+}
+
+void Box2DDrawDebug::DrawCircle(b2Vec2 center, float radius, b2HexColor color, void* context)
+{
+	DrawCircleV({ center.x * PTM_RATIO, center.y * PTM_RATIO }, radius * PTM_RATIO, ConvertToColor(color));
+}
+
+void Box2DDrawDebug::DrawSegment(b2Vec2 p1, b2Vec2 p2, b2HexColor color, void* context)
+{
+	Vector2 P1 = { p1.x * PTM_RATIO, p1.y * PTM_RATIO };
+	Vector2 P2 = { p2.x * PTM_RATIO, p2.y * PTM_RATIO };
+	DrawLineEx(P1, P2, 2.0f, ConvertToColor(color));
+}
+
+void Box2DDrawDebug::DrawTransform(b2Transform transform, void* context)
+{
+	DrawCircleV({ transform.p.x * PTM_RATIO, transform.p.y * PTM_RATIO }, 1.5f, ORANGE);
+}
+
+void Box2DDrawDebug::DrawPoint(b2Vec2 p, float size, b2HexColor color, void* context)
+{
+	DrawCircleV({ p.x * PTM_RATIO, p.y * PTM_RATIO }, 1.5f, ConvertToColor(color));
+}
+
+void Box2DDrawDebug::DrawString(b2Vec2 p, const char* s, b2HexColor color, void* context)
+{
+	DrawText(s, p.x * PTM_RATIO, p.y * PTM_RATIO, 10, ConvertToColor(color));
+}
+
+Color Box2DDrawDebug::ConvertToColor(const b2HexColor& color)
+{
+	Color DrawColor = GetColor(color);
+
+	return DrawColor;
 }

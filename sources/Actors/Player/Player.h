@@ -44,7 +44,7 @@ private:
 
 	std::shared_ptr<class AnimationManager> CreatePlayerAnimationManager();
 
-	std::unordered_map<EMovementMode, std::shared_ptr<b2Shape>> CollisionShapes;
+	std::unordered_map<EMovementMode, const b2Polygon > CollisionShapes;
 
 	float TimeBeforeActivateSliding = 0.5f;
 	float CurrentTimeBeforeActivateSliding = 0.0f;

@@ -16,7 +16,7 @@ public:
 	virtual void SetFriction(float NewFriction) = 0;
 	virtual float GetFriction() const = 0;
 
-	virtual void SetLinearDamping(float NewAngularDamping) = 0;
+	virtual void SetLinearDamping(float NewLinearDamping) = 0;
 	virtual float GetLinearDamping() const = 0;
 
 protected:
