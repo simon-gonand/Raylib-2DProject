@@ -5,6 +5,7 @@
 #include "../../Components/Physics/Box2D/Box2DPhysicsComponent.h"
 
 #include <box2d/base.h>
+#include <iostream>
 
 Box2DWorldManager::Box2DWorldManager()
 {
@@ -116,7 +117,12 @@ float FirstHitRaycastCallback(b2ShapeId shapeId, b2Vec2 point, b2Vec2 normal, fl
 
 void Box2DDrawDebug::DrawSolidPolygon(b2Transform transform, const b2Vec2* vertices, int vertexCount, float radius, b2HexColor color, void* context)
 {
-	Box2DDrawDebug::DrawPolygon(vertices, vertexCount, color, context);
+	for (int i = 0; i < vertexCount; i++) {
+		b2Vec2 StartVertex = vertices[i] + transform.p;
+		b2Vec2 EndVertex = i == vertexCount - 1 ? vertices[0] : vertices[i + 1];
+		EndVertex += transform.p;
+		DrawLineEx({ StartVertex.x * PTM_RATIO, StartVertex.y * PTM_RATIO }, { EndVertex.x * PTM_RATIO, EndVertex.y * PTM_RATIO }, 1.0f, ConvertToColor(color));
+	}
 }
 
 void Box2DDrawDebug::DrawPolygon(const b2Vec2* vertices, int vertexCount, b2HexColor color, void* context)

@@ -144,7 +144,7 @@ void Box2DPhysicsComponent::CreateBody(const b2BodyType& Type, float GravityScal
 
 	b2BodyDef BodyDef = b2DefaultBodyDef();
 	BodyDef.type = Type;
-	BodyDef.position = b2Vec2({ WorldLocation.x, WorldLocation.y });
+	BodyDef.position = b2Vec2({ WorldLocation.x / PTM_RATIO, WorldLocation.y / PTM_RATIO });
 	BodyDef.gravityScale = GravityScale;
 	BodyDef.fixedRotation = bFixedRotation;
 	Body = ((Box2DWorldManager*)Box2DWorldManager::Get().get())->CreateBody(&BodyDef, InOwner.get());

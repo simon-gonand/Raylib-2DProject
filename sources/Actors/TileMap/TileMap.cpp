@@ -46,14 +46,14 @@ void TileMap::Initialize()
 {
 	Actor::Initialize();
 
+	SetActorLocation({ 0.0f });
+	SetActorRotation(QuaternionIdentity());
+	SetActorScale({ 1.0f, 1.0f });
+
 	RendererComp = std::make_shared<TileMapRendererComponent>(shared_from_this());
 	AddComponent(RendererComp);
 
 	InitializeColliders();
-
-	SetActorLocation({0.0f});
-	SetActorRotation(QuaternionIdentity());
-	SetActorScale({ 1.0f, 1.0f });
 }
 
 const Vector2& TileMap::GetTileMapSize() const
