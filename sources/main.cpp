@@ -30,8 +30,8 @@ int main(void)
 	std::shared_ptr<TileMap> TM = std::make_shared<TileMap>("assets/TileMap/TMX/TestGround.tmx");
 	W->AddActor(TM);
 	TM->Initialize();
+	TM->SetActorLocation({ -30 * 16.0f / 2, -20 * 16.0f / 2, 0.0f, });
 	TM->SetActorScale({ 0.05f, 0.05f });
-	TM->SetActorLocation({ -30 * 16.0f / 2, -20 * 16.0f / 2, 2.0f });
 
 	std::shared_ptr<Player> P = std::make_shared<Player>();
 	W->AddActor(P);

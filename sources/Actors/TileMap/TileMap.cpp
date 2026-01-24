@@ -46,14 +46,14 @@ void TileMap::Initialize()
 {
 	Actor::Initialize();
 
+	SetActorLocation({ 0.0f });
+	SetActorRotation(QuaternionIdentity());
+	SetActorScale({ 1.0f, 1.0f });
+
 	RendererComp = std::make_shared<TileMapRendererComponent>(shared_from_this());
 	AddComponent(RendererComp);
 
 	InitializeColliders();
-
-	SetActorLocation({0.0f});
-	SetActorRotation(QuaternionIdentity());
-	SetActorScale({ 1.0f, 1.0f });
 }
 
 const Vector2& TileMap::GetTileMapSize() const
@@ -320,34 +320,37 @@ void TileMap::InitializeColliders()
 	ObjectGroupInfo Collisions = GetObjectGroup("Collisions");
 	for (ObjectInfo* Object : Collisions.Objects)
 	{
-		b2Shape* Shape = new b2PolygonShape();
+		std::shared_ptr<Box2DPhysicsComponent> PhysicsComp = nullptr;
 		Vector3 Location = { Object->Location.x, Object->Location.y };
 		if (EllipseObjectInfo* EllipseObject = dynamic_cast<EllipseObjectInfo*>(Object))
 		{
 			// No elipse shape in Box2D will need to do that by my own if I need to. For now, it will be a circle
-			Shape = new b2CircleShape();
-			Shape->m_radius = EllipseObject->Size.y / 2 / PTM_RATIO;
+			b2Circle Shape = { 0 };
+			Shape.center = b2Vec2_zero;
+			Shape.radius = EllipseObject->Size.y / 2 / PTM_RATIO;
 			Location.x += EllipseObject->Size.x / 2;
 			Location.y += EllipseObject->Size.y / 2;
+
+			PhysicsComp = std::make_shared<Box2DPhysicsComponent>(shared_from_this(), b2_staticBody, Shape, 1.0f, 0.3f, 1.0f, false, true, Location);
 		}
 		else if (RectangleObjectInfo* RectangleObject = dynamic_cast<RectangleObjectInfo*>(Object))
 		{
-			((b2PolygonShape*)Shape)->SetAsBox(RectangleObject->Size.x / PTM_RATIO / 2, RectangleObject->Size.y / PTM_RATIO / 2);
+			b2Polygon Shape = b2MakeBox(RectangleObject->Size.x / PTM_RATIO / 2, RectangleObject->Size.y / PTM_RATIO / 2);
 			Location.x += RectangleObject->Size.x / 2;
 			Location.y += RectangleObject->Size.y / 2;
+			PhysicsComp = std::make_shared<Box2DPhysicsComponent>(shared_from_this(), b2_staticBody, Shape, 1.0f, 0.3f, 1.0f, false, true, Location);
 		}
 		else if (PolygoneObjectInfo* PolygonObject = dynamic_cast<PolygoneObjectInfo*>(Object))
 		{
-			b2Vec2* Pointsb2 = (b2Vec2*)malloc(sizeof(b2Vec2) * PolygonObject->Points.size());
+			b2Polygon Shape = { 0 };
 			for (int i = 0; i < PolygonObject->Points.size(); ++i)
 			{
-				Pointsb2[i] = b2Vec2(PolygonObject->Points[i].x / PTM_RATIO, PolygonObject->Points[i].y / PTM_RATIO);
+				Shape.vertices[i] = b2Vec2({PolygonObject->Points[i].x / PTM_RATIO, PolygonObject->Points[i].y / PTM_RATIO});
 			}
-			((b2PolygonShape*)Shape)->Set(Pointsb2, PolygonObject->Points.size());
+			Shape.count = PolygonObject->Points.size();
+			PhysicsComp = std::make_shared<Box2DPhysicsComponent>(shared_from_this(), b2_staticBody, Shape, 1.0f, 0.3f, 1.0f, false, true, Location);
 		}
 
-		std::shared_ptr<Box2DPhysicsComponent> PhysicsComp =
-			std::make_shared<Box2DPhysicsComponent>(shared_from_this(), b2_staticBody, Shape, 1.0f, 0.3f, 1.0f, false, true, Location);
 		PhysicsComps.push_back(PhysicsComp);
 		AddComponent(PhysicsComp);
 	}

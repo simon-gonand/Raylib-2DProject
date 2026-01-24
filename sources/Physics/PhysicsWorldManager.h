@@ -44,6 +44,6 @@ public:
 	void SetDebugMode(bool bInDebug);
 
 	virtual RaycastResult Raycast(Vector3 StartLocation, Vector3 EndLocation) = 0;
-	virtual void* CreateDistanceJointBetween(std::shared_ptr<class PhysicsComponent> PhysicsCompA, std::shared_ptr<PhysicsComponent> PhysicsCompB, Vector3 AttachPointA, Vector3 AttachPointB) = 0; // Needs to copy attach point since they will be stored
-	virtual void DestroyJoint(void* Joint) = 0;
+	virtual int CreateDistanceJointBetween(std::shared_ptr<class PhysicsComponent> PhysicsCompA, std::shared_ptr<PhysicsComponent> PhysicsCompB, Vector3 AttachPointA, Vector3 AttachPointB) = 0; // Needs to copy attach point since they will be stored
+	virtual void DestroyJoint(int Joint) = 0;
 };
