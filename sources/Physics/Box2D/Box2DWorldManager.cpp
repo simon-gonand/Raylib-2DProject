@@ -56,7 +56,20 @@ RaycastResult Box2DWorldManager::Raycast(Vector3 StartLocation, Vector3 EndLocat
 	RaycastResult HitRaycastResult;
 	StartLocation = Vector3Scale(StartLocation,  1 / PTM_RATIO);
 	EndLocation = Vector3Scale(EndLocation,  1 / PTM_RATIO);
-	b2World_CastRay(WorldId, b2Vec2({ StartLocation.x, StartLocation.y }), b2Vec2({ EndLocation.x, EndLocation.y }), b2DefaultQueryFilter(), &FirstHitRaycastCallback, &HitRaycastResult);
+	b2RayResult Result = b2World_CastRayClosest(WorldId, b2Vec2({ StartLocation.x, StartLocation.y }), b2Vec2({ EndLocation.x - StartLocation.x, EndLocation.y - StartLocation.y }), b2DefaultQueryFilter());
+	HitRaycastResult.bHasHit = Result.hit;
+	HitRaycastResult.HitLocation = Vector3Scale(Vector3{Result.point.x, Result.point.y}, PTM_RATIO);
+	if (!B2_IS_NULL(Result.shapeId))
+	{
+		b2BodyId BodyId = b2Shape_GetBody(Result.shapeId);
+		if (!B2_IS_NULL(b2Shape_GetBody(Result.shapeId)))
+		{
+			if (void* ptr = b2Body_GetUserData(BodyId))
+				HitRaycastResult.HitActor = reinterpret_cast<Actor*>(ptr);
+		}
+	}
+
+	HitRaycastResult.Normal = Vector3{ Result.normal.x, Result.normal.y };
 	return HitRaycastResult;
 }
 
