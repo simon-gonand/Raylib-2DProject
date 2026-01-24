@@ -94,11 +94,11 @@ float Box2DPhysicsComponent::GetLinearDamping() const
 
 void Box2DPhysicsComponent::EditCollisionShape(b2Polygon NewShape)
 {
-	/*b2ShapeDef ShapeDef = CreateShapeDef(b2Shape_GetDensity(ShapeId), b2Shape_GetFriction(ShapeId));
+	b2ShapeDef ShapeDef = CreateShapeDef(b2Shape_GetDensity(ShapeId), b2Shape_GetFriction(ShapeId));
 
 	b2DestroyShape(ShapeId, false);
 
-	b2CreatePolygonShape(Body, &ShapeDef, &NewShape);*/
+	ShapeId = b2CreatePolygonShape(Body, &ShapeDef, &NewShape);
 }
 
 void Box2DPhysicsComponent::EditCollisionShape(b2Capsule NewShape)
@@ -107,7 +107,7 @@ void Box2DPhysicsComponent::EditCollisionShape(b2Capsule NewShape)
 
 	b2DestroyShape(ShapeId, false);
 
-	b2CreateCapsuleShape(Body, &ShapeDef, &NewShape);
+	ShapeId = b2CreateCapsuleShape(Body, &ShapeDef, &NewShape);
 }
 
 void Box2DPhysicsComponent::EditCollisionShape(b2Circle NewShape)
@@ -116,7 +116,7 @@ void Box2DPhysicsComponent::EditCollisionShape(b2Circle NewShape)
 
 	b2DestroyShape(ShapeId, false);
 
-	b2CreateCircleShape(Body, &ShapeDef, &NewShape);
+	ShapeId = b2CreateCircleShape(Body, &ShapeDef, &NewShape);
 }
 
 const b2BodyId& Box2DPhysicsComponent::GetBody() const
