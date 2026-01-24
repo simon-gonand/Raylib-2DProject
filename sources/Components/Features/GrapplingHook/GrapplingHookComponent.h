@@ -42,7 +42,7 @@ private:
 	bool bAttractGrapplingHookTriggered = false;
 	bool bBalanceGrapplingHookTriggered = false;
 
-	void* CurrentAttachedJoint = nullptr;
+	int CurrentAttachedJointId = -1;
 
 	float MinGrapplingHookDistance;
 	float MaxBalanceGrapplingHookDistance;
@@ -100,7 +100,7 @@ inline bool GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 	Vector3 WorldLocation = GetWorldLocation();
 	Vector3 AimRendererWorldLocation = AimRendererComp->GetWorldLocation();
 	return !bIsHookActivated && Vector3Distance(WorldLocation, AimRendererWorldLocation) >= MinGrapplingHookDistance &&	
-		CurrentAttachedJoint == nullptr;
+		CurrentAttachedJointId == -1;
 }
 
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
@@ -117,10 +117,10 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
 inline bool GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::ClearBalanceGrapplingHook()
 {
-	if (CurrentAttachedJoint != nullptr)
+	if (CurrentAttachedJointId != -1)
 	{
-		PhysicsWorldManager::Get()->DestroyJoint(CurrentAttachedJoint);
-		CurrentAttachedJoint = nullptr;
+		PhysicsWorldManager::Get()->DestroyJoint(CurrentAttachedJointId);
+		CurrentAttachedJointId = -1;
 		bAttractGrapplingHookTriggered = false;
 		bBalanceGrapplingHookTriggered = false;
 		bIsHookActivated = false;
@@ -255,7 +255,7 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 			}
 		}
 
-		CurrentAttachedJoint = PhysicsWorldManager::Get()->CreateDistanceJointBetween(GetOwner()->GetComponentByClass<PhysicsComponent>(),
+		CurrentAttachedJointId = PhysicsWorldManager::Get()->CreateDistanceJointBetween(GetOwner()->GetComponentByClass<PhysicsComponent>(),
 			HookAttachedRaycastResult.HitActor->GetComponentByClass<PhysicsComponent>(),
 			GetWorldLocation(), HookAttachedRaycastResult.HitLocation);
 		

@@ -3,6 +3,7 @@
 #include "../PhysicsWorldManager.h"
 
 #include <box2d/box2d.h>
+#include <unordered_map>
 
 float FirstHitRaycastCallback(b2ShapeId shapeId, b2Vec2 point, b2Vec2 normal, float fraction, void* context);
 
@@ -26,6 +27,9 @@ private:
 	b2WorldId WorldId;
 	b2DebugDraw DebugDraw;
 
+	unsigned int NextAvailableJointId = 0;
+	std::unordered_map<unsigned int, b2JointId> JointIds;
+
 public:
 	Box2DWorldManager();
 
@@ -37,7 +41,7 @@ public:
 	b2BodyId CreateBody(const b2BodyDef* BodyDef, void* UserData = nullptr);
 
 	virtual RaycastResult Raycast(Vector3 StartLocation, Vector3 EndLocation) override;
-	virtual void* CreateDistanceJointBetween(std::shared_ptr<class PhysicsComponent> PhysicsCompA, std::shared_ptr<PhysicsComponent> PhysicsCompB, Vector3 AttachPointA, Vector3 AttachPointB) override;
-	virtual void DestroyJoint(void* Joint) override;
+	virtual int CreateDistanceJointBetween(std::shared_ptr<class PhysicsComponent> PhysicsCompA, std::shared_ptr<PhysicsComponent> PhysicsCompB, Vector3 AttachPointA, Vector3 AttachPointB) override;
+	virtual void DestroyJoint(int Joint) override;
 };
 

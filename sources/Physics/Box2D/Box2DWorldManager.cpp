@@ -60,13 +60,13 @@ RaycastResult Box2DWorldManager::Raycast(Vector3 StartLocation, Vector3 EndLocat
 	return HitRaycastResult;
 }
 
-void* Box2DWorldManager::CreateDistanceJointBetween(std::shared_ptr<PhysicsComponent> PhysicsCompA, std::shared_ptr<PhysicsComponent> PhysicsCompB, Vector3 AttachPointA, Vector3 AttachPointB)
+int Box2DWorldManager::CreateDistanceJointBetween(std::shared_ptr<PhysicsComponent> PhysicsCompA, std::shared_ptr<PhysicsComponent> PhysicsCompB, Vector3 AttachPointA, Vector3 AttachPointB)
 {
 	std::shared_ptr<Box2DPhysicsComponent> Box2DPhysicsCompA = std::dynamic_pointer_cast<Box2DPhysicsComponent>(PhysicsCompA);
 	std::shared_ptr<Box2DPhysicsComponent> Box2DPhysicsCompB = std::dynamic_pointer_cast<Box2DPhysicsComponent>(PhysicsCompB);
 
 	if (!Box2DPhysicsCompA || !Box2DPhysicsCompB)
-		return nullptr;
+		return -1;
 
 	b2BodyId BodyA = Box2DPhysicsCompA->GetBody();
 	b2BodyId BodyB = Box2DPhysicsCompB->GetBody();
@@ -75,22 +75,26 @@ void* Box2DWorldManager::CreateDistanceJointBetween(std::shared_ptr<PhysicsCompo
 	b2Vec2 B2LocalAttachPointA = b2Body_GetLocalPoint(BodyA, B2WorldAttachPointA);
 	b2Vec2 B2LocalAttachPointB = b2Body_GetLocalPoint(BodyB, B2WorldAttachPointB);
 
-	b2DistanceJointDef JointDef = b2DistanceJointDef();
+	b2DistanceJointDef JointDef = b2DefaultDistanceJointDef();
 	JointDef.bodyIdA = BodyA;
 	JointDef.bodyIdB = BodyB;
-	JointDef.localAnchorA = B2WorldAttachPointA;
-	JointDef.localAnchorB = B2WorldAttachPointB;
+	JointDef.localAnchorA = B2LocalAttachPointA;
+	JointDef.localAnchorB = B2LocalAttachPointB;
+	JointDef.length = b2Distance(B2WorldAttachPointA, B2WorldAttachPointB);
 	JointDef.collideConnected = true;
 
-	return &b2CreateDistanceJoint(WorldId, &JointDef);
+	unsigned int Id = NextAvailableJointId;
+	++NextAvailableJointId;
+	JointIds.insert({ Id, b2CreateDistanceJoint(WorldId, &JointDef) });
+
+	return Id;
 }
 
-void Box2DWorldManager::DestroyJoint(void* Joint)
+void Box2DWorldManager::DestroyJoint(int Joint)
 {
-	b2JointId* B2Joint = static_cast<b2JointId*>(Joint);
-	if(B2Joint)
-		DestroyJoint(B2Joint);
-	Joint = nullptr;
+	std::unordered_map<unsigned int, b2JointId>::iterator B2Joint = JointIds.find(Joint);
+	if(B2Joint != JointIds.end())
+		b2DestroyJoint(B2Joint->second);
 }
 
 float FirstHitRaycastCallback(b2ShapeId shapeId, b2Vec2 point, b2Vec2 normal, float fraction, void* context)
