@@ -16,6 +16,12 @@
 #include "World/World.h"
 #include "UI/UserWidgets/Custom/TextsWithBackground/TextsWithBackgroundUserWidget.h"
 
+// Disable the console in Windows releases (from https://keasigmadelta.com/blog/raylib-hide-the-console-window-on-windows-release-builds/?srsltid=AfmBOoo2k-zfGUYh_a4LCI9-RXJwu760A66KR_1X9CEwQs8MmJBmA7dK)
+# if defined(WIN32) && !defined(_DEBUG)
+# pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+# endif
+
+
 int main(void) 
 {
 	const int ScreenWidth = 1280;

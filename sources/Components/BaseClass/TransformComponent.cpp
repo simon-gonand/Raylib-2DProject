@@ -53,17 +53,17 @@ const Vector3& TransformComponent::GetComponentScale() const
 	return RelativeTransform.scale;
 }
 
-const Vector3& TransformComponent::GetWorldLocation() const
+const Vector3 TransformComponent::GetWorldLocation() const
 {
 	return Vector3Add(GetOwnerLocation(), RelativeTransform.translation);
 }
 
-const Quaternion& TransformComponent::GetWorldRotation() const
+const Quaternion TransformComponent::GetWorldRotation() const
 {
 	return QuaternionAdd(GetOwnerRotation(), RelativeTransform.rotation);
 }
 
-const Vector3& TransformComponent::GetWorldScale() const
+const Vector3 TransformComponent::GetWorldScale() const
 {
 	return Vector3Multiply(GetOwnerScale(), RelativeTransform.scale);
 }

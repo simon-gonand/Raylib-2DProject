@@ -66,7 +66,7 @@ const Vector2& TileMap::GetTileSize() const
 	return TileSize;
 }
 
-const Vector2& TileMap::GetPxlTileMapSize() const
+const Vector2 TileMap::GetPxlTileMapSize() const
 {
 	return Vector2Multiply(TileSize, TileMapSize);
 }

@@ -122,7 +122,7 @@ public:
 
 	const Vector2& GetTileMapSize() const;
 	const Vector2& GetTileSize() const;
-	const Vector2& GetPxlTileMapSize() const;
+	const Vector2 GetPxlTileMapSize() const;
 
 	const std::vector<LayerInfo>& GetLayers() const;
 	const ObjectGroupInfo& GetObjectGroup(const char* InObjectGroupName) const;

@@ -22,9 +22,9 @@ public:
 	const Quaternion& GetComponentRotation() const;
 	const Vector3& GetComponentScale() const;
 
-	const Vector3& GetWorldLocation() const;
-	const Quaternion& GetWorldRotation() const;
-	const Vector3& GetWorldScale() const;
+	const Vector3 GetWorldLocation() const;
+	const Quaternion GetWorldRotation() const;
+	const Vector3 GetWorldScale() const;
 
 private:
 	Transform RelativeTransform;
