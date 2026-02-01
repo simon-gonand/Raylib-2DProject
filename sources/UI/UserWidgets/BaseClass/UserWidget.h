@@ -12,6 +12,8 @@ public:
 
 	virtual void Update(float DeltaTime);
 
+	void SetPosition(const Vector2& NewPosition);
+
 protected:
 	std::shared_ptr<Widget> RootWidget;
 

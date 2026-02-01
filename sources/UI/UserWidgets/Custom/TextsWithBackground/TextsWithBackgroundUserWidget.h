@@ -10,7 +10,7 @@
 class TextsWithBackgroundUserWidget : public UserWidget
 {
 public:
-	TextsWithBackgroundUserWidget(const char* InBackgroundTexturePath, std::vector<const char*> InTexts, bool bInTextOverrideBackgroundSize,
+	TextsWithBackgroundUserWidget(const char* InBackgroundTexturePath, std::vector<const char*> InTexts, bool bInTextOverrideBackgroundSize, Color TextsColor, Color DefaultBackgroundColor,
 		const Vector2& InPosition = { 0.0f }, float InRotation = 0.0f, const Vector2& InScale = {1.0f, 1.0f}, float Opacity = 1.0f, const Vector4& InImagePadding = { 0.0f }, const Vector4& InTextsPadding = {0.0f});
 
 	void EditTextAtIndex(int Index, const char* NewText);

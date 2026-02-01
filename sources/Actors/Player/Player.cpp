@@ -52,7 +52,7 @@ void Player::Initialize()
 	InputComp->BindAxis<Player, &Player::Move>("Move", this);
 	InputComp->BindAxis<Player, &Player::Aim>("Aim", this);
 
-	ActorInitialPostion = { 0.0f, -50.0f, 0.0f};
+	ActorInitialPostion = { -150.0f, -50.0f, 0.0f};
 	SetActorLocation(ActorInitialPostion);
 	SetActorRotation(QuaternionIdentity());
 	SetActorScale({ 1.0f, 1.0f });

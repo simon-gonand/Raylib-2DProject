@@ -8,6 +8,7 @@
 #include "Actors/BaseClass/Actor.h"
 #include "Actors/Player/Player.h"
 #include "Components/Inputs/InputComponent.h"
+#include "Components/UI/WidgetComponent.h"
 #include "Physics/PhysicsWorldManager.h"
 #include "Managers/Camera/CameraManager.h"
 #include "Managers/Game/GameManager.h"
@@ -36,8 +37,24 @@ int main(void)
 	std::shared_ptr<TileMap> TM = std::make_shared<TileMap>("assets/TileMap/TMX/TestGround.tmx");
 	W->AddActor(TM);
 	TM->Initialize();
-	TM->SetActorLocation({ -30 * 16.0f / 2, -20 * 16.0f / 2, 0.0f, });
+	TM->SetActorLocation({ -30 * 16.0f / 2, -20 * 16.0f / 2, 0.0f});
 	TM->SetActorScale({ 0.05f, 0.05f });
+
+	std::shared_ptr<Actor> TutorialWidgetEmptyActor = std::make_shared<Actor>();
+	W->AddActor(TutorialWidgetEmptyActor);
+	TutorialWidgetEmptyActor->Initialize();
+	std::vector<const char*> TutorialTexts = { "A/D or Left Stick to Move",
+		"Space or A to Jump",
+		"Left Shift or B to Slide",
+		"Mouse or Right Stick to Aim",
+		"Left Click or LB to use Grappling Hook to Balance",
+		"Right Click or RB to use Grappling Hook to be Attracted" };
+	std::shared_ptr<TextsWithBackgroundUserWidget> TutorialTextWidget = std::make_shared<TextsWithBackgroundUserWidget>("", 
+		TutorialTexts,
+		true, BLACK, WHITE);
+	std::shared_ptr<WidgetComponent> WidgetComp = std::make_shared<WidgetComponent>(TutorialTextWidget, TutorialWidgetEmptyActor);
+	TutorialWidgetEmptyActor->AddComponent(WidgetComp);
+	TutorialWidgetEmptyActor->SetActorLocation({ -300.0f, -150.0f, 0.0f });
 
 	std::shared_ptr<Player> P = std::make_shared<Player>();
 	W->AddActor(P);

@@ -12,3 +12,8 @@ void UserWidget::Update(float DeltaTime)
 
 	RootWidget->Update(DeltaTime, Position, Rotation, Scale, Opacity);
 }
+
+void UserWidget::SetPosition(const Vector2& NewPosition)
+{
+	Position = NewPosition;
+}
