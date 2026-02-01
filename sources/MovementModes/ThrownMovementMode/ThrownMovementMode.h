@@ -16,6 +16,7 @@ protected:
 private:
 	std::shared_ptr<PhysicsComponent> PhysicsComp;
 
+	bool bBaseFrictionOverriden = false;
 	float BaseFriction = 0.0f;
 	float FrictionOverride;
 };
