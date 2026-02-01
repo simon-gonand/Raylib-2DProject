@@ -20,19 +20,20 @@ void JumpingMovementMode::ResetJumpCount()
 void JumpingMovementMode::OnSwitch()
 {
 	if (JumpCount == 0 && 
-		(MovementComp->GetPreviousMovementMode() == EMovementMode::FALLING || MovementComp->GetPreviousMovementMode() == EMovementMode::JUMPING))
+		(MovementComp->GetPreviousMovementMode() == EMovementMode::FALLING || MovementComp->GetPreviousMovementMode() == EMovementMode::JUMPING) ||
+		MovementComp->GetPreviousMovementMode() == EMovementMode::GRAPPLING_THROWN)
 		++JumpCount;
 }
 
 bool JumpingMovementMode::CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const
 {
-	return JumpCount < MaxJumpCount && CurrentMovementMode != EMovementMode::THROWN && CurrentMovementMode != EMovementMode::GRAPPLING_THROWN &&
+	return JumpCount < MaxJumpCount && CurrentMovementMode != EMovementMode::THROWN &&
 		MovementModeBase::CanSwitchToMode(CurrentMovementMode, CurrentVelocity);
 }
 
 Vector3 JumpingMovementMode::PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity)
 {
-	Vector3 Result = MovementModeBase::PerformMovement(DeltaTime, Input, CurrentVelocity);
+ 	Vector3 Result = MovementModeBase::PerformMovement(DeltaTime, Input, CurrentVelocity);
 
 	if (PreviousFrameJumpCount < JumpCount)
 		Result.y = JumpSpeed;

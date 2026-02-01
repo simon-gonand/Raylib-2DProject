@@ -4,6 +4,7 @@
 #include "../../Renderer/2DRenderer/Renderer2DComponent.h"
 #include "../../../Physics/PhysicsWorldManager.h"
 #include "../../../Managers/Camera/CameraManager.h"
+#include "../../../MovementModes/ThrownMovementMode/GrapplingThrownMovementMode/GrapplingThrownMovementMode.h"
 
 #include <type_traits>
 
@@ -225,7 +226,14 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 {
 	if (OwnerMovementComp)
 	{
-		OwnerMovementComp->SwitchMovementMode(EMovementMode::GRAPPLING_THROWN);
+		if (std::shared_ptr<MovementModeBase> MovementMode = OwnerMovementComp->SwitchMovementMode(EMovementMode::GRAPPLING_THROWN))
+		{
+			if (std::shared_ptr<GrapplingThrownMovementMode> GrapplingThrownMovement = std::dynamic_pointer_cast<GrapplingThrownMovementMode>(MovementMode))
+			{
+				GrapplingThrownMovement->SetFinalLocation(EndHookLocation);
+			}
+		}
+		
 		OnMovementModeSwitchToGroundDelegate =
 			OwnerMovementComp->BindToOnMovementModeSwitch<
 			GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>,
