@@ -22,6 +22,7 @@ public:
 	
 	void UpdateAimPosition(const Vector2& InScale);
 	void TriggerAttractGrapplingHook();
+	bool ClearAttractGrapplingHook();
 	void TriggerBalanceGrapplingHook();
 	bool ClearBalanceGrapplingHook();
 
@@ -102,6 +103,21 @@ inline bool GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 	Vector3 AimRendererWorldLocation = AimRendererComp->GetWorldLocation();
 	return !bIsHookActivated && Vector3Distance(WorldLocation, AimRendererWorldLocation) >= MinGrapplingHookDistance &&	
 		CurrentAttachedJointId == -1;
+}
+
+template<class AimRendererComponent, class GrapplingHookRendererComponent>
+inline bool GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::ClearAttractGrapplingHook()
+{
+ 	if (OwnerMovementComp->GetCurrentMovementMode() == EMovementMode::GRAPPLING_THROWN || (bIsHookActivated && bAttractGrapplingHookTriggered))
+	{
+		bAttractGrapplingHookTriggered = false;
+		bBalanceGrapplingHookTriggered = false;
+		bIsHookActivated = false;
+		CableRendererComp->Deactivate();
+		return true;
+	}
+
+	return false;
 }
 
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
