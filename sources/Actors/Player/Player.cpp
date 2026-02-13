@@ -184,6 +184,7 @@ void Player::PostUpdate()
 			MovementComp->SwitchMovementMode(EMovementMode::GROUND);
 	}
 	else if (GetCurrentMovementMode() != EMovementMode::JUMPING && 
+		GetCurrentMovementMode() != EMovementMode::SLIDING &&
 		GetCurrentMovementMode() != EMovementMode::THROWN && 
 		GetCurrentMovementMode() != EMovementMode::GRAPPLING_THROWN &&
 		GetCurrentMovementMode() != EMovementMode::GRAPPLING_BALANCE)

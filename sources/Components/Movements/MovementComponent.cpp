@@ -158,6 +158,6 @@ const char* MovementComponent::DebugMovementModeStr(EMovementMode InMovementMode
 	case EMovementMode::GRAPPLING_BALANCE:
 		return "GRAPPLING BALANCE";
 	default:
-		return "";
+		return "None";
 	}
 }

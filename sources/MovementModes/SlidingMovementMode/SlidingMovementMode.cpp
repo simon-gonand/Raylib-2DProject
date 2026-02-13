@@ -9,7 +9,7 @@ SlidingMovementMode::SlidingMovementMode(float InAcceleration, float InDecelerat
 
 bool SlidingMovementMode::CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const
 {
-	return CurrentMovementMode != EMovementMode::JUMPING && CurrentMovementMode != EMovementMode::THROWN && CurrentMovementMode != EMovementMode::GRAPPLING_THROWN && abs(CurrentVelocity.x) > MinimalVelocityToTrigger &&
+	return CurrentMovementMode != EMovementMode::THROWN && CurrentMovementMode != EMovementMode::GRAPPLING_THROWN && abs(CurrentVelocity.x) > MinimalVelocityToTrigger &&
 		MovementModeBase::CanSwitchToMode(CurrentMovementMode, CurrentVelocity);
 }
 
@@ -17,12 +17,17 @@ void SlidingMovementMode::OnSwitch()
 {
 	InitialVelocity = 0.0f;
 	DeaccelerateAlpha = 0.0f;
-	std::cout << "SLIDING" << std::endl;
 }
 
 Vector3 SlidingMovementMode::PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity)
 {
-	Vector3 Result = Vector3Zero();
+	Vector3 Result = CurrentVelocity;
+
+	if ((MovementComp->GetPreviousMovementMode() == EMovementMode::FALLING || MovementComp->GetPreviousMovementMode() == EMovementMode::JUMPING) && !FloatEquals(CurrentVelocity.y, 0.0f))
+	{
+		Result.y += 1.0f;
+		Result.y = Clamp(Result.y, 0.0f, 10.0f);
+	}
 
 	if (InitialVelocity == 0.0f) 
 	{
