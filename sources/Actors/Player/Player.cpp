@@ -75,10 +75,10 @@ void Player::Initialize()
 	AddComponent(RendererComp);
 
 	MovementComp = std::make_shared<MovementComponent>(PlayerSPtr, PhysicsComp, true);
-	MovementComp->AddNewMovementMode(EMovementMode::GROUND, std::make_shared<GroundMovementMode>(1.5f, 3.0f, 15.0f));
-	MovementComp->AddNewMovementMode(EMovementMode::JUMPING, std::make_shared<JumpingMovementMode>(1.5f, 3.0f, 15.0f, -15.0f, 2, MovementComp));
-	MovementComp->AddNewMovementMode(EMovementMode::FALLING, std::make_shared<FallingMovementMode>(1.5f, 3.0f, 15.0f, 30.0f, 1.5f));
-	MovementComp->AddNewMovementMode(EMovementMode::SLIDING, std::make_shared<SlidingMovementMode>(21.5f, 0.75f, 15.0f, MovementComp));
+	MovementComp->AddNewMovementMode(EMovementMode::GROUND, std::make_shared<GroundMovementMode>(1.0f, 3.0f, 15.0f));
+	MovementComp->AddNewMovementMode(EMovementMode::JUMPING, std::make_shared<JumpingMovementMode>(1.0f, 3.0f, 15.0f, -15.0f, 2, MovementComp));
+	MovementComp->AddNewMovementMode(EMovementMode::FALLING, std::make_shared<FallingMovementMode>(1.0f, 3.0f, 15.0f, 30.0f, 1.5f));
+	MovementComp->AddNewMovementMode(EMovementMode::SLIDING, std::make_shared<SlidingMovementMode>(21.5f, 0.75f, 15.0f, MovementComp, 12.5f));
 	MovementComp->AddNewMovementMode(EMovementMode::THROWN, std::make_shared<ThrownMovementMode>(PhysicsComp, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_THROWN, std::make_shared<GrapplingThrownMovementMode>(PhysicsComp, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_BALANCE, std::make_shared<GrapplingBalanceMovementMode>(15.0f, 3.0f, 15.0f, PhysicsComp, 0.25f));
@@ -94,7 +94,6 @@ void Player::Initialize()
 	AddComponent(GrapplingHookComp);
 
 	MovementComp->SwitchMovementMode(EMovementMode::FALLING);
-	MovementComp->DeactivateMovementMode(EMovementMode::SLIDING);
 }
 
 void Player::Move(const Vector2& Scale)
@@ -170,13 +169,13 @@ void Player::Update(float DeltaTime)
 {
 	UpdateCollision();
 	Actor::Update(DeltaTime);
-	UpdateSlidingAvailability(DeltaTime);
 }
 
 void Player::PostUpdate()
 {
 	// Is Player Falling
 	Vector3 CurrentVelocity = PhysicsComp->GetLinearVelocity();
+	std::cout << "Velocity : " << CurrentVelocity.x << std::endl;
 	if (FloatEquals(CurrentVelocity.y, 0.0f)) 
 	{
 		if(GetCurrentMovementMode() != EMovementMode::SLIDING && 
@@ -251,23 +250,6 @@ void Player::UpdateCollision()
 		{
 			Box2DPhysicsComp->EditCollisionShape(Shape);
 		}
-	}
-}
-
-void Player::UpdateSlidingAvailability(float DeltaTime)
-{
-	Vector3 CurrentVelocity = PhysicsComp->GetLinearVelocity();
-	float TopSpeed = MovementComp->GetCurrentMovementTopSpeed();
-	if (FloatEquals(CurrentVelocity.x, -TopSpeed) || FloatEquals(CurrentVelocity.x, TopSpeed))
-	{
-		CurrentTimeBeforeActivateSliding += DeltaTime;
-		if (CurrentTimeBeforeActivateSliding >= TimeBeforeActivateSliding)
-			MovementComp->ActivateMovementMode(EMovementMode::SLIDING);
-	}
-	else
-	{
-		CurrentTimeBeforeActivateSliding = 0.0f;
-		MovementComp->DeactivateMovementMode(EMovementMode::SLIDING);
 	}
 }
 

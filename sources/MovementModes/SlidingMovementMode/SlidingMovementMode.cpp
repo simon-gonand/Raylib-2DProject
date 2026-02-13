@@ -1,14 +1,15 @@
 #include "SlidingMovementMode.h"
 
-SlidingMovementMode::SlidingMovementMode(float InAcceleration, float InDeceleration, float InTopSpeed, std::shared_ptr<MovementComponent> InMovementComp)
-	: MovementModeBase(InAcceleration, InDeceleration, InTopSpeed), MovementComp {InMovementComp}, InitialVelocity{ 0.0f }
+#include <iostream>
+
+SlidingMovementMode::SlidingMovementMode(float InAcceleration, float InDeceleration, float InTopSpeed, std::shared_ptr<MovementComponent> InMovementComp, float InMinimalVelocityToTrigger)
+	: MovementModeBase(InAcceleration, InDeceleration, InTopSpeed), MovementComp{InMovementComp}, InitialVelocity{ 0.0f }, MinimalVelocityToTrigger{InMinimalVelocityToTrigger}
 {
 }
 
 bool SlidingMovementMode::CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const
 {
-	return CurrentMovementMode != EMovementMode::JUMPING && CurrentMovementMode != EMovementMode::FALLING && 
-		CurrentMovementMode != EMovementMode::THROWN && CurrentMovementMode != EMovementMode::GRAPPLING_THROWN &&
+	return CurrentMovementMode != EMovementMode::JUMPING && CurrentMovementMode != EMovementMode::THROWN && CurrentMovementMode != EMovementMode::GRAPPLING_THROWN && abs(CurrentVelocity.x) > MinimalVelocityToTrigger &&
 		MovementModeBase::CanSwitchToMode(CurrentMovementMode, CurrentVelocity);
 }
 
@@ -16,6 +17,7 @@ void SlidingMovementMode::OnSwitch()
 {
 	InitialVelocity = 0.0f;
 	DeaccelerateAlpha = 0.0f;
+	std::cout << "SLIDING" << std::endl;
 }
 
 Vector3 SlidingMovementMode::PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity)

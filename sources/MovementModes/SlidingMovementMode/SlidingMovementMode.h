@@ -5,7 +5,7 @@
 class SlidingMovementMode : public MovementModeBase
 {
 public:
-	SlidingMovementMode(float InAcceleration, float InDeceleration, float InTopSpeed, std::shared_ptr<MovementComponent> InMovementComp);
+	SlidingMovementMode(float InAcceleration, float InDeceleration, float InTopSpeed, std::shared_ptr<MovementComponent> InMovementComp, float InMinimalVelocityToTrigger);
 
 protected:
 	virtual bool CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const override;
@@ -14,6 +14,7 @@ protected:
 
 private:
 	float InitialVelocity;
+	float MinimalVelocityToTrigger;
 
 	std::shared_ptr<MovementComponent> MovementComp;
 };

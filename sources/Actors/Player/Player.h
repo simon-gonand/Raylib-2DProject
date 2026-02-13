@@ -47,15 +47,11 @@ private:
 
 	std::unordered_map<EMovementMode, const b2Polygon > CollisionShapes;
 
-	float TimeBeforeActivateSliding = 0.5f;
-	float CurrentTimeBeforeActivateSliding = 0.0f;
-
 	bool bCanIncrementJump = true;
 
 	Vector3 ActorInitialPostion;
 
 	void UpdateCollision();
-	void UpdateSlidingAvailability(float DeltaTime);
 
 	void OnMovementModeSwitch(EMovementMode PreviousMovementMode, EMovementMode CurrentMovementMode);
 };
