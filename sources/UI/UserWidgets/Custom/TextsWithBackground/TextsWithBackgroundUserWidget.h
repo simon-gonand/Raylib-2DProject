@@ -17,8 +17,6 @@ public:
 
 protected:
 	virtual void Update(float DeltaTime) override;
-
-private:
 	std::shared_ptr<ImageWidget> BackgroundImageWidget;
 	std::shared_ptr<VerticalBox> TextVerticalBox;
 };

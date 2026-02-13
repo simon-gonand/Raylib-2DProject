@@ -23,7 +23,7 @@
 #include "../../MovementModes/ThrownMovementMode/ThrownMovementMode.h"
 #include "../../MovementModes/ThrownMovementMode/GrapplingThrownMovementMode/GrapplingThrownMovementMode.h"
 #include "../../MovementModes/GrapplingBalanceMovementMode/GrapplingBalanceMovementMode.h"
-//#include "../../UI/UserWidgets/Debug/MovementModeDebug/MovementModeDebugWidget.h"
+#include "../../Components/Movements/UI/MovementComponentDebugUserWidget.h"
 
 Player::Player()
 {
@@ -83,9 +83,9 @@ void Player::Initialize()
 	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_THROWN, std::make_shared<GrapplingThrownMovementMode>(PhysicsComp, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_BALANCE, std::make_shared<GrapplingBalanceMovementMode>(15.0f, 3.0f, 15.0f, PhysicsComp, 0.25f));
 	MovementComp->BindToOnMovementModeSwitch<Player, &Player::OnMovementModeSwitch>(this);
-	/*MovementComp->SetDrawDebug(true);
-	std::shared_ptr<MovementModeDebugWidget> PlayerMovementModeDebugUI = std::make_shared<MovementModeDebugWidget>("", MovementComp);
-	MovementComp->SetDebugUI(PlayerMovementModeDebugUI);*/
+	MovementComp->SetDrawDebug(true);
+	std::shared_ptr<MovementComponentDebugUserWidget> PlayerMovementModeDebugUI = std::make_shared<MovementComponentDebugUserWidget>(MovementComp);
+	MovementComp->SetDebugUI(PlayerMovementModeDebugUI);
 	AddComponent(MovementComp);
 
 	GrapplingHookComp = std::make_shared<GrapplingHookComponent<Renderer2DComponent, CableRendererComponent>>(PlayerSPtr, 
@@ -175,7 +175,6 @@ void Player::PostUpdate()
 {
 	// Is Player Falling
 	Vector3 CurrentVelocity = PhysicsComp->GetLinearVelocity();
-	std::cout << "Velocity : " << CurrentVelocity.x << std::endl;
 	if (FloatEquals(CurrentVelocity.y, 0.0f)) 
 	{
 		if(GetCurrentMovementMode() != EMovementMode::SLIDING && 
