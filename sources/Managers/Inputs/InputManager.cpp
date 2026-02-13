@@ -22,7 +22,7 @@ InputManager::InputManager()
     // Slide Events
     std::string SlideEventName = "Slide";
     std::vector<std::shared_ptr<InputKey>> SlideEventInputs;
-    SlideEventInputs.push_back(std::make_shared<InputKey>(KEYBOARD, KEY_LEFT_SHIFT, 1.0f));
+    SlideEventInputs.push_back(std::make_shared<InputKey>(KEYBOARD, KEY_LEFT_CONTROL, 1.0f));
     SlideEventInputs.push_back(std::make_shared<InputKey>(GAMEPAD, GAMEPAD_BUTTON_RIGHT_FACE_RIGHT, 1.0f));
     EventsBindedInputs.insert(std::make_pair(SlideEventName, SlideEventInputs));
 
