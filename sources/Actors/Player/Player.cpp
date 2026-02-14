@@ -124,6 +124,9 @@ void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 {
 	if (Trigger == DOWN)
 	{
+		if (MovementComp->GetCurrentMovementMode() != EMovementMode::JUMPING && MovementComp->GetCurrentMovementMode() != EMovementMode::FALLING)
+			bCanIncrementJump = true;
+
 		MovementComp->SwitchMovementMode(EMovementMode::JUMPING);
 		GrapplingHookComp->ClearBalanceGrapplingHook();
 		const std::shared_ptr<MovementModeBase> CurrentMovementModeObj = MovementComp->GetCurrentMovementModeObj();

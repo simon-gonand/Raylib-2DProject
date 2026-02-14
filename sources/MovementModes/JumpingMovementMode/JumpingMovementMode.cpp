@@ -1,5 +1,7 @@
 #include "JumpingMovementMode.h"
 
+#include <iostream>
+
 JumpingMovementMode::JumpingMovementMode(float InAcceleration, float InDeceleration, float InTopSpeed, float InJumpSpeed, int InMaxJumpCount,
 	std::shared_ptr<MovementComponent> InMovementComponent)
 	: MovementModeBase(InAcceleration, InDeceleration, InTopSpeed), JumpSpeed{ InJumpSpeed }, MaxJumpCount{InMaxJumpCount}, MovementComp {InMovementComponent}
@@ -8,7 +10,8 @@ JumpingMovementMode::JumpingMovementMode(float InAcceleration, float InDecelerat
 
 void JumpingMovementMode::IncrementJumpCount()
 {
-	++JumpCount;
+	if(JumpCount < MaxJumpCount)
+		++JumpCount;
 }
 
 void JumpingMovementMode::ResetJumpCount()
