@@ -61,8 +61,8 @@ InputManager::InputManager()
 
     AimAxisInputs.push_back(std::make_shared<InputAxis>(MOUSE_POSITION, -1, true, Vector2({1.0f, 1.0f}))); // Specific exception for MOUSE_POSITION since we only need to get the current Mouse Position
 
-    AimAxisInputs.push_back(std::make_shared<InputAxis>(GAMEPAD, GAMEPAD_AXIS_RIGHT_X, true, Vector::RightVector2, 0.5f));
-    AimAxisInputs.push_back(std::make_shared<InputAxis>(GAMEPAD, GAMEPAD_AXIS_RIGHT_Y, true, Vector::DownVector2, 0.5f));
+    AimAxisInputs.push_back(std::make_shared<InputAxis>(GAMEPAD, GAMEPAD_AXIS_LEFT_X, true, Vector::RightVector2, 0.5f));
+    AimAxisInputs.push_back(std::make_shared<InputAxis>(GAMEPAD, GAMEPAD_AXIS_LEFT_Y, true, Vector::DownVector2, 0.5f));
 
     AxisBindedInputs.insert(std::make_pair(AimAxisName, AimAxisInputs));
 }
