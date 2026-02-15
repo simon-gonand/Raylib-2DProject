@@ -66,8 +66,9 @@ void Player::Initialize()
 	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, GroundPhysicsShape, 1.0f, 0.0f, 3.0f, true);
 	AddComponent(PhysicsComp);
 
-	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, true, Vector2({ ActorInitialPostion.x, ActorInitialPostion.y }), Vector2({ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }), 0.0f, 2.5f);
+	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, true, Vector2{ ActorInitialPostion.x, ActorInitialPostion.y }, Vector2{ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }, 0.0f, 2.5f, Vector2{115.0f, 70.0f});
 	AddComponent(CameraComp);
+	//CameraComp->SetDrawDebug(true);
 
 	// Create Animation Manager + add Idle animation
 	std::shared_ptr<AnimationManager> AnimManager = CreatePlayerAnimationManager();
@@ -83,9 +84,9 @@ void Player::Initialize()
 	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_THROWN, std::make_shared<GrapplingThrownMovementMode>(PhysicsComp, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_BALANCE, std::make_shared<GrapplingBalanceMovementMode>(15.0f, 3.0f, 15.0f, PhysicsComp, 0.25f));
 	MovementComp->BindToOnMovementModeSwitch<Player, &Player::OnMovementModeSwitch>(this);
-	MovementComp->SetDrawDebug(true);
+	/*MovementComp->SetDrawDebug(true);
 	std::shared_ptr<MovementComponentDebugUserWidget> PlayerMovementModeDebugUI = std::make_shared<MovementComponentDebugUserWidget>(MovementComp);
-	MovementComp->SetDebugUI(PlayerMovementModeDebugUI);
+	MovementComp->SetDebugUI(PlayerMovementModeDebugUI);*/
 	AddComponent(MovementComp);
 
 	GrapplingHookComp = std::make_shared<GrapplingHookComponent<Renderer2DComponent, CableRendererComponent>>(PlayerSPtr, 
