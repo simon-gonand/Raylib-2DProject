@@ -20,4 +20,6 @@ namespace Vector
 
 	Vector2 Vector3ToVector2(Vector3 Vector);
 	Vector3 Vector2ToVector3(Vector2 Vector);
+	Vector3 Vector3InterpTo(const Vector3& Current, const Vector3& Target, float DeltaTime, float InterpSpeed);
+	Vector2 Vector2InterpTo(const Vector2& Current, const Vector2& Target, float DeltaTime, float InterpSpeed);
 }
