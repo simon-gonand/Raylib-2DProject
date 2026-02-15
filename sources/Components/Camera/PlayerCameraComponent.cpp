@@ -1,6 +1,7 @@
 #include "PlayerCameraComponent.h"
 
 #include "../../Helpers/Math/Vectors/Vectors.h"
+#include "../../Helpers/Math/MathLibrary.h"
 
 #include <raymath.h>
 
@@ -28,7 +29,7 @@ void PlayerCameraComponent::Update(float DeltaTime)
 			Target.y += YDistance > 0 ? YDistance - CameraNoMovementBoxOffsetSize.y / 2 : YDistance + CameraNoMovementBoxOffsetSize.y / 2;
 		}
 
-		Camera.target = Vector::Vector2InterpTo(Camera.target, Target, DeltaTime, CameraSpeed);
+		Camera.target = Math::Vector2InterpTo(Camera.target, Target, DeltaTime, CameraSpeed);
 	}
 }
 

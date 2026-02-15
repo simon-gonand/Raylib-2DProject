@@ -1,5 +1,7 @@
 #include "MovementModeBase.h"
 
+#include "../Helpers/Math/MathLibrary.h"
+
 #include <iostream>
 #include <raymath.h>
 
@@ -34,14 +36,8 @@ Vector3 MovementModeBase::PerformMovement(float DeltaTime, const Vector2& Input,
 	}
 
 	// Clamp to TopSpeed
-	if (Result.x > 0.0f)
-	{
-		Result.x = Clamp(Result.x, 0.0f, TopSpeed);
-	}
-	else
-	{
-		Result.x = Clamp(Result.x, -TopSpeed, 0.0f);
-	}
+	if((Result.x > 0.0f && Result.x > TopSpeed) || (Result.x < 0.0f && Result.x < -TopSpeed))
+		Result.x = Math::FloatInterpTo(CurrentVelocity.x, Result.x > 0.0f ? TopSpeed : -TopSpeed, DeltaTime, Deceleration);
 
 	return Result;
 }
