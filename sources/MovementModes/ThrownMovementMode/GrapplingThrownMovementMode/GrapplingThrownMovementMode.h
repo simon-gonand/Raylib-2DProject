@@ -5,7 +5,7 @@
 class GrapplingThrownMovementMode : public ThrownMovementMode
 {
 public:
-	GrapplingThrownMovementMode(std::shared_ptr<PhysicsComponent> OwnerPhysicsComponent, std::shared_ptr<MovementComponent> OwnerMovementComp);
+	GrapplingThrownMovementMode(std::shared_ptr<PhysicsComponent> OwnerPhysicsComponent, std::shared_ptr<MovementComponent> OwnerMovementComp, const float& InAcceleration = 1.0f, const float& InTopSpeed = 20.0f, const float& InEndDistance = 20.0f, const float& InVelocityLerpSpeed = 1.0f);
 
 	void SetFinalLocation(const Vector3& InFinalLocation);
 
@@ -14,9 +14,15 @@ protected:
 	virtual Vector3 PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity) override;
 
 private:
-	Vector3 FinalLocation =  Vector3Zero();
-	float MinimalDistance = 20.0f;
+	Vector3 FinalLocation = Vector3Zero();
+	Vector3 FinalDirection = Vector3Zero();
+	float EndDistance = 20.0f;
 
-	float Speed = 20.0f;
+	float TopSpeed;
+	float Acceleration;
+	float CurrentSpeed;
+
+	float VelocityLerpSpeed;
+	float VelocityLerpAlpha;
 };
 
