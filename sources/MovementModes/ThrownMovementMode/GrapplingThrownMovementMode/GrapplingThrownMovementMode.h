@@ -15,12 +15,11 @@ protected:
 
 private:
 	Vector3 FinalLocation = Vector3Zero();
-	Vector3 FinalDirection = Vector3Zero();
 	float EndDistance = 20.0f;
 
 	float TopSpeed;
 	float Acceleration;
-	float CurrentSpeed;
+	float TargetSpeed;
 
 	float VelocityLerpSpeed;
 	float VelocityLerpAlpha;

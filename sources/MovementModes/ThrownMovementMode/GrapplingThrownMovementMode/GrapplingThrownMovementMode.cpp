@@ -11,16 +11,12 @@ void GrapplingThrownMovementMode::SetFinalLocation(const Vector3& InFinalLocatio
 		return;
 	
 	FinalLocation = InFinalLocation;
-	
-	FinalDirection= Vector3Subtract(FinalLocation, MovementComp->GetOwner()->GetActorLocation());
-	FinalDirection = Vector3Normalize(FinalDirection);
 }
 
 void GrapplingThrownMovementMode::OnSwitch()
 {
 	// We don't want to override the friction on this movement mode
-	CurrentSpeed = 0.0f;
-	FinalDirection = Vector3Zero();
+	TargetSpeed = 0.0f;
 	VelocityLerpAlpha = 0.0f;
 }
 
@@ -44,17 +40,23 @@ Vector3 GrapplingThrownMovementMode::PerformMovement(float DeltaTime, const Vect
 		return DefaultResult;
 	}
 
+	Vector3 TargetDirection = Vector3Subtract(FinalLocation, MovementComp->GetOwner()->GetActorLocation());
+	TargetDirection = Vector3Normalize(TargetDirection);
+
+	TargetSpeed += Acceleration * DeltaTime;
+	TargetSpeed = TargetSpeed > TopSpeed ? TopSpeed : TargetSpeed;
+
 	if (VelocityLerpAlpha < 1.0f)
 	{
 		VelocityLerpAlpha += DeltaTime * VelocityLerpSpeed;
 		VelocityLerpAlpha = VelocityLerpAlpha > 1.0f ? 1.0f : VelocityLerpAlpha;
+		Vector3 CurrentVelocityDirection = Vector3Normalize(CurrentVelocity);
+		TargetDirection = Vector3Lerp(CurrentVelocityDirection, TargetDirection, VelocityLerpAlpha);
+
+		float CurrentSpeed = Vector3Length(CurrentVelocity);
+		TargetSpeed = Lerp(CurrentSpeed, TargetSpeed, VelocityLerpAlpha);
 	}
 	
-	Vector3 CurrentVelocityDirection = Vector3Normalize(CurrentVelocity);
-
-	CurrentSpeed += Acceleration * DeltaTime;
-	CurrentSpeed = CurrentSpeed > TopSpeed ? TopSpeed : CurrentSpeed;
-	
-	Vector3 TargetVelocity = Vector3Scale(FinalDirection, CurrentSpeed);
-	return VelocityLerpAlpha == 1.0f ? TargetVelocity : Vector3Lerp(Vector3Scale(CurrentVelocityDirection, CurrentSpeed), TargetVelocity, VelocityLerpAlpha);
+	Vector3 Result = Vector3Scale(TargetDirection, TargetSpeed);
+	return Result;
 }
