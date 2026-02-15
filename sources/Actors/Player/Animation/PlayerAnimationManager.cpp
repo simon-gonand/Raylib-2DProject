@@ -6,9 +6,11 @@
 void PlayerAnimationManager::Initialize(std::shared_ptr<class Player> InPlayerOwner)
 {
 	Player = InPlayerOwner;
+	Player->BindOnIncrementJumpCount<PlayerAnimationManager, &PlayerAnimationManager::OnIncrementJumpCount>(this);
 
 	AddAnimationFromTexture("Idle", "assets/Characters/Player/SpriteSheets/_Idle.png", 10, 1, 0.1f, true, 0, 9, "");
 	AddAnimationFromTexture("Jump", "assets/Characters/Player/SpriteSheets/_Jump.png", 3, 1, 0.05f, true, 0, 2, "");
+	AddAnimationFromTexture("SecondJump", "assets/Characters/Player/SpriteSheets/_Roll.png", 12, 1, 0.025f, false, 0, 11, "Jump");
 	AddAnimationFromTexture("Movement", "assets/Characters/Player/SpriteSheets/_Run.png", 10, 1, 0.025f, true, 0, 9, "");
 	AddAnimationFromTexture("StartSlide", "assets/Characters/Player/SpriteSheets/_SlideTransitionStart.png", 1, 1, 0.1f, false, 0, 0, "Slide");
 	AddAnimationFromTexture("Slide", "assets/Characters/Player/SpriteSheets/_Slide.png", 2, 1, 0.05f, true, 0, 1, "");
@@ -20,8 +22,10 @@ void PlayerAnimationManager::Update(const float& DeltaTime)
 	if (!Player)
 		return;
 
-	if (Player->GetCurrentMovementMode() == EMovementMode::FALLING || Player->GetCurrentMovementMode() == EMovementMode::JUMPING) {
-		SetCurrentAnimationState("Jump");
+	if (Player->GetCurrentMovementMode() == EMovementMode::FALLING || Player->GetCurrentMovementMode() == EMovementMode::JUMPING) 
+	{
+		if(CurrentAnimationState != "SecondJump")
+			SetCurrentAnimationState("Jump");
 	}
 	else if (Player->GetCurrentMovementMode() == EMovementMode::SLIDING) {
 		if(Player->GetPreviousMovementMode() != EMovementMode::SLIDING && CurrentAnimationState != "Slide")
@@ -57,4 +61,12 @@ void PlayerAnimationManager::ComputeDefaultAnimation()
 void PlayerAnimationManager::OnEndSlideEnded(const std::shared_ptr<Animation> EndSlideAnimation)
 {
 	ComputeDefaultAnimation();
+}
+
+void PlayerAnimationManager::OnIncrementJumpCount(int InJumpCount)
+{
+	if (InJumpCount > 1)
+	{
+		SetCurrentAnimationState("SecondJump");
+	}
 }

@@ -16,4 +16,5 @@ private:
 	void ComputeDefaultAnimation();
 
 	void OnEndSlideEnded(const std::shared_ptr<Animation> EndSlideAnimation);
+	void OnIncrementJumpCount(int InJumpCount);
 };

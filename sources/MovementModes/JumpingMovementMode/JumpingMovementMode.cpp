@@ -8,16 +8,26 @@ JumpingMovementMode::JumpingMovementMode(float InAcceleration, float InDecelerat
 {
 }
 
-void JumpingMovementMode::IncrementJumpCount()
+bool JumpingMovementMode::IncrementJumpCount()
 {
-	if(JumpCount < MaxJumpCount)
+	if (JumpCount < MaxJumpCount)
+	{
 		++JumpCount;
+		return true;
+	}
+
+	return false;
 }
 
 void JumpingMovementMode::ResetJumpCount()
 {
 	JumpCount = 0;
 	PreviousFrameJumpCount = 0;
+}
+
+int JumpingMovementMode::GetJumpCount()
+{
+	return JumpCount;
 }
 
 void JumpingMovementMode::OnSwitch()

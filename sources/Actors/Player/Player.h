@@ -35,6 +35,16 @@ public:
 	
 	std::shared_ptr<class PhysicsComponent> GetPhysicsComponent();
 
+
+	// Event Bindings
+	template<class C, void (C::* Function)(int)>
+	void BindOnIncrementJumpCount(C* Instance)
+	{
+		if (!OnIncrementJumpCount)
+			OnIncrementJumpCount = new DelegateBase<void, int>();
+		OnIncrementJumpCount->Bind<C, Function>(Instance);
+	}
+
 private:
 	std::shared_ptr<class InputComponent> InputComp;
 	std::shared_ptr<PhysicsComponent> PhysicsComp;
@@ -48,6 +58,8 @@ private:
 	std::unordered_map<EMovementMode, const b2Polygon > CollisionShapes;
 
 	bool bCanIncrementJump = true;
+
+	DelegateBase<void, int>* OnIncrementJumpCount = nullptr;
 
 	Vector3 ActorInitialPostion;
 

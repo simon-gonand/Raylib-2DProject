@@ -134,7 +134,10 @@ void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 		{
 			if (std::shared_ptr<JumpingMovementMode> JumpingMode = std::dynamic_pointer_cast<JumpingMovementMode>(CurrentMovementModeObj))
 			{
-				JumpingMode->IncrementJumpCount();
+				if (JumpingMode->IncrementJumpCount() && OnIncrementJumpCount)
+				{
+					OnIncrementJumpCount->Invoke(JumpingMode->GetJumpCount());
+				}
 				bCanIncrementJump = false;
 			}
 		}

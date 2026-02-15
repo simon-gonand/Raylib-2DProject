@@ -8,8 +8,9 @@ public:
 	JumpingMovementMode(float InAcceleration, float InDeceleration, float InTopSpeed, float InJumpSpeed, int InMaxJumpCount,
 		std::shared_ptr<MovementComponent> InMovementComponent);
 
-	void IncrementJumpCount();
+	bool IncrementJumpCount();
 	virtual void ResetJumpCount();
+	int GetJumpCount();
 
 protected:
 	virtual void OnSwitch() override;
