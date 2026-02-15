@@ -23,11 +23,8 @@ public:
 protected:
 	float Acceleration;
 	float Deceleration;
-	float DeaccelerateAlpha;
 
 	float TopSpeed;
-
-	static Vector3 LastVelocityIncrease; // Need to be shared to all MovementModeBase instances
 
 	bool bIsActive;
 };

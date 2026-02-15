@@ -16,7 +16,6 @@ bool SlidingMovementMode::CanSwitchToMode(EMovementMode CurrentMovementMode, con
 void SlidingMovementMode::OnSwitch()
 {
 	InitialVelocity = 0.0f;
-	DeaccelerateAlpha = 0.0f;
 }
 
 Vector3 SlidingMovementMode::PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity)
@@ -25,7 +24,7 @@ Vector3 SlidingMovementMode::PerformMovement(float DeltaTime, const Vector2& Inp
 
 	if ((MovementComp->GetPreviousMovementMode() == EMovementMode::FALLING || MovementComp->GetPreviousMovementMode() == EMovementMode::JUMPING) && !FloatEquals(CurrentVelocity.y, 0.0f))
 	{
-		Result.y += FallingAcceleration;
+		Result.y += FallingAcceleration * DeltaTime;
 		Result.y = Clamp(Result.y, 0.0f, MaxFallingSpeed);
 	}
 
@@ -35,9 +34,10 @@ Vector3 SlidingMovementMode::PerformMovement(float DeltaTime, const Vector2& Inp
 	}
 	if (FloatEquals(CurrentVelocity.y, 0.0f))
 	{
-		DeaccelerateAlpha += DeltaTime * Deceleration;
-		DeaccelerateAlpha = Clamp(DeaccelerateAlpha, 0.0f, 1.0f);
-		Result.x = Lerp(InitialVelocity, 0.0f, DeaccelerateAlpha);
+		Result.x += (Result.x > 0.0f ? -Deceleration : Deceleration) * DeltaTime;
+
+		if (CurrentVelocity.x * Result.x < 0.0f) // Set Velocity to 0 if CurrentVelocity.x & Result.x are not the same sign
+			Result.x = 0.0f;
 	}
 
 	if (Result.x == 0.0f)

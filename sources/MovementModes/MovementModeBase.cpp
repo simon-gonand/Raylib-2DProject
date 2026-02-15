@@ -3,10 +3,8 @@
 #include <iostream>
 #include <raymath.h>
 
-Vector3 MovementModeBase::LastVelocityIncrease = Vector3Zero();
-
 MovementModeBase::MovementModeBase(float InAcceleration, float InDeceleration, float InTopSpeed):
-	Acceleration{InAcceleration}, Deceleration{InDeceleration}, TopSpeed{InTopSpeed}, DeaccelerateAlpha{0.0f}, bIsActive{true}
+	Acceleration{InAcceleration}, Deceleration{InDeceleration}, TopSpeed{InTopSpeed}, bIsActive{true}
 {
 }
 
@@ -17,7 +15,6 @@ bool MovementModeBase::CanSwitchToMode(EMovementMode CurrentMovementMode, const 
 
 void MovementModeBase::OnSwitch()
 {
-	DeaccelerateAlpha = 0.0f;
 }
 
 Vector3 MovementModeBase::PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity)
@@ -26,15 +23,14 @@ Vector3 MovementModeBase::PerformMovement(float DeltaTime, const Vector2& Input,
 	Vector3 Result = CurrentVelocity;
 	if (Magnitude > 0.0f)
 	{
-		Result.x += Input.x > 0.0f ? Acceleration : -Acceleration;
-		DeaccelerateAlpha = 0.0f;
-		LastVelocityIncrease = CurrentVelocity;
+		Result.x += (Input.x > 0.0f ? Acceleration : -Acceleration) * DeltaTime;
 	}
 	else if (!FloatEquals(Result.x, 0.0f))
 	{
-		DeaccelerateAlpha += DeltaTime * Deceleration;
-		DeaccelerateAlpha = Clamp(DeaccelerateAlpha, 0.0f, 1.0f);
-		Result.x = Lerp(LastVelocityIncrease.x, 0.0f, DeaccelerateAlpha);
+		Result.x += (Result.x > 0.0f ? -Deceleration : Deceleration) * DeltaTime;
+
+		if (CurrentVelocity.x * Result.x < 0.0f) // Set Velocity to 0 if CurrentVelocity.x & Result.x are not the same sign
+			Result.x = 0.0f;
 	}
 
 	// Clamp to TopSpeed
