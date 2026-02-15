@@ -66,7 +66,7 @@ void Player::Initialize()
 	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, GroundPhysicsShape, 1.0f, 0.0f, 3.0f, true);
 	AddComponent(PhysicsComp);
 
-	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, true, Vector2{ ActorInitialPostion.x, ActorInitialPostion.y }, Vector2{ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }, 0.0f, 2.5f, Vector2{115.0f, 70.0f});
+	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, true, Vector2{ ActorInitialPostion.x, ActorInitialPostion.y }, Vector2{ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }, 0.0f, 2.5f, Vector2{100.0f, 70.0f});
 	AddComponent(CameraComp);
 	//CameraComp->SetDrawDebug(true);
 
