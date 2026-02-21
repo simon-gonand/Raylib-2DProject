@@ -8,7 +8,8 @@
 #include <string>
 #include "../../Components/Physics/Box2D/Box2DPhysicsComponent.h"
 #include "../../Managers/Game/GameManager.h"
-#include "../Trigger/DeathTrigger.h"
+#include "../Trigger/DeathTrigger/DeathTrigger.h"
+#include "../Trigger/ObstacleTrigger/ObstacleTrigger.h"
 
 TileMap::TileMap(const Vector2& InTileSize): TileSize{InTileSize}
 {
@@ -336,12 +337,19 @@ void TileMap::InitializeTriggers()
 	for (ObjectInfo* Object : Triggers.Objects)
 	{
 		// Create triggers
-		if(strcpy(Object->Name, "Death"))
+		if(strcmp(Object->Name, "Death") == 0)
 		{
 			// Create Death Trigger
 			std::shared_ptr<PhysicsComponent> PhysicsComp = CreatePhysicsComponent(Object, true);
 			std::shared_ptr<DeathTrigger> DT = std::make_shared<DeathTrigger>(PhysicsComp);
 			W->AddActor(DT);
+		}
+		else if (strcmp(Object->Name, "Obstacle") == 0)
+		{
+			// Create Obstacle Trigger
+			std::shared_ptr<PhysicsComponent> PhysicsComp = CreatePhysicsComponent(Object, true);
+			std::shared_ptr<ObstacleTrigger> OT = std::make_shared<ObstacleTrigger>(PhysicsComp);
+			W->AddActor(OT);
 		}
 	}
 }

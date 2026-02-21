@@ -1,17 +1,17 @@
 #include "DeathTrigger.h"
 
-#include "../Player/Player.h"
+#include "../../Player/Player.h"
 
 #include <memory>
 
 DeathTrigger::DeathTrigger(std::shared_ptr<PhysicsComponent> InPhysicsComp):
-	Actor(), PhysicsComp{InPhysicsComp}
+	Trigger(InPhysicsComp)
 {
 }
 
 void DeathTrigger::Initialize()
 {
-	AddComponent(PhysicsComp);
+	Trigger::Initialize();
 	PhysicsComp->BindOnBeginOverlap<DeathTrigger, &DeathTrigger::OnBeginOverlap>(this);
 }
 
@@ -21,7 +21,7 @@ void DeathTrigger::OnBeginOverlap(PhysicsComponent* OtherComp)
 	{
 		if (std::shared_ptr<Player> P = std::dynamic_pointer_cast<Player>(OtherComp->GetOwner()))
 		{
-			P->Respawn();
+			P->Die(DeathReason::FALLING);
 		}
 	}
 }

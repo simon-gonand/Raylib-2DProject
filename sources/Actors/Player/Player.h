@@ -8,6 +8,12 @@
 #include <unordered_map>
 #include "../../Components/Renderer/2DRenderer/CableRenderer/CableRendererComponent.h"
 
+enum class DeathReason : unsigned int
+{
+	FALLING,
+	HIT
+};
+
 class Player: public Actor
 {
 public:
@@ -28,7 +34,7 @@ public:
 	virtual void Update(float DeltaTime) override;
 	virtual void PostUpdate() override;
 
-	void Respawn();
+	void Die(DeathReason Reason);
 
 	EMovementMode GetCurrentMovementMode() const;
 	EMovementMode GetPreviousMovementMode() const;
@@ -64,6 +70,8 @@ private:
 	Vector3 ActorInitialPostion;
 
 	EMovementMode CurrentMovementModeShape;
+	void Respawn();
+	
 	void UpdateCollision();
 
 	void OnMovementModeSwitch(EMovementMode PreviousMovementMode, EMovementMode CurrentMovementMode);

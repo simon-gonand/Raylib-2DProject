@@ -57,10 +57,10 @@ void Player::Initialize()
 	SetActorRotation(QuaternionIdentity());
 	SetActorScale({ 1.0f, 1.0f });
 
-	b2Polygon GroundPhysicsShape = b2MakeBox(0.8f, 1.6f);
+	b2Polygon GroundPhysicsShape = b2MakeBox(0.5f, 1.6f);
 	CollisionShapes.insert({ EMovementMode::GROUND, GroundPhysicsShape });
 
-	b2Polygon SlidingPhysicsShape = b2MakeOffsetBox(1.3f, 0.5f, b2Vec2({ 0.0f, 1.0f }), b2MakeRot(0.0f));
+	b2Polygon SlidingPhysicsShape = b2MakeOffsetBox(1.5f, 0.5f, b2Vec2({ 0.0f, 1.0f }), b2MakeRot(0.0f));
 	CollisionShapes.insert({ EMovementMode::SLIDING, SlidingPhysicsShape });
 
 	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, GroundPhysicsShape, false, 1.0f, 0.0f, 3.0f, true);
@@ -209,6 +209,20 @@ void Player::PostUpdate()
 		RendererComponentRotation.y = 0.0f;
 	}
 	RendererComp->SetComponentRotation(RendererComponentRotation);
+}
+
+void Player::Die(DeathReason Reason)
+{
+	// Play Death Animation according to Death Reason
+	switch (Reason)
+	{
+	case DeathReason::HIT:
+		// Start Death Animation
+		break;
+	default:
+		Respawn();
+		break;
+	}
 }
 
 void Player::Respawn()
