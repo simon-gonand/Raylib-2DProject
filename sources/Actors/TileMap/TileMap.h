@@ -161,6 +161,9 @@ private:
 	void FillBackground(rapidxml::xml_node<>* InMapNode);
 
 	void InitializeColliders();
+	void InitializeTriggers();
+
+	std::shared_ptr<PhysicsComponent> CreatePhysicsComponent(ObjectInfo* Object, bool bIsTrigger);
 
 	char* TestDecode(const char* source, unsigned int* rlength);
 	char b64_value(char c);

@@ -36,13 +36,11 @@ int main(void)
 	Vector2 TileSize = { 16.0f, 16.0f };
 	std::shared_ptr<TileMap> TM = std::make_shared<TileMap>("assets/TileMap/TMX/TestGround.tmx");
 	W->AddActor(TM);
-	TM->Initialize();
 	TM->SetActorLocation({ -30 * 16.0f / 2, -20 * 16.0f / 2, 0.0f});
 	TM->SetActorScale({ 0.05f, 0.05f });
 
 	std::shared_ptr<Actor> TutorialWidgetEmptyActor = std::make_shared<Actor>();
 	W->AddActor(TutorialWidgetEmptyActor);
-	TutorialWidgetEmptyActor->Initialize();
 	std::vector<const char*> TutorialTexts = { "A/D or Left Stick to Move",
 		"Space or A to Jump",
 		"Left Shift or B to Slide",
@@ -58,7 +56,6 @@ int main(void)
 
 	std::shared_ptr<Player> P = std::make_shared<Player>();
 	W->AddActor(P);
-	P->Initialize();
 
 	// Target FPS
 	SetTargetFPS(60);

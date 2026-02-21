@@ -7,7 +7,7 @@ World::World()
 	if (PhysicsManager)
 	{
 		PhysicsManager->Initialize({ 0.0f, 9.81f, 0.0f });
-		PhysicsManager->SetDebugMode(false);
+		PhysicsManager->SetDebugMode(true);
 	}
 
 	SetMousePosition(GetScreenWidth() / 2, GetScreenHeight() / 2);
@@ -23,6 +23,8 @@ void World::AddActor(std::shared_ptr<Actor> InActor)
 
 	if (std::shared_ptr<Player> InPlayer = std::dynamic_pointer_cast<Player>(InActor))
 		PlayerActor = InPlayer;
+
+	InActor->Initialize();
 }
 
 void World::RemoveActor(std::shared_ptr<Actor> InActor)
