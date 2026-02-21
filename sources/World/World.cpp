@@ -7,7 +7,7 @@ World::World()
 	if (PhysicsManager)
 	{
 		PhysicsManager->Initialize({ 0.0f, 9.81f, 0.0f });
-		PhysicsManager->SetDebugMode(true);
+		PhysicsManager->SetDebugMode(false);
 	}
 
 	SetMousePosition(GetScreenWidth() / 2, GetScreenHeight() / 2);
