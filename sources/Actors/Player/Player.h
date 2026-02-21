@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include "../../Components/Renderer/2DRenderer/CableRenderer/CableRendererComponent.h"
 
-enum class DeathReason : unsigned int
+enum class DeathReason : int
 {
 	FALLING,
 	HIT
@@ -35,6 +35,7 @@ public:
 	virtual void PostUpdate() override;
 
 	void Die(DeathReason Reason);
+	void Respawn();
 
 	EMovementMode GetCurrentMovementMode() const;
 	EMovementMode GetPreviousMovementMode() const;
@@ -49,6 +50,14 @@ public:
 		if (!OnIncrementJumpCount)
 			OnIncrementJumpCount = new DelegateBase<void, int>();
 		OnIncrementJumpCount->Bind<C, Function>(Instance);
+	}
+
+	template<class C, void (C::* Function)(DeathReason)>
+	void BindOnDeath(C* Instance)
+	{
+		DelegateBase<void, DeathReason>* Delegate = new DelegateBase<void, DeathReason>();
+		Delegate->Bind<C, Function>(Instance);
+		OnDeath.push_back(Delegate);
 	}
 
 private:
@@ -66,11 +75,11 @@ private:
 	bool bCanIncrementJump = true;
 
 	DelegateBase<void, int>* OnIncrementJumpCount = nullptr;
+	std::vector<DelegateBase<void, DeathReason>*> OnDeath;
 
 	Vector3 ActorInitialPostion;
 
 	EMovementMode CurrentMovementModeShape;
-	void Respawn();
 	
 	void UpdateCollision();
 

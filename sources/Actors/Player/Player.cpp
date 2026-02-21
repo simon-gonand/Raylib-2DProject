@@ -23,6 +23,7 @@
 #include "../../MovementModes/ThrownMovementMode/ThrownMovementMode.h"
 #include "../../MovementModes/ThrownMovementMode/GrapplingThrownMovementMode/GrapplingThrownMovementMode.h"
 #include "../../MovementModes/GrapplingBalanceMovementMode/GrapplingBalanceMovementMode.h"
+#include "../../MovementModes/DeathMovementMode/DeathMovementMode.h"
 #include "../../Components/Movements/UI/MovementComponentDebugUserWidget.h"
 
 Player::Player()
@@ -83,6 +84,7 @@ void Player::Initialize()
 	MovementComp->AddNewMovementMode(EMovementMode::THROWN, std::make_shared<ThrownMovementMode>(PhysicsComp, MovementComp));
 	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_THROWN, std::make_shared<GrapplingThrownMovementMode>(PhysicsComp, MovementComp, 75.0f, 20.0f, 20.0f, 0.5f));
 	MovementComp->AddNewMovementMode(EMovementMode::GRAPPLING_BALANCE, std::make_shared<GrapplingBalanceMovementMode>(15.0f, 3.0f, 15.0f, PhysicsComp, 0.25f));
+	MovementComp->AddNewMovementMode(EMovementMode::DEAD, std::make_shared<DeathMovementMode>());
 	MovementComp->BindToOnMovementModeSwitch<Player, &Player::OnMovementModeSwitch>(this);
 	/*MovementComp->SetDrawDebug(true);
 	std::shared_ptr<MovementComponentDebugUserWidget> PlayerMovementModeDebugUI = std::make_shared<MovementComponentDebugUserWidget>(MovementComp);
@@ -123,6 +125,9 @@ void Player::Slide(const float& Scale, const InputTrigger& Trigger)
 
 void Player::Jump(const float& Scale, const InputTrigger& Trigger)
 {
+	if (GetCurrentMovementMode() == EMovementMode::DEAD)
+		return;
+
 	if (Trigger == DOWN)
 	{
 		if (MovementComp->GetCurrentMovementMode() != EMovementMode::JUMPING && MovementComp->GetCurrentMovementMode() != EMovementMode::FALLING)
@@ -180,6 +185,9 @@ void Player::Update(float DeltaTime)
 
 void Player::PostUpdate()
 {
+	if (GetCurrentMovementMode() == EMovementMode::DEAD)
+		return;
+
 	// Is Player Falling
 	Vector3 CurrentVelocity = PhysicsComp->GetLinearVelocity();
 	if (FloatEquals(CurrentVelocity.y, 0.0f)) 
@@ -187,7 +195,7 @@ void Player::PostUpdate()
 		if(GetCurrentMovementMode() != EMovementMode::SLIDING && 
 			GetCurrentMovementMode() != EMovementMode::THROWN &&
 			GetCurrentMovementMode() != EMovementMode::GRAPPLING_THROWN &&
-			GetCurrentMovementMode() != EMovementMode::GRAPPLING_BALANCE )
+			GetCurrentMovementMode() != EMovementMode::GRAPPLING_BALANCE)
 			MovementComp->SwitchMovementMode(EMovementMode::GROUND);
 	}
 	else if (GetCurrentMovementMode() != EMovementMode::JUMPING && 
@@ -213,14 +221,19 @@ void Player::PostUpdate()
 
 void Player::Die(DeathReason Reason)
 {
-	// Play Death Animation according to Death Reason
+	MovementComp->SwitchMovementMode(EMovementMode::DEAD);
+
+	for (DelegateBase<void, DeathReason>* Delegate : OnDeath)
+	{
+		Delegate->Invoke(Reason);
+	}
+
 	switch (Reason)
 	{
-	case DeathReason::HIT:
-		// Start Death Animation
+	case DeathReason::FALLING:
+		Respawn();
 		break;
 	default:
-		Respawn();
 		break;
 	}
 }
@@ -228,6 +241,7 @@ void Player::Die(DeathReason Reason)
 void Player::Respawn()
 {
 	SetActorLocation(ActorInitialPostion);
+	MovementComp->SwitchMovementMode(EMovementMode::FALLING);
 }
 
 EMovementMode Player::GetCurrentMovementMode() const

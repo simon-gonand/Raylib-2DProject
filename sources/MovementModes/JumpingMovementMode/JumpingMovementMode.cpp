@@ -40,7 +40,7 @@ void JumpingMovementMode::OnSwitch()
 
 bool JumpingMovementMode::CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const
 {
-	return JumpCount < MaxJumpCount && CurrentMovementMode != EMovementMode::THROWN &&
+	return JumpCount < MaxJumpCount && CurrentMovementMode != EMovementMode::THROWN && CurrentMovementMode != EMovementMode::DEAD &&
 		MovementModeBase::CanSwitchToMode(CurrentMovementMode, CurrentVelocity);
 }
 

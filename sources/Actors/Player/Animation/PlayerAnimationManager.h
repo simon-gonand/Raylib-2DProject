@@ -16,5 +16,7 @@ private:
 	void ComputeDefaultAnimation();
 
 	void OnEndSlideEnded(const std::shared_ptr<Animation> EndSlideAnimation);
+	void OnEndDeath(const std::shared_ptr<Animation> EndDeathAnimation);
 	void OnIncrementJumpCount(int InJumpCount);
+	void OnDeath(enum class DeathReason Reason);
 };
