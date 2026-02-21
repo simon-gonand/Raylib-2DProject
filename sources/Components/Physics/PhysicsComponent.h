@@ -2,6 +2,8 @@
 
 #include"../BaseClass/TransformComponent.h"
 
+#include <vector>
+
 class PhysicsComponent: public TransformComponent
 {
 public:
@@ -19,7 +21,29 @@ public:
 	virtual void SetLinearDamping(float NewLinearDamping) = 0;
 	virtual float GetLinearDamping() const = 0;
 
+	template<class C, void (C::* Function)(PhysicsComponent*)>
+	void BindOnBeginOverlap(C* Instance)
+	{
+		DelegateBase<void, PhysicsComponent*>* OnBeginOverlapDelegate = new DelegateBase<void, PhysicsComponent*>();
+		OnBeginOverlapDelegate->Bind<C, Function>(Instance);
+		OnBeginOverlap.push_back(OnBeginOverlapDelegate);
+	}
+
+	template<class C, void (C::* Function)(PhysicsComponent*)>
+	void BindOnEndOverlap(C* Instance)
+	{
+		DelegateBase<void, PhysicsComponent*>* OnEndOverlapDelegate = new DelegateBase<void, PhysicsComponent*>();
+		OnEndOverlapDelegate->Bind<C, Function>(Instance);
+		OnEndOverlap.push_back(OnEndOverlapDelegate);
+	}
+
 protected:
 	PhysicsComponent(std::shared_ptr<Actor> InOwner, bool bAutoActivate = true, const Vector3& InLocation = { 0.0f }, const Quaternion& InRotation = { 0.0f }, const Vector3& InScale = { 1.0f, 1.0f, 1.0f });
+
+	void BroadcastOnBeginOverlap(PhysicsComponent* InVisitor) const;
+	void BroadcastOnEndOverlap(PhysicsComponent* InVisitor) const;
+
+	std::vector<DelegateBase<void, PhysicsComponent*>*> OnBeginOverlap;
+	std::vector<DelegateBase<void, PhysicsComponent*>*> OnEndOverlap;
 };
 

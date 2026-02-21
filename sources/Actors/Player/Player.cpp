@@ -63,7 +63,7 @@ void Player::Initialize()
 	b2Polygon SlidingPhysicsShape = b2MakeOffsetBox(1.3f, 0.5f, b2Vec2({ 0.0f, 1.0f }), b2MakeRot(0.0f));
 	CollisionShapes.insert({ EMovementMode::SLIDING, SlidingPhysicsShape });
 
-	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, GroundPhysicsShape, 1.0f, 0.0f, 3.0f, true);
+	PhysicsComp = std::make_shared<Box2DPhysicsComponent>(PlayerSPtr, b2_dynamicBody, GroundPhysicsShape, false, 1.0f, 0.0f, 3.0f, true);
 	AddComponent(PhysicsComp);
 
 	CameraComp = std::make_shared<PlayerCameraComponent>(PlayerSPtr, true, Vector2{ ActorInitialPostion.x, ActorInitialPostion.y }, Vector2{ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }, 0.0f, 2.5f, Vector2{100.0f, 70.0f}, 15.0f);
@@ -246,11 +246,18 @@ void Player::UpdateCollision()
 		auto CollisionShape = CollisionShapes.find(MovementComp->GetCurrentMovementMode());
 		if (CollisionShape != CollisionShapes.end())
 		{
+			if (MovementComp->GetCurrentMovementMode() == CurrentMovementModeShape)
+				return;
 			Shape = CollisionShape->second;
+			CurrentMovementModeShape = MovementComp->GetCurrentMovementMode();
 		}
 		else
 		{
+			if (CurrentMovementModeShape == EMovementMode::GROUND)
+				return;
+				
 			Shape = CollisionShapes[EMovementMode::GROUND];
+			CurrentMovementModeShape = EMovementMode::GROUND;
 		}
 		std::shared_ptr<Box2DPhysicsComponent> Box2DPhysicsComp = std::dynamic_pointer_cast<Box2DPhysicsComponent>(PhysicsComp);
 		if (Box2DPhysicsComp)

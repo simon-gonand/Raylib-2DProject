@@ -7,15 +7,15 @@
 class Box2DPhysicsComponent : public PhysicsComponent
 {
 public:
-	Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Polygon Shape, 
+	Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Polygon Shape, bool bIsSensor = false,
 		const float& Density = 1.0f, const float& Friction = 0.3f, const float& GravityScale = 1.0f, bool bFixedRotation = false, bool bAutoActivate = true,
 		const Vector3& InLocation = { 0.0f }, const Quaternion& InRotation = { 0.0f }, const Vector3& InScale = { 1.0f, 1.0f, 1.0f });
 
-	Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Capsule Shape,
+	Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Capsule Shape, bool bIsSensor = false,
 		const float& Density = 1.0f, const float& Friction = 0.3f, const float& GravityScale = 1.0f, bool bFixedRotation = false, bool bAutoActivate = true,
 		const Vector3& InLocation = { 0.0f }, const Quaternion& InRotation = { 0.0f }, const Vector3& InScale = { 1.0f, 1.0f, 1.0f });
 
-	Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Circle Shape,
+	Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Circle Shape, bool bIsSensor = false,
 		const float& Density = 1.0f, const float& Friction = 0.3f, const float& GravityScale = 1.0f, bool bFixedRotation = false, bool bAutoActivate = true,
 		const Vector3& InLocation = { 0.0f }, const Quaternion& InRotation = { 0.0f }, const Vector3& InScale = { 1.0f, 1.0f, 1.0f });
 	
@@ -47,11 +47,13 @@ private:
 	b2ShapeId ShapeId;
 
 	void CreateBody(const b2BodyType& Type, float GravityScale, bool bFixedRotation, std::shared_ptr<Actor> InOwner);
-	b2ShapeDef CreateShapeDef(float Density, float Friction);
+	b2ShapeDef CreateShapeDef(float Density, float Friction, bool bIsSensor = false);
 
 	void BindEvents(std::shared_ptr<Actor> InOwner);
 
 	void OnOwnerLocationSet(const Vector3& NewLocation);
 	void OnOwnerRotationSet(const Quaternion& NewRotation);
+
+	friend class Box2DWorldManager;
 };
 

@@ -4,3 +4,19 @@ PhysicsComponent::PhysicsComponent(std::shared_ptr<Actor> InOwner, bool bAutoAct
 	TransformComponent(InOwner, bAutoActivate, InLocation, InRotation, InScale)
 {
 }
+
+void PhysicsComponent::BroadcastOnBeginOverlap(PhysicsComponent* InVisitor) const
+{
+	for (DelegateBase<void, PhysicsComponent*>* Delegate : OnBeginOverlap)
+	{
+		Delegate->Invoke(InVisitor);
+	}
+}
+
+void PhysicsComponent::BroadcastOnEndOverlap(PhysicsComponent* InVisitor) const
+{
+	for (DelegateBase<void, PhysicsComponent*>* Delegate : OnEndOverlap)
+	{
+		Delegate->Invoke(InVisitor);
+	}
+}

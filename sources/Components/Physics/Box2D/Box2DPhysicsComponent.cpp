@@ -5,41 +5,44 @@
 
 #include <iostream>
 
-Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Polygon Shape,
+Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Polygon Shape, bool bIsSensor,
 	const float& Density, const float& Friction, const float& GravityScale, bool bFixedRotation, bool bAutoActivate,
 	const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale)
 	: PhysicsComponent(InOwner, bAutoActivate, InLocation, InRotation, InScale)
 {
 	CreateBody(Type, GravityScale, bFixedRotation, InOwner);
 
-	b2ShapeDef ShapeDef = CreateShapeDef(Density, Friction);
+	b2ShapeDef ShapeDef = CreateShapeDef(Density, Friction, bIsSensor);
 	ShapeId = b2CreatePolygonShape(Body, &ShapeDef, &Shape);
+	b2Shape_SetUserData(ShapeId, this);
 
 	BindEvents(InOwner);
 }
 
-Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Capsule Shape, 
+Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Capsule Shape, bool bIsSensor,
 	const float& Density, const float& Friction, const float& GravityScale, bool bFixedRotation, bool bAutoActivate, 
 	const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale)
 	: PhysicsComponent(InOwner, bAutoActivate, InLocation, InRotation, InScale)
 {
 	CreateBody(Type, GravityScale, bFixedRotation, InOwner);
 
-	b2ShapeDef ShapeDef = CreateShapeDef(Density, Friction);
+	b2ShapeDef ShapeDef = CreateShapeDef(Density, Friction, bIsSensor);
 	ShapeId = b2CreateCapsuleShape(Body, &ShapeDef, &Shape);
+	b2Shape_SetUserData(ShapeId, this);
 
 	BindEvents(InOwner);
 }
 
-Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Circle Shape, 
+Box2DPhysicsComponent::Box2DPhysicsComponent(std::shared_ptr<Actor> InOwner, b2BodyType Type, b2Circle Shape, bool bIsSensor,
 	const float& Density, const float& Friction, const float& GravityScale, bool bFixedRotation, bool bAutoActivate, 
 	const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale)
 	: PhysicsComponent(InOwner, bAutoActivate, InLocation, InRotation, InScale)
 {
 	CreateBody(Type, GravityScale, bFixedRotation, InOwner);
 
-	b2ShapeDef ShapeDef = CreateShapeDef(Density, Friction);
+	b2ShapeDef ShapeDef = CreateShapeDef(Density, Friction, bIsSensor);
 	ShapeId = b2CreateCircleShape(Body, &ShapeDef, &Shape);
+	b2Shape_SetUserData(ShapeId, this);
 
 	BindEvents(InOwner);
 }
@@ -94,29 +97,32 @@ float Box2DPhysicsComponent::GetLinearDamping() const
 
 void Box2DPhysicsComponent::EditCollisionShape(b2Polygon NewShape)
 {
-	b2ShapeDef ShapeDef = CreateShapeDef(b2Shape_GetDensity(ShapeId), b2Shape_GetFriction(ShapeId));
+	b2ShapeDef ShapeDef = CreateShapeDef(b2Shape_GetDensity(ShapeId), b2Shape_GetFriction(ShapeId), b2Shape_IsSensor(ShapeId));
 
 	b2DestroyShape(ShapeId, false);
 
 	ShapeId = b2CreatePolygonShape(Body, &ShapeDef, &NewShape);
+	b2Shape_SetUserData(ShapeId, this);
 }
 
 void Box2DPhysicsComponent::EditCollisionShape(b2Capsule NewShape)
 {
-	b2ShapeDef ShapeDef = CreateShapeDef(b2Shape_GetDensity(ShapeId), b2Shape_GetFriction(ShapeId));
+	b2ShapeDef ShapeDef = CreateShapeDef(b2Shape_GetDensity(ShapeId), b2Shape_GetFriction(ShapeId), b2Shape_IsSensor(ShapeId));
 
 	b2DestroyShape(ShapeId, false);
 
 	ShapeId = b2CreateCapsuleShape(Body, &ShapeDef, &NewShape);
+	b2Shape_SetUserData(ShapeId, this);
 }
 
 void Box2DPhysicsComponent::EditCollisionShape(b2Circle NewShape)
 {
-	b2ShapeDef ShapeDef = CreateShapeDef(b2Shape_GetDensity(ShapeId), b2Shape_GetFriction(ShapeId));
+	b2ShapeDef ShapeDef = CreateShapeDef(b2Shape_GetDensity(ShapeId), b2Shape_GetFriction(ShapeId), b2Shape_IsSensor(ShapeId));
 
 	b2DestroyShape(ShapeId, false);
 
 	ShapeId = b2CreateCircleShape(Body, &ShapeDef, &NewShape);
+	b2Shape_SetUserData(ShapeId, this);
 }
 
 const b2BodyId& Box2DPhysicsComponent::GetBody() const
@@ -150,11 +156,13 @@ void Box2DPhysicsComponent::CreateBody(const b2BodyType& Type, float GravityScal
 	Body = ((Box2DWorldManager*)Box2DWorldManager::Get().get())->CreateBody(&BodyDef, InOwner.get());
 }
 
-b2ShapeDef Box2DPhysicsComponent::CreateShapeDef(float Density, float Friction)
+b2ShapeDef Box2DPhysicsComponent::CreateShapeDef(float Density, float Friction, bool bIsSensor)
 {
 	b2ShapeDef ShapeDef = b2DefaultShapeDef();
 	ShapeDef.density = Density;
 	ShapeDef.material.friction = Friction;
+	ShapeDef.isSensor = bIsSensor;
+	ShapeDef.enableSensorEvents = true;
 
 	return ShapeDef;
 }

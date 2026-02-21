@@ -63,6 +63,7 @@ private:
 
 	Vector3 ActorInitialPostion;
 
+	EMovementMode CurrentMovementModeShape;
 	void UpdateCollision();
 
 	void OnMovementModeSwitch(EMovementMode PreviousMovementMode, EMovementMode CurrentMovementMode);

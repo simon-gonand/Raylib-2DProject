@@ -36,6 +36,24 @@ void Box2DWorldManager::Initialize(const Vector3& InGravity)
 void Box2DWorldManager::Update(float DeltaTime)
 {
 	b2World_Step(WorldId, 1.0f / 60.0f, 4); // Velocity iterations and Position iterations values are set as advised on the Box2D doc
+	b2SensorEvents sensorEvents = b2World_GetSensorEvents(WorldId);
+	for (int i = 0; i < sensorEvents.beginCount; ++i)
+	{
+		b2SensorBeginTouchEvent* beginTouch = sensorEvents.beginEvents + i;
+		Box2DPhysicsComponent* SensorPhysicsComp = reinterpret_cast<Box2DPhysicsComponent*>(b2Shape_GetUserData(beginTouch->sensorShapeId));
+		Box2DPhysicsComponent* VisitorPhysicsComp = reinterpret_cast<Box2DPhysicsComponent*>(b2Shape_GetUserData(beginTouch->visitorShapeId));
+		SensorPhysicsComp->BroadcastOnBeginOverlap(VisitorPhysicsComp);
+	}
+	for (int i = 0; i < sensorEvents.endCount; ++i)
+	{
+		b2SensorEndTouchEvent* endTouch = sensorEvents.endEvents + i;
+		if (b2Shape_IsValid(endTouch->visitorShapeId))
+		{
+			Box2DPhysicsComponent* SensorPhysicsComp = reinterpret_cast<Box2DPhysicsComponent*>(b2Shape_GetUserData(endTouch->sensorShapeId));
+			Box2DPhysicsComponent* VisitorPhysicsComp = reinterpret_cast<Box2DPhysicsComponent*>(b2Shape_GetUserData(endTouch->visitorShapeId));
+			SensorPhysicsComp->BroadcastOnEndOverlap(VisitorPhysicsComp);
+		}
+	}
 }
 
 void Box2DWorldManager::DrawDebug()
