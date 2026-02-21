@@ -43,8 +43,8 @@ int main(void)
 	W->AddActor(TutorialWidgetEmptyActor);
 	std::vector<const char*> TutorialTexts = { "A/D or Left Stick to Move",
 		"Space or A to Jump",
-		"Left Shift or B to Slide",
-		"Mouse or Right Stick to Aim",
+		"Left Ctrl or B to Slide",
+		"Mouse or Left Stick to Aim",
 		"Left Click or LB to use Grappling Hook to Balance",
 		"Right Click or RB to use Grappling Hook to be Attracted" };
 	std::shared_ptr<TextsWithBackgroundUserWidget> TutorialTextWidget = std::make_shared<TextsWithBackgroundUserWidget>("", 
