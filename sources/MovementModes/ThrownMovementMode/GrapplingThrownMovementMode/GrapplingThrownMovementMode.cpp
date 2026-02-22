@@ -1,7 +1,5 @@
 #include "GrapplingThrownMovementMode.h"
 
-#include <iostream>
-
 GrapplingThrownMovementMode::GrapplingThrownMovementMode(std::shared_ptr<PhysicsComponent> OwnerPhysicsComponent, std::shared_ptr<MovementComponent> OwnerMovementComp, const float& InAcceleration, const float& InTopSpeed, const float& InEndDistance, const float& InVelocityLerpSpeed)
 	: ThrownMovementMode(OwnerPhysicsComponent, OwnerMovementComp), Acceleration{InAcceleration}, TopSpeed{InTopSpeed}, EndDistance{InEndDistance}, VelocityLerpAlpha{0.0f}, VelocityLerpSpeed{InVelocityLerpSpeed}
 {
@@ -20,7 +18,6 @@ void GrapplingThrownMovementMode::OnSwitch()
 	// We don't want to override the friction on this movement mode
 	TargetSpeed = 0.0f;
 	VelocityLerpAlpha = 0.0f;
-	std::cout << "Initial Speed: " << Vector3Length(PhysicsComp->GetLinearVelocity()) << std::endl;
 }
 
 Vector3 GrapplingThrownMovementMode::PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity)
@@ -61,6 +58,5 @@ Vector3 GrapplingThrownMovementMode::PerformMovement(float DeltaTime, const Vect
 	}
 	
 	Vector3 Result = Vector3Scale(TargetDirection, TargetSpeed);
-	std::cout << "Current Speed: " << Vector3Length(Result) << std::endl;
 	return Result;
 }

@@ -16,7 +16,7 @@ class GrapplingHookComponent : public TransformComponent
 
 public:
 	GrapplingHookComponent(std::shared_ptr<Actor> InOwner, const char* InAimTexturePath, const Vector2& InAimRendererSize = { 1.0f, 1.0f }, 
-		float InAimSpeed = 1.0f, float InAttractSpeed = 25.0f, float InMinGrapplingDistance = 10.0f, 
+		float InAimSpeed = 1.0f, float InGrapplingDeploymentSpeed = 5.0f, float InAttractSpeed = 25.0f, float InMinGrapplingDistance = 10.0f, 
 		float InMaxBalanceGrapplingDistance = 200.0f, float InMaxAttractGrapplingDistance = 25.0f, bool bAutoActivate = true, 
 		const Vector3 & InLocation = { 0.0f }, const Quaternion & InRotation = { 0.0f }, const Vector3 & InScale = { 1.0f, 1.0f, 1.0f });
 	
@@ -33,7 +33,7 @@ protected:
 private:
 	std::shared_ptr<AimRendererComponent> AimRendererComp;
 	float AimSpeed;
-
+	float GrapplingDeploymentSpeed = 0.0f;
 	float AttractSpeed;
 
 	bool bIsHookActivated;
@@ -73,10 +73,10 @@ private:
 
 template<class AimRendererComponent, class GrapplingHookRendererComponent>
 inline GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererComponent>::GrapplingHookComponent(std::shared_ptr<Actor> InOwner, 
-	const char* InAimTexturePath, const Vector2& InAimRendererSize, float InAimSpeed, float InAttractSpeed, 
+	const char* InAimTexturePath, const Vector2& InAimRendererSize, float InAimSpeed, float InGrapplingDeploymentSpeed, float InAttractSpeed, 
 	float InMinGrapplingDistance, float InMaxBalanceGrapplingDistance, float InMaxAttractGrapplingDistance, bool bAutoActivate, 
 const Vector3& InLocation, const Quaternion& InRotation, const Vector3& InScale)
-	: TransformComponent(InOwner, bAutoActivate, InLocation, InRotation, InScale), AimSpeed {InAimSpeed}, AttractSpeed {InAttractSpeed},
+	: TransformComponent(InOwner, bAutoActivate, InLocation, InRotation, InScale), AimSpeed{ InAimSpeed }, GrapplingDeploymentSpeed{InGrapplingDeploymentSpeed}, AttractSpeed {InAttractSpeed},
 	bIsHookActivated{false}, MinGrapplingHookDistance {InMinGrapplingDistance}, MaxBalanceGrapplingHookDistance{InMaxBalanceGrapplingDistance},
 	MaxAttractGrapplingHookDistance{InMaxAttractGrapplingDistance}
 {
@@ -295,7 +295,7 @@ inline void GrapplingHookComponent<AimRendererComponent, GrapplingHookRendererCo
 {
 	if (bIsHookActivated)
 	{
-		CurrentEndHookAlpha += DeltaTime * 5.0f;
+		CurrentEndHookAlpha += DeltaTime * GrapplingDeploymentSpeed;
 		if (CurrentEndHookAlpha >= 1.0f)
 		{
 			CurrentEndHookAlpha = 1.0f;

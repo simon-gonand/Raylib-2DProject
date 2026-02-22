@@ -92,7 +92,7 @@ void Player::Initialize()
 	AddComponent(MovementComp);
 
 	GrapplingHookComp = std::make_shared<GrapplingHookComponent<Renderer2DComponent, CableRendererComponent>>(PlayerSPtr, 
-		"assets/Aim/GrapplingHookAim.png", Vector2({1.5f, 1.5f}), 225.0f, 25.0f, 30.0f, 150.0f, 100.0f);
+		"assets/Aim/GrapplingHookAim.png", Vector2({1.5f, 1.5f}), 225.0f, 7.5f, 25.0f, 30.0f, 150.0f, 100.0f);
 	GrapplingHookComp->SetDrawDebug(false);
 	AddComponent(GrapplingHookComp);
 
