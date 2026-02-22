@@ -23,9 +23,11 @@ Vector3 MovementModeBase::PerformMovement(float DeltaTime, const Vector2& Input,
 {
 	float Magnitude = Vector2Length(Input);
 	Vector3 Result = CurrentVelocity;
-	if (Magnitude > 0.0f)
+	if (Magnitude > 0.0f && abs(Result.x) < TopSpeed)
 	{
 		Result.x += (Input.x > 0.0f ? Acceleration : -Acceleration) * DeltaTime;
+		if (abs(Result.x) > TopSpeed)
+			Result.x = Result.x > 0.0f ? TopSpeed : -TopSpeed;
 	}
 	else if (!FloatEquals(Result.x, 0.0f))
 	{
@@ -34,10 +36,6 @@ Vector3 MovementModeBase::PerformMovement(float DeltaTime, const Vector2& Input,
 		if (CurrentVelocity.x * Result.x < 0.0f) // Set Velocity to 0 if CurrentVelocity.x & Result.x are not the same sign
 			Result.x = 0.0f;
 	}
-
-	// Clamp to TopSpeed
-	if((Result.x > 0.0f && Result.x > TopSpeed) || (Result.x < 0.0f && Result.x < -TopSpeed))
-		Result.x = Math::FloatInterpTo(CurrentVelocity.x, Result.x > 0.0f ? TopSpeed : -TopSpeed, DeltaTime, Deceleration);
 
 	return Result;
 }

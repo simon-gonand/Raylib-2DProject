@@ -6,9 +6,15 @@ FallingMovementMode::FallingMovementMode(float InAcceleration, float InDecelerat
 {
 }
 
+void FallingMovementMode::CancelYVelocity()
+{
+	CurrentJumpSpeedLerpAlpha = 0.0f;
+}
+
 void FallingMovementMode::OnSwitch()
 {
-	bFirstPerformMovement = true;
+	bFirstPerformMovement = true; 
+	CurrentJumpSpeedLerpAlpha = 1.0f; // To force CancelYVelociy to be called
 }
 
 bool FallingMovementMode::CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const
@@ -24,7 +30,6 @@ Vector3 FallingMovementMode::PerformMovement(float DeltaTime, const Vector2& Inp
 	{
 		if (bFirstPerformMovement) 
 		{
-			CurrentJumpSpeedLerpAlpha = 0.0f;
 			ReduceJumpSpeedTargetScale = CurrentVelocity.y / 1.5f;
 			InitialJumpSpeed = CurrentVelocity.y;
 		}

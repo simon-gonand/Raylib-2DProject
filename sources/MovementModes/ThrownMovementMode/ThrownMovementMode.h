@@ -12,9 +12,9 @@ protected:
 	virtual Vector3 PerformMovement(float DeltaTime, const Vector2& Input, const Vector3& CurrentVelocity) override;
 
 	std::shared_ptr<MovementComponent> MovementComp;
+	std::shared_ptr<PhysicsComponent> PhysicsComp;
 
 private:
-	std::shared_ptr<PhysicsComponent> PhysicsComp;
 
 	bool bBaseFrictionOverriden = false;
 	float BaseFriction = 0.0f;

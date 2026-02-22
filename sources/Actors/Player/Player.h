@@ -8,12 +8,6 @@
 #include <unordered_map>
 #include "../../Components/Renderer/2DRenderer/CableRenderer/CableRendererComponent.h"
 
-enum class DeathReason : int
-{
-	FALLING,
-	HIT
-};
-
 class Player: public Actor
 {
 public:

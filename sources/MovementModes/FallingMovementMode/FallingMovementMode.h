@@ -7,6 +7,8 @@ class FallingMovementMode : public MovementModeBase
 public:
 	FallingMovementMode(float InAcceleration, float InDeceleration, float InTopSpeed, float InJumpSpeedDeceleration, float InReduceJumpSpeedTargetScale);
 
+	void CancelYVelocity();
+
 protected:
 	virtual void OnSwitch();
 	virtual bool CanSwitchToMode(EMovementMode CurrentMovementMode, const Vector3& CurrentVelocity) const;
